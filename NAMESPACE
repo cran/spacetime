@@ -1,0 +1,41 @@
+import(sp)
+import(zoo)
+import(xts)
+import(methods)
+exportClasses(xts)
+
+# importFrom("sp", "coordinates")
+
+exportClasses(ST, STF, STFDF, STP, STPDF, STS, STSDF)
+
+export(ST, 
+	STF, STFDF,
+	STP, STPDF,
+	STS, STSDF,
+	as.data.frame.STF,
+	as.data.frame.STP,
+	as.data.frame.STS,
+	as.data.frame.STFDF,
+	as.data.frame.STPDF,
+	as.data.frame.STSDF,
+	unstack.STFDF,
+	stplot)
+
+S3method(as.data.frame, STF)
+S3method(as.data.frame, STFDF)
+S3method(as.data.frame, STPDF)
+S3method(as.data.frame, STSDF)
+S3method(index, STF)
+S3method(index, STP)
+S3method(index, STS)
+S3method(index, STFDF)
+S3method(index, STPDF)
+S3method(index, STSDF)
+S3method(dim, ST)
+S3method(dim, STF)
+S3method(dim, STP)
+S3method(dim, STS)
+S3method(dim, STFDF)
+S3method(dim, STPDF)
+S3method(dim, STSDF)
+#S3method(unstack, STFDF)
