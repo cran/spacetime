@@ -11,9 +11,9 @@
 \alias{coerce,STPDF,STSDF-method}
 
 \title{Class "STPDF"}
-\description{ A class for spatio-temporal data with partial space-time grids; for
-n spatial locations and m times, an index table is kept for which nodes 
-observations are available }
+\description{ A class for spatio-temporal data with partial
+space-time grids; for n spatial locations and m times, an index
+table is kept for which nodes observations are available }
 \section{Objects from the Class}{
 Objects of this class carry full space/time grid data }
 \section{Slots}{

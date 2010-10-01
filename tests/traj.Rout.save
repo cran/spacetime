@@ -1,0 +1,191 @@
+
+R version 2.11.1 (2010-05-31)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ###################################################
+> ### chunk number 25: 
+> ###################################################
+> library(spacetime)
+Loading required package: sp
+Loading required package: zoo
+Loading required package: xts
+> library(diveMove)
+Loading required package: stats4
+Loading required package: caTools
+Loading required package: bitops
+Loading required package: RColorBrewer
+> library(trip)
+> 
+> locs <- readLocs(system.file(file.path("data", "sealLocs.csv"),
++ 	package="diveMove"), idCol=1, dateCol=2,
++ 	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
++ 	lonCol=4, latCol=5, sep=";")
+> 
+> ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+> coordinates(ringy) <- ringy[c("lon", "lat")]
+> tr <- trip(ringy, c("time", "id"))
+> 
+> setClass("STSDFtrip", representation("STSDF", TOR.columns = "character"))
+[1] "STSDFtrip"
+> setAs("trip", "STSDFtrip",
++ 	function(from) {
++ 		new("STSDFtrip", STSDF(as(from, "SpatialPoints"), 
++ 				from[[from@TOR.columns[1]]], from@data), 
++ 			TOR.columns = from@TOR.columns)
++ 	}
++ )
+> setAs("STSDFtrip", "trip", function(from) 
++ 	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
++ )
+> x = as(tr, "STSDFtrip")
+> y = as(x, "trip")
+> all.equal(y, tr)
+[1] TRUE
+> 
+> 
+> ###################################################
+> ### chunk number 26: 
+> ###################################################
+> library(adehabitat)
+Loading required package: ade4
+
+Attaching package: 'ade4'
+
+The following object(s) are masked from 'package:base':
+
+    within
+
+This package requires ade4 to be installed
+
+Type:
+demo(rastermaps) for demonstration of raster map analysis
+demo(homerange) for demonstration of home-range estimation
+demo(managltraj) for demonstration of animals trajectory management
+demo(analysisltraj) for demonstration of animals trajectory analysis
+demo(nichehs) for demonstration of niche/habitat selection analysis
+
+Loading required package: gpclib
+General Polygon Clipper Library for R (version 1.5-1)
+	Type 'class ? gpc.poly' for help
+
+
+Attaching package: 'adehabitat'
+
+The following object(s) are masked from 'package:zoo':
+
+    is.regular
+
+> # from: adehabitat/demo/managltraj.r
+> # demo(managltraj)
+> data(puechabon)
+> # locations:
+> locs <- puechabon$locs
+> xy <- locs[,c("X","Y")]
+> ### Conversion of the date to the format POSIX
+> da <- as.character(locs$Date)
+> da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
+> 
+> ## object of class "ltraj"
+> ltr <- as.ltraj(xy, da, id = locs$Name)
+> 
+> foo <- function(dt) {
++     return(dt> (100*3600*24))
++ }
+> ## The function foo returns TRUE if dt is longer than 100 days
+> ## We use it to cut ltr:
+> l2 <- cutltraj(ltr, "foo(dt)", nextr = TRUE)
+> 
+> setClass("ltraj", representation("list"))
+[1] "ltraj"
+> setClass("STSDFltraj", representation("STSDF"))
+[1] "STSDFltraj"
+> setAs("ltraj", "STSDFltraj", 
++ 	function(from) {
++ 		d = do.call(rbind, from)
++ 		n = unlist(lapply(from, nrow))
++ 		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
++ 		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
++ 		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")]), d$date, d))
++ 	}
++ )
+> setAs("STSDFltraj", "ltraj", 
++ 	function(from) {
++ 		xy = coordinates(from@sp)
++ 		da = index(from@time)
++ 		as.ltraj(xy, da, id = from@data[,"id"], burst = from@data[,"burst"])
++ 	}
++ )
+> 
+> ltr.stsdf = as(l2, "STSDFltraj")
+> ltr.stsdf[1:10,]
+An object of class "STSDFltraj"
+Slot "data":
+        x       y       date   dx   dy      dist     dt    R2n  abs.angle
+50 699520 3159572 1992-07-29  120 -870 878.23687 345600      0 -1.4337302
+51 699640 3158702 1992-08-02   49  155 162.56076  86400 771300  1.2646087
+52 699689 3158857 1992-08-03  -19  -13  23.02173  86400 539786 -2.5415424
+53 699670 3158844 1992-08-04  128  -84 153.10127  86400 552484 -0.5807564
+54 699798 3158760 1992-08-05  -67   11  67.89698 345600 736628  2.9788653
+55 699731 3158771 1992-08-09  -63  -86 106.60675  86400 686122 -2.2030409
+56 699668 3158685 1992-08-10  343   79 351.98011  86400 808673  0.2263730
+57 700011 3158764 1992-08-11 -326 -116 346.02312 259200 893945 -2.7997351
+58 699685 3158648 1992-08-14   34   61  69.83552 259200 881001  1.0623070
+59 699719 3158709 1992-08-17   32  202 204.51895 172800 784370  1.4136861
+    rel.angle   id  burst
+50         NA Chou Chou.1
+51  2.6983389 Chou Chou.1
+52  2.4770341 Chou Chou.1
+53  1.9607861 Chou Chou.1
+54 -2.7235637 Chou Chou.1
+55  1.1012792 Chou Chou.1
+56  2.4294138 Chou Chou.1
+57 -3.0261081 Chou Chou.1
+58 -2.4211432 Chou Chou.1
+59  0.3513791 Chou Chou.1
+
+Slot "sp":
+SpatialPoints:
+           x       y
+ [1,] 699520 3159572
+ [2,] 699640 3158702
+ [3,] 699689 3158857
+ [4,] 699670 3158844
+ [5,] 699798 3158760
+ [6,] 699731 3158771
+ [7,] 699668 3158685
+ [8,] 700011 3158764
+ [9,] 699685 3158648
+[10,] 699719 3158709
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+           [,1]
+1992-07-29   50
+1992-08-02   51
+1992-08-03   52
+1992-08-04   53
+1992-08-05   54
+1992-08-09   55
+1992-08-10   56
+1992-08-11   57
+1992-08-14   58
+1992-08-17   59
+
+> ltr0 = as(ltr.stsdf, "ltraj")
+> all.equal(l2, ltr0, check.attributes = FALSE)
+[1] TRUE
+> 
+> 

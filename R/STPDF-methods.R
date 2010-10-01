@@ -1,5 +1,6 @@
 STP = function(sp, time, index) {
-	new("STP", sp = sp, time = initTime(time), index = index)
+	time[,1] = 1:nrow(time) # reset any original order
+	new("STP", sp = sp, time = time, index = index)
 }
 
 STPDF = function(sp, time, data, index) {
@@ -7,7 +8,7 @@ STPDF = function(sp, time, data, index) {
 }
 
 setMethod("coordinates", "STP", function(obj) {
-		myCoordinates(obj@sp)[obj@index[,1]]
+		myCoordinates(obj@sp)[obj@index[,1],]
 	}
 )
 
@@ -16,7 +17,7 @@ index.STP = function(x, ...) {
 }
 index.STPDF = index.STP
 
-as.data.frame.STP = function(x, row.names, ...) {
+as.data.frame.STP = function(x, row.names = NULL, ...) {
   	data.frame(coordinates(x), 
 		sp.ID = row.names(x@sp)[x@index[,1]],
 		time = index(x),
@@ -24,9 +25,9 @@ as.data.frame.STP = function(x, row.names, ...) {
 }
 setAs("STP", "data.frame", function(from) as.data.frame.STP(from))
 
-as.data.frame.STPDF = function(x, row.names, ...) {
-  	data.frame(x@data, as.data.frame(as(x, "STP")),
-		row.names = row.names, ...)
+as.data.frame.STPDF = function(x, row.names = NULL, ...) {
+	f = as.data.frame(as(x, "STP"))
+  	data.frame(f, x@data, row.names = row.names, ...)
 }
 setAs("STPDF", "data.frame", function(from) as.data.frame.STPDF(from))
 
@@ -71,20 +72,8 @@ subs.STPDF <- function(x, i, j, ... , drop = TRUE) {
 				x = x@data[1,1,drop=TRUE]
 			else
 				x = xts(x@data, index(x@time))
-		} else if (length(t) == 1) { # only one time item
-			if (is(x@sp, "SpatialPoints"))
-				x = SpatialPointsDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialLines"))
-				x = SpatialLinesDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialPixels"))
-				x = SpatialPixelsDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialGrid"))
-				x = SpatialGridDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialPolygons"))
-				x = SpatialPolygonsDataFrame(x@sp, x@data)
-			else
-				stop("unknown Spatial class")
-		}
+		} else if (length(t) == 1) # only one time item
+			x = asSpatialDataFrame(x)
 	}
 	x
 }

@@ -1,11 +1,9 @@
-initTime = function(time) {
-	# time = time[,1] # drop further columns
-	# time[,1] = 1:nrow(time)
-	time
-}
-
 ST = function(sp, time) {
-	new("ST", sp = sp, time = initTime(time))
+	if (is(sp, "SpatialGrid")) {
+		sp = as(sp, "SpatialPixels")
+		warning("converted SpatialGrid to SpatialPixels")
+	}
+	new("ST", sp = sp, time = time)
 }
 
 setMethod("[[", c("ST", "ANY", "missing"), 
@@ -72,3 +70,20 @@ setReplaceMethod("proj4string", signature(obj = "ST", value = "character"),
 		obj
 	}
 )
+
+asSpatialDataFrame = function(x) { # convert to lower
+	stopifnot(length(x@sp) == nrow(x@data))
+	if (is(x@sp, "SpatialPoints"))
+		return(SpatialPointsDataFrame(x@sp, x@data))
+	if (is(x@sp, "SpatialLines"))
+		return(SpatialLinesDataFrame(x@sp, x@data))
+	if (is(x@sp, "SpatialPixels"))
+		return(SpatialPixelsDataFrame(x@sp, x@data))
+	if (is(x@sp, "SpatialGrid"))
+		return(SpatialGridDataFrame(x@sp, x@data))
+	if (is(x@sp, "SpatialPolygons"))
+		return(SpatialPolygonsDataFrame(x@sp, x@data))
+	#if (is(x@sp, "SpatialRings"))
+	#	return(SpatialRingsDataFrame(x@sp, x@data))
+	stop("unknown Spatial class")
+}
