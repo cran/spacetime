@@ -39,8 +39,8 @@ and feasible for the classes implemented. It tries to reuse existing
 infrastructure (classes, methods, functions) that is present in
 packages for spatial data ({\tt sp}) and time series data ({\tt zoo}
 and {\tt xts}).  Coercion to the appropriate reduced spatial and
-temporal classes is provided, as well as to data.frame objects in
-the obvious long or wide format.
+temporal classes is provided, as well as to \code{data.frame}
+objects in the obvious long or wide format.
 
 \end{abstract}
 
@@ -55,7 +55,7 @@ and a number of consecutive elections, and GPS tracks for people
 or animals.
 
 Schabenberger and Gotway (2004) argue that analysis of
-spatio-temporal data often happens in {\em conditionally}, meaning
+spatio-temporal data often happens {\em conditionally}, meaning
 that either first the spatial aspect is analysed, after which the
 temporal aspects are analysed, or reversed, but not in a joint,
 integral modelling approach, where space and time are not separated.
@@ -63,9 +63,9 @@ As a possible reason they mention the lack of good software, data
 classes and methods to handle, import, export, display and analyse
 such data. This R package tries to partially fill this gap.
 
-A possible ground why data are often analysed conditionally is
+A possible reason why data are often analysed conditionally is
 that they are often either overly abundant in space, or in time,
-and relatively sparse in the other.  Sattelite imagery is typically
+and relatively sparse in the other.  Satellite imagery is typically
 very abundant in space, giving lots of detail in high resolution
 for large areas, but much less abundant in time. Also, repeated
 images over time may suffer from problems like difference in light
@@ -98,7 +98,13 @@ and methods are subject to change.
 
 % what is wide and what is long format.
 
-% why we use xts, and not use its data matrix to store attributes.
+We use \code{xts} for time because it has nice tools for reorganizing
+time and a very flexible syntax to select time periods. We do
+not use the \code{xts} objects to store attribute information,
+as it is restricted to \code{matrix} objects, and hence can only
+store a single type, and not combine numeric and factor. Instead,
+as in the classes of \code{sp}, we use \code{data.frame} to store
+measured values.
 
 \section{ Space-time layouts }
 In the following we will use spatial location to denote a particular
@@ -114,11 +120,14 @@ points need to be laid out in some regular sequence} of observations
 for spatial location (points, lines, polygons, grid cells) $s_i, i =
 1,...,n$ and observation time $t_j, j = 1,...,m$ is obtained when
 the full set of $n \times m$ set of observations $z_k$ is stored,
-with $k=1,...,nm$. We choose to cycle spatial locations first, so
-observation $k$ corresponds to location $((k-1)~\mbox{mod}~n) + 1$
-and with time moment $((k-1) / n)+ 1$, with $/$ the integer division.
+with $k=1,...,nm$. We choose to cycle spatial locations first,
+so observation $k$ corresponds to location $s_i$, $i=((k-1)\ \%\ n) + 1$
+and with time moment $t_j$, $j=((k-1) / n)+ 1$, with $/$ integer
+division and \% integer division remainder (modulo). The $t_j$
+need to be in time order, as \code{xts} objects are used to
+store them.
 
-A partial grid has the same general layout, with measurements layed
+A partial grid has the same general layout, with measurements laid
 out on a space time grid (figure \ref{fig:stpdf}), but instead of
 storing the full grid, only non-missing valued observations $z_{k}$
 are stored. For each $k$, an index $[i,j]$ is stored that refers
@@ -127,11 +136,12 @@ which spatial location $i$ and time point $j$ the value belongs to.
 Sparse space-time data are those where time and space points of
 measured values can have arbitrary organization: for each measured
 value the spatial location and time point is stored. This is
-equivalent to a partial grid where the index for value $k$ is
-$[k,k]$, and hence can be dropped. The next subsections will illustrate
+equivalent to a partial grid where the index for observation $k$
+is $[k,k]$, and hence can be dropped. For these objects, $n=m$ and
+equals the number of records.  The next subsections will illustrate
 these three classes.
 
-\subsection{Full space-time grids}
+\subsection{Full space-time grid}
 
 In this data class (figure \ref{fig:stfdf}), for each location,
 the same temporal sequence of data is sampled. Altenatively one
@@ -141,7 +151,7 @@ are stored in this class, but are assigned a missing value {\tt NA}.
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=3.5,width=5>>=
+<<fig=TRUE,echo=FALSE,height=5,width=5>>=
 s = 1:3
 t = c(1, 1.5, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -157,19 +167,19 @@ title("Layout for STFDF")
 \end{center}
 \caption{space-time layout of STFDF (F: Full) objects: all space-time
 combinations are stored; numbers refer to the ordering of rows in
-the data.frame with measured values: time is kept ordered, space
+the \code{data.frame} with measured values: time is kept ordered, space
 cycles first }
 \label{fig:stfdf}
 \end{figure}
 
-\subsection{Partial space-time grids}
+\subsection{Partial space-time grid }
 Partial space-time grids (figure \ref{fig:stpdf}) have space and
 time points layed out on a grid, but not all grid nodes are stored
 and an index is kept that relates the values to the grid nodes:
 $[i,j]$ refers to spatial location $i$ and time point $j$.
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=3.5,width=5>>=
+<<fig=TRUE,echo=FALSE,height=5,width=5>>=
 s = 1:3
 t = c(1, 2.2, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -186,18 +196,18 @@ title("Layout for STPDF")
 \end{center}
 \caption{space-time layout of STPDF (P: partial) objects: part of
 the space-time combinations are stored; numbers refer to the
-ordering of rows in the data.frame; an index is kept where [3,4]
+ordering of rows in the \code{data.frame}; an index is kept where [3,4]
 refers to the third item in the list of spatial locations and fourth
 item in the list of temporal points. }
 \label{fig:stpdf}
 \end{figure}
 
-\subsection{Sparse space-time grids}
-Space-time sparse data frames (STSDF, figure \ref{fig:stsdf}) simply
-store for each value the spatial location and time point.
+\subsection{Sparse space-time \code{data.frame}}
+Space-time sparse \code{data.frame}s (STSDF, figure \ref{fig:stsdf}) simply
+store for each value the spatial location and time point, in time order.
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=3.5,width=5>>=
+<<fig=TRUE,echo=FALSE,height=5,width=5>>=
 s = c(1,2,3,1,4)
 t = c(1, 2.2, 3, 3, 4.5)
 g = data.frame(t,s)
@@ -205,19 +215,20 @@ plot(g, xaxt = 'n', yaxt = 'n', xlab = "Time points",
     ylab = "Space locations", xlim = c(.5,5), ylim = c(.5,4.5))
 abline(h=s, col = grey(.8))
 abline(v=t, col = grey(.8))
-axis(1, at = sort(unique(t)), labels = c("1st", "2nd", "3rd+4th", "5th"))
-axis(2, at = sort(unique(s)), labels = c("1st+4th", "2nd", "3rd", "5th"))
+axis(1, at = sort(unique(t)), labels = c("1st", "2nd", "3rd,4th", "5th"))
+axis(2, at = sort(unique(s)), labels = c("1st,4th", "2nd", "3rd", "5th"))
 text(g, labels = 1:5, pos=4)
 title("Layout for STSDF")
 @
 \end{center}
 \caption{space-time layout of STSDF (S: Sparse) objects: each
-observation has its spatial location and time stamp stored; In the
-example, time point 3 and spatial location 1 are duplicated. }
+observation has its spatial location and time stamp stored; in this
+example, time point 3 and spatial location 1 are duplicated, so they
+appear twice. }
 \label{fig:stsdf}
 \end{figure}
 
-\section{Spatio-temporal full grid data frames (\code{STFDF}) }
+\section{Spatio-temporal full grid \code{data.frame}s (\code{STFDF}) }
 
 For objects of class \code{STFDF}, time representation can be regular
 or irregular, as it is of class \code{xts} in package \code{xts}. Spatial
@@ -235,7 +246,7 @@ sp = SpatialPoints(sp)
 time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
-IDs = paste("ID",1:length(mydata))
+IDs = paste("ID",1:length(mydata), sep = "_")
 mydata = data.frame(values = signif(mydata,3), ID=IDs)
 stfdf = STFDF(sp, time, mydata)
 str(stfdf)
@@ -243,19 +254,19 @@ str(stfdf)
 
 \subsection{Coercion to {\tt data.frame}}
 The following coercion function creates a {\tt data.frame} using both
-the S3 (to set row.names) and S4 ``as()'' way. It gives data in the
+the S3 (to set row.names) and S4 ``as()'' method. It gives data in the
 long format, meaning that time and space are replicated appropriately:
 <<>>=
-as.data.frame(stfdf, row.names = ID)
+as.data.frame(stfdf, row.names = IDs)
 as(stfdf, "data.frame")[1:4,]
 @
 Note that \code{sp.ID} denotes the ID of the spatial location;
-coordinates are shown for point, pixel or grid cell centre
-locations; in case locations refer to lines or polygons, the lines
-start coordinate or coordinate centre of weight are given in the
-coordinate values.
+coordinates are shown for point, pixel or grid cell centre locations;
+in case locations refer to lines or polygons, the line's start
+coordinate and coordinate centre of weight are given, respectively,
+as the coordinate values.
 
-For a single attribute, we can obtain a data.frame object if we
+For a single attribute, we can obtain a \code{data.frame} object if we
 properly unstack the column, giving the data in both its wide
 formats when in addition we apply transpose \code{t()}:
 <<>>=
@@ -290,7 +301,7 @@ stfdf
 
 The idea behind the {\tt [} method for classes in {\tt sp} was
 that objects would behave as much as possible similar to a matrix
-or data.frame -- this is one of the stronger intuitive areas of R
+or \code{data.frame} -- this is one of the stronger intuitive areas of R
 syntax. A construct like {\tt a[i,j]} selects row(s) i and column(s)
 j. In sp, rows were taken as the spatial entities (points, lines,
 polygons, pixels) and rows as the attributes. This convention was broken
@@ -314,10 +325,10 @@ Clearly, unless \code{drop=FALSE}, selecting a single time or
 single location object results in an object that is no longer
 spatio-temporal; see also section \ref{snaphist}.
 
-\section{Space-time partial data frames (\code{STPDF})}
-Space-time partial data frames have a layout over a grid, meaning
+\section{Space-time partial \code{data.frame}s (\code{STPDF})}
+Space-time partial \code{data.frame}s have a layout over a grid, meaning
 that particular times and locations are typically present more
-than once, but only the data for the time/location combionations
+than once, but only the data for the time/location combinations
 are stored. An index keeps the link between the measured values in
 the data entries (rows), and the locations and times.
 
@@ -329,10 +340,11 @@ In this class, index is an $n \times 2$ matrix. If in this index
 row $i$ has entry $[j,k]$, it means that \code{data[i,]} corresponds
 to location $j$ and time $k$.
 
-\section{Spatio-temporal sparse data frames (\code{STSDF})}
-Sparse data.frame store for each data record the location and time.
-No index is kept. Location and time need not be organized. Data
-are stored such that time is ordered (as it is an \code{xts} object).
+\section{Spatio-temporal sparse \code{data.frame}s (\code{STSDF})}
+Space-time sparse \code{data.frame}s store for each data record
+the location and time.  No index is kept. Location and time need
+not be organized. Data are stored such that time is ordered (as it
+is an \code{xts} object).
 
 \subsection{Class definition}
 <<keep.source=TRUE>>=
@@ -388,8 +400,8 @@ is needed to find out whether a single point in time or a single
 spatial location is retrieved.
 
 \section{Coercion}
-Coercion from full to partial and/or sparse space-time data.frame's,
-we can use as:
+Coercion from full to partial and/or sparse space-time
+\code{data.frame}s, we can use as:
 <<>>=
 class(stfdf)
 class(as(stfdf, "STPDF"))
@@ -468,9 +480,9 @@ text(coordinates(wind.loc), pos=1, label=wind.loc$Station, cex=.7)
 \end{figure}
 
 The first thing is to reshape these data. As space is sparse and
-time is rich, the data in data.frame \code{wind} come stations
+time is rich, the data in \code{data.frame} \code{wind} come stations
 time series in columns. The station locations come in a separate
-data.frame, called \code{wind.loc}.
+\code{data.frame}, called \code{wind.loc}.
 <<>>=
 wind[1:3,]
 wind.loc[1:3,]
@@ -548,80 +560,41 @@ daily data was considered (April, 1961) }
 
 \subsection{Tracking data: trip and ltraj objects}
 
-<<>>=
-library(argosfilter)
-data(seal)
-library(sp)
-library(trip)
-library(maptools)
-trackAngle <- function(xy) {
-	angles <- abs(c(trackAzimuth(xy), 0) - c(0, rev(trackAzimuth(xy[nrow(xy):1, ]))))
-	angles <- ifelse(angles > 180, 360 - angles, angles)
-	angles[is.na(angles)] <- 180
-	angles
-}
-vmax <- 2
-ang <- c(15, 25)
-distlim <- c(2500, 5000)
-
-coordinates(seal) <- ~lon + lat
-proj4string(seal) <- CRS("+proj=longlat +ellps=WGS84")
-seal$id <- "seal"
-seal <- seal[!duplicated(seal$dtime), ]
-seal.tr <- trip(seal, c("dtime", "id"))
-
-seal.tr$speed.ok <- speedfilter(seal.tr, max.speed = vmax * 3.6)
-
-dsts <- trackDistance(coordinates(seal.tr)) * 1000
-angs <- trackAngle(coordinates(seal.tr))
-dprev <- c(0, dsts)
-dnext <- c(dsts, 0)
-ok <- (seal.tr$speed.ok | dprev <= 5000) & (seal.tr$lc > -9)
-plot(seal.tr[ok,])
-
-seal.tr$filt.row <- 1:nrow(seal.tr)
-seal.tr$ok <- rep(FALSE, nrow(seal.tr))
-df <- seal.tr
-df <- df[ok, ]
-for (i in 1:length(distlim)) {
-  dsts <- trackDistance(coordinates(df)) * 1000
-  angs <- trackAngle(coordinates(df))
-  dprev <- c(0, dsts)
-  dnext <- c(dsts, 0)
-  ok <- (dprev <= distlim[i] | dnext <= distlim[i]) | angs > ang[i]
-  ok[c(1:2, (length(ok) - 1):length(ok))] <- TRUE
-  df <- df[ok, ]
-  ok <- rep(TRUE, nrow(df))
-}
-seal.tr$ok[match(df$filt.row, seal.tr$filt.row)] <- ok
-# plot(seal.tr[seal.tr$ok,])
-@
-
 \subsection{Conversion from and to trip}
 
-Objects of class \code{trip} extend objects of class
+Objects of class \code{trip} (Sumner, 2010) extend objects of class
 \code{SpatialPointsDataFrame} by indicating in which attribute
 columns time and trip ID are, in slot \code{TOR.columns}. To not
-loose this information (in particular, which column contains the
+lose this information (in particular, which column contains the
 IDs), we will extend class \code{STSDF} to retain this info.
 
+Currently it does assume that time in a trip object is in order,
+as xts will order it anyhow:
+
 <<>>=
+library(diveMove)
+library(trip)
+
+locs <- readLocs(system.file(file.path("data", "sealLocs.csv"),
+	package="diveMove"), idCol=1, dateCol=2,
+	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
+	lonCol=4, latCol=5, sep=";")
+
+ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+coordinates(ringy) <- ringy[c("lon", "lat")]
+tr <- trip(ringy, c("time", "id"))
+
 setClass("STSDFtrip", representation("STSDF", TOR.columns = "character"))
 setAs("trip", "STSDFtrip",
 	function(from) {
 		new("STSDFtrip", STSDF(as(from, "SpatialPoints"), 
-			xts(1:nrow(from), from[[from@TOR.columns[1]]]),
-			from@data), TOR.columns = from@TOR.columns)
+				from[[from@TOR.columns[1]]], from@data), 
+			TOR.columns = from@TOR.columns)
 	}
 )
 setAs("STSDFtrip", "trip", function(from) 
 	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
 )
-d <- data.frame(x = 1:10, 
-	y = rnorm(10), 
-	tms = Sys.time() + 1:10, id = gl(2, 5))
-coordinates(d) <- d[c("x", "y")]
-tr <- trip(d, c("tms", "id"))
 x = as(tr, "STSDFtrip")
 y = as(x, "trip")
 all.equal(y, tr)
@@ -666,9 +639,7 @@ setAs("ltraj", "STSDFltraj",
 		n = unlist(lapply(from, nrow))
 		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
 		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-		t = xts(1:nrow(d), d$date)
-		o = t[,1]
-		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")])[o], t, d[o,]))
+		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")]), d$date, d))
 	}
 )
 setAs("STSDFltraj", "ltraj", 
@@ -680,6 +651,7 @@ setAs("STSDFltraj", "ltraj",
 )
 
 ltr.stsdf = as(l2, "STSDFltraj")
+ltr.stsdf[1:10,]
 ltr0 = as(ltr.stsdf, "ltraj")
 all.equal(l2, ltr0, check.attributes = FALSE)
 @
@@ -725,6 +697,8 @@ all.equal(l2, ltr0, check.attributes = FALSE)
 % \subsection{coercion to external classes}
 % ltraj in adehabitat; trip in trip; spatial panel model.
 
+\section*{Acknowledgements}
+Michael Sumner provided helpful comments on the trip example.
 
 \section*{References}
 \begin{description}

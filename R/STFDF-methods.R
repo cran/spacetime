@@ -1,4 +1,5 @@
 STF = function(sp, time) {
+	time[,1] = 1:nrow(time) # removes any old indexing
 	new("STF", ST(sp, time))
 }
 
@@ -32,8 +33,9 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 }
 setAs("STF", "data.frame", function(from) as.data.frame.STF(from))
 
-as.data.frame.STFDF = function(x, row.names = row.names(x@data), ...) {
-	cbind(x@data, as(as(x, "STF"), "data.frame"))
+as.data.frame.STFDF = function(x, row.names = NULL, ...) {
+	f = as.data.frame(as(x, "STF"))
+	data.frame(f, x@data, row.names = row.names, ...)
 }
 setAs("STFDF", "data.frame", function(from) as.data.frame.STFDF(from))
 
@@ -79,9 +81,9 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	si = rep(1:length(x@sp), nrow(x@time))
 	ti = rep(1:nrow(x@time), each = length(x@sp))
 	x@sp = x@sp[s]
-	x@time = x@time[t]
-	t = x@time[,1]
-	x@time = initTime(x@time)
+	x@time = x@time[t] # uses [.xts, deals with character
+	t = x@time[,1] # gets the indices
+	x@time[,1] = 1:nrow(x@time) # resets indices
 	x@data = x@data[si %in% s & ti %in% t, k, drop = FALSE]
 	if (drop) {
 		if (length(s) == 1) { # space index has only 1 item:
@@ -89,20 +91,8 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 				x = x@data[1,1,drop=TRUE]
 			else
 				x = xts(x@data, index(x@time))
-		} else if (length(t) == 1) { # only one data item
-			if (is(x@sp, "SpatialPoints"))
-				x = SpatialPointsDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialLines"))
-				x = SpatialLinesDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialPixels"))
-				x = SpatialPixelsDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialGrid"))
-				x = SpatialGridDataFrame(x@sp, x@data)
-			else if (is(x@sp, "SpatialPolygons"))
-				x = SpatialPolygonsDataFrame(x@sp, x@data)
-			else
-				stop("unknown Spatial class")
-		}
+		} else if (length(t) == 1) # only one data item
+			x = asSpatialDataFrame(x)
 	}
 	x
 }

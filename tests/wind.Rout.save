@@ -1,0 +1,141 @@
+
+R version 2.11.1 (2010-05-31)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ###################################################
+> ### chunk number 19: 
+> ###################################################
+> library(spacetime)
+Loading required package: sp
+Loading required package: zoo
+Loading required package: xts
+> library(gstat)
+> data(wind)
+> wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
+> wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
+> coordinates(wind.loc) = ~x+y
+> proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
+> 
+> 
+> ###################################################
+> ### chunk number 20: 
+> ###################################################
+> library(mapdata)
+Loading required package: maps
+> plot(wind.loc, xlim = c(-11,-5.4), ylim = c(51,55.5), axes=T, col="red")
+> map("worldHires", add=T, col = grey(.5))
+> text(coordinates(wind.loc), pos=1, label=wind.loc$Station, cex=.7)
+> 
+> 
+> ###################################################
+> ### chunk number 21: 
+> ###################################################
+> wind[1:3,]
+  year month day   RPT   VAL   ROS   KIL   SHA  BIR   DUB   CLA   MUL   CLO
+1   61     1   1 15.04 14.96 13.17  9.29 13.96 9.87 13.67 10.25 10.83 12.58
+2   61     1   2 14.71 16.88 10.83  6.50 12.62 7.67 11.50 10.04  9.79  9.67
+3   61     1   3 18.50 16.88 12.33 10.13 11.17 6.17 11.25  8.04  8.50  7.67
+    BEL   MAL
+1 18.50 15.04
+2 17.54 13.83
+3 12.75 12.71
+> wind.loc[1:3,]
+          coordinates     Station Code Latitude Longitude MeanWind
+1   (-10.25, 51.9333)    Valentia  VAL  51d56'N   10d15'W     5.48
+2      (-10, 54.2333)   Belmullet  BEL  54d14'N   10d00'W     6.75
+3 (-8.98333, 53.7167) Claremorris  CLA  53d43'N    8d59'W     4.32
+> 
+> 
+> ###################################################
+> ### chunk number 22: 
+> ###################################################
+> wind$time = ISOdate(wind$year+1900, wind$month, wind$day)
+> wind$jday = as.numeric(format(wind$time, '%j'))
+> 
+> 
+> ###################################################
+> ### chunk number 23: 
+> ###################################################
+> # match order of columns in wind to Code in wind.loc;
+> # convert to utm zone 29, to be able to do interpolation in
+> # proper Euclidian (projected) space:
+> pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
+> pts = SpatialPoints(pts)
+> proj4string(pts) = "+proj=longlat +datum=WGS84"
+> library(rgdal)
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Path to GDAL shared files: /usr/share/gdal17
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
+Path to PROJ.4 shared files: (autodetected)
+> pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
+> t = xts(1:nrow(wind), wind$time)
+> stations = 4:15
+> # note the t() in:
+> w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
+> 
+> library(maptools)
+Loading required package: foreign
+Loading required package: lattice
+
+	Note: polygon geometry computations in maptools
+ 	depend on the package gpclib, which has a
+ 	restricted licence. It is disabled by default;
+ 	to enable gpclib, type gpclibPermit()
+
+Checking rgeos availability as gpclib substitute:
+FALSE 
+> m = map2SpatialLines(
++ 	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
+> proj4string(m) = "+proj=longlat +datum=WGS84"
+> m = spTransform(m, CRS("+proj=utm +zone=29 +datum=WGS84"))
+> 
+> # setup grid
+> grd = SpatialPixels(SpatialPoints(makegrid(m, n = 300)),
++ 	proj4string = proj4string(m))
+> # grd$t = rep(1, nrow(grd))
+> #coordinates(grd) = ~x1+x2
+> #gridded(grd)=TRUE
+> 
+> # select april 1961:
+> w = w[, "1961-04"]
+> 
+> covfn = function(x,y) { 
++ 	du = spDists(coordinates(x), coordinates(y))
++ 	t1 = as.numeric(index(x)) # time in seconds
++ 	t2 = as.numeric(index(y)) # time in seconds
++ 	dt = abs(outer(t1, t2, "-"))
++ 	# separable, product covariance model:
++ 	0.6 * exp(-du/750000) * exp(-dt / (1.5 * 3600 * 24))
++ }
+> 
+> n = 10
+> tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
+> pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
+> wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
+> 
+> 
+> ###################################################
+> ### chunk number 24: 
+> ###################################################
+> spl = list(list("sp.points", pts, first=F, cex=.5),
++ 	list("sp.lines", m, col='grey'))
+> stplot(wind.pr, col.regions=bpy.colors(),
++ 	par.strip.text = list(cex=.5), sp.layout = spl)
+> summary(wind.pr)
+Length  Class   Mode 
+     1  STFDF     S4 
+> 

@@ -42,7 +42,9 @@ Objects of this class carry full space/time grid data }
 
 \arguments{
 \item{sp}{object of class \link{Spatial}}
-\item{time}{object of class \link{xts}}
+\item{time}{object of class \link{xts}; when STSDF is called, a vector with
+times, e.g. \link{POSIXct} will also work, and rearrange sp and data according
+to the ordering of time. }
 \item{data}{data frame with appropriate number of rows}
 \item{x}{an object of class STFDF}
 \item{i}{selection of record index (spatial/temporal entities),
@@ -50,13 +52,19 @@ or character string with temporal selection }
 \item{j}{selection of attributes }
 \item{...}{ignored}
 \item{drop}{if TRUE and a single spatial entity is selected, an object
-of class \link{xts} is returned; if TRUE and a single temporal entity is
+of class \link{xts} is returned (NOT yet implemented);
+if TRUE and a single temporal entity is
 selected, and object of the appropriate \code{Spatial} class is returned;
 if FALSE, no coercion to reduced classes takes place}
 \item{from}{object of class STFDF}
 \item{to}{target class}
 \item{strict}{ignored}
 }
+
+\note{ sp, time and data need to have the same number of records,
+and regardless of the class of time (xts or POSIXct) have to be
+in correspoinding order: the triple \code{sp[i]}, \code{time[i]}
+and \code{data[i,]} refer to the same observation }
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 
