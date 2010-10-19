@@ -21,7 +21,7 @@
 \date{\small \today }
 
 \begin{document}
-%\VignetteIndexEntry{spacetime: classes and methods for spatio-temporal data}
+% \VignetteIndexEntry{spacetime: classes and methods for spatio-temporal data}
 \maketitle
 
 \begin{abstract}
@@ -98,12 +98,14 @@ and methods are subject to change.
 
 % what is wide and what is long format.
 
-We use \code{xts} for time because it has nice tools for reorganizing
-time and a very flexible syntax to select time periods. We do
-not use the \code{xts} objects to store attribute information,
-as it is restricted to \code{matrix} objects, and hence can only
-store a single type, and not combine numeric and factor. Instead,
-as in the classes of \code{sp}, we use \code{data.frame} to store
+We use \code{xts} for time because it has nice tools
+for reorganizing time and a very flexible syntax to
+select time periods that adheres ISO 8601\footnote{see
+\url{http://en.wikipedia.org/wiki/ISO_8601}}. We do not use
+the \code{xts} objects to store attribute information, as it is
+restricted to \code{matrix} objects, and hence can only store
+a single type, and not combine numeric and factor. Instead, as
+in the classes of \code{sp}, we use \code{data.frame} to store
 measured values.
 
 \section{ Space-time layouts }
@@ -290,7 +292,7 @@ Here are some examples:
 <<>>=
 stfdf[[1]]
 stfdf[["values"]]
-stfdf[["newVal"]] <- rnorm(12)
+stfdf[["newVal"]] = rnorm(12)
 stfdf$ID
 stfdf$ID = paste("OldIDs", 1:12, sep="")
 stfdf$NewID = paste("NewIDs", 12:1, sep="")
@@ -421,15 +423,70 @@ identical(stfdf, xx)
 
 \section{Spatial footprint or support, time intervals}
 
-Time series typically store for each record a time stamp, not
-a time interval.  The implicit assumption of time seems to be
-(i) the time stamp is a moment, (ii) this indicates either the
-real moment of measurement / registration, or the start of the
-interval over which something is aggregated (summed, averaged,
-maximized). For financial "Open, high, low, close" data, "Open"
-and "Close" refer to the values for moments at opening and closing
-of the stock exchange, where "high" and "low" aggregated (minimum,
-maximum over the time interval between opening and closing times.
+\subsection{Time periods}
+
+Time series typically store for each record a time stamp, not a
+time interval.  The implicit assumption of time seems to be (i) the
+time stamp is a moment, (ii) this indicates either the real moment
+of measurement / registration, or the start of the interval over
+which something is aggregated (summed, averaged, maximized). For
+financial "Open, high, low, close" data, the "Open" and "Close"
+refer to the values at the moments the stock exchange opens and
+closes, where "high" and "low" aggregated (minimum, maximum taken
+over the time interval between opening and closing times.
+
+According to \href{http://en.wikipedia.org/wiki/ISO_8601}{ISO 8601:2004},
+a time stamp like "2010-05" refers to {\em the full} month of May,
+2010, and so reflects a time period rather than a moment. As
+a selection criterion, \code{xts} will include everything inside the
+following interval:
+<<>>=
+.parseISO8601('2010-05')
+@
+and it seems that this syntax lets one define, unambiguously,
+yearly, monthly, daily, hourly or minute intervals, but not 10-
+or 30-minute intervals; for ten minutes, the full specification 
+is needed:
+<<>>=
+.parseISO8601('2010-05-01T13:30/2010-05-01T13:39')
+@
+
+\subsection{Spatial Points}
+All examples above work with spatial points, i.e. data having a point
+support. The assumption of data having points support is implicit.
+
+\subsection{Spatial Polygons}
+\label{sec:nc}
+As an example, the North Carolina SIDS data in package
+\code{maptools} will be used; they are sparse in time (2 instances),
+but have polygons in space. See figure \ref{fig:nc} for the plot generated
+by:
+<<>>=
+library(maptools)
+fname = system.file("shapes/sids.shp", package="maptools")[1]
+nc = readShapePoly(fname, proj4string=CRS("+proj=longlat +datum=NAD27"))
+data = data.frame(
+	BIR = c(nc$BIR74, nc$BIR79),
+	NWBIR = c(nc$NWBIR74, nc$NWBIR79),
+	SID = c(nc$SID74, nc$SID79))
+time = xts(1:2, 
+	as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d")))
+nct = STFDF(
+	sp = as(nc, "SpatialPolygons"),
+	time = time,
+	data = data)
+stplot(nct[,,"SID"],as.table=TRUE)
+@
+
+\begin{figure}
+\begin{center}
+<<echo=FALSE,fig=TRUE,height=3,width=5>>=
+print(stplot(nct[,,"SID"],as.table=TRUE))
+@
+\end{center}
+\caption{North Carolina suddan infant death syndrome data}
+\label{fig:nc}
+\end{figure}
 
 % What if time intervals are irregular, and values denoting aggregate?
 % What is the time interval for the last measurement?
@@ -445,18 +502,21 @@ maximum over the time interval between opening and closing times.
 
 \section{ Worked examples }
 
-\subsection { Interpolating Iris wind }
+\subsection { Interpolating Irish wind }
 
-This worked example is a shortened version of the analysis present
-in \code{demo(wind)}, in package \code{gstat}. This demo is rather
+This worked example is a modified version of the analysis presented
+in \code{demo(wind)} of package \code{gstat}. This demo is rather
 lengthy and largely reproduces the original analysis in Haslett and
 Raftery (1989). Here, we will reduce the intermediate plots and
-focus on the use of spatiotemporal classes.
+focus on the use of spatio-temporal classes.
 
-In the next fragment, we will load the wind data from package
-\code{gstat}, and convert character representation (such as
-\code{51d56'N}) to proper numerical coordinates.
-
+First, we will load the wind data from package \code{gstat}. It
+has two tables, station locations in a \code{data.frame}, called
+\code{wind.loc}, and daily wind speed in \code{data.frame}
+\code{wind}.  We now convert character representation (such as
+\code{51d56'N}) to proper numerical coordinates, and convert the
+station locations to a SpatialPointsDataFrame object. A plot of
+these data is shown in figure \ref{fig:wind}.
 <<>>=
 library(gstat)
 data(wind)
@@ -468,7 +528,7 @@ proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,height=4.5,width=4.5>>=
+<<fig=TRUE,height=4.5,width=4.5,echo=FALSE>>=
 library(mapdata)
 plot(wind.loc, xlim = c(-11,-5.4), ylim = c(51,55.5), axes=T, col="red")
 map("worldHires", add=T, col = grey(.5))
@@ -479,86 +539,105 @@ text(coordinates(wind.loc), pos=1, label=wind.loc$Station, cex=.7)
 \label{fig:wind}
 \end{figure}
 
-The first thing is to reshape these data. As space is sparse and
-time is rich, the data in \code{data.frame} \code{wind} come stations
-time series in columns. The station locations come in a separate
-\code{data.frame}, called \code{wind.loc}.
+The first thing to do with the wind speed values is to reshape
+these data. Unlike the North Carolina SIDS data of section \ref{sec:nc},
+for this data space is sparse and time is rich, and so the data in
+\code{data.frame} \code{wind} come in wide form with stations time
+series in columns:
 <<>>=
 wind[1:3,]
-wind.loc[1:3,]
 @
-
-First, we will recode the time columns to an appropriate time data 
-structure, and subtract a smooth trend of daily means:
+We will recode the time columns to an appropriate time data 
+structure, and subtract a smooth time trend of daily means:
 <<>>=
 wind$time = ISOdate(wind$year+1900, wind$month, wind$day)
 wind$jday = as.numeric(format(wind$time, '%j'))
+stations = 4:15
+windsqrt = sqrt(0.5148 * wind[stations]) # knots -> m/s
+Jday = 1:366
+daymeans = apply(sapply(split(windsqrt - mean(windsqrt), wind$jday), mean), 2,  mean)
+meanwind = lowess(daymeans ~ Jday, f = 0.1)$y[wind$jday]
+velocities = apply(windsqrt, 2, function(x) { x - meanwind })
 @
 
 Next, we will match the wind data to its location, and convert
 the long/lat coordinates and country boundary to the appropriate 
 UTM zone:
-<<>>=
-# match order of columns in wind to Code in wind.loc;
+<<keep.source=TRUE>>=
+# order locations to order of columns in wind;
+# connect station names to location coordinates
+wind.loc = wind.loc[match(names(wind[4:15]), wind.loc$Code),]
+pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
+rownames(pts) = wind.loc$Station
+pts = SpatialPoints(pts)
 # convert to utm zone 29, to be able to do interpolation in
 # proper Euclidian (projected) space:
-pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
-pts = SpatialPoints(pts)
 proj4string(pts) = "+proj=longlat +datum=WGS84"
 library(rgdal)
-pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
+utm29 = CRS("+proj=utm +zone=29 +datum=WGS84")
 t = xts(1:nrow(wind), wind$time)
-stations = 4:15
+pts = spTransform(pts, utm29)
 # note the t() in:
-w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
+w = STFDF(pts, t, data.frame(values = as.vector(t(velocities))))
 
 library(maptools)
 m = map2SpatialLines(
 	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
 proj4string(m) = "+proj=longlat +datum=WGS84"
-m = spTransform(m, CRS("+proj=utm +zone=29 +datum=WGS84"))
+m = spTransform(m, utm29)
 
 # setup grid
 grd = SpatialPixels(SpatialPoints(makegrid(m, n = 300)),
 	proj4string = proj4string(m))
-# grd$t = rep(1, nrow(grd))
-#coordinates(grd) = ~x1+x2
-#gridded(grd)=TRUE
-
 # select april 1961:
 w = w[, "1961-04"]
-
-covfn = function(x,y) { 
-	du = spDists(coordinates(x), coordinates(y))
-	t1 = as.numeric(index(x)) # time in seconds
-	t2 = as.numeric(index(y)) # time in seconds
-	dt = abs(outer(t1, t2, "-"))
-	# separable, product covariance model:
-	0.6 * exp(-du/750000) * exp(-dt / (1.5 * 3600 * 24))
-}
-
+# 10 prediction time points, evenly spread over this month:
 n = 10
 tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
-pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
-wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
+
+# separable covariance model, exponential with ranges 750 km and 1.5 day:
+v = list(space = vgm(0.6, "Exp", 750000), time = vgm(1, "Exp", 1.5 * 3600 * 24))
+pred = krigeST(sqrt(values)~1, w, STF(grd, tgrd), v)
+wind.ST = STFDF(grd, tgrd, data.frame(sqrt_speed = pred))
 @
+the results of which are shown in figure \ref{fig:wind}, created
+with \code{stplot}.
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,height=4,width=5>>=
-spl = list(list("sp.points", pts, first=F, cex=.5),
-	list("sp.lines", m, col='grey'))
-print(stplot(wind.pr, col.regions=bpy.colors(),
-	par.strip.text = list(cex=.5), sp.layout = spl))
+<<echo=FALSE,fig=TRUE,height=3.5,width=5>>=
+layout = list(list("sp.lines", m, col='grey'),
+	list("sp.points", pts, first=F, cex=.5))
+print(stplot(wind.ST, col.regions=bpy.colors(),
+	par.strip.text = list(cex=.5), sp.layout = layout))
 @
 \end{center}
 \caption{ Space-time interpolations of wind (square root transformed,
 detrended) over Ireland using a separable product covariance model,
 for 10 time points regularly distributed over the month for which
 daily data was considered (April, 1961) }
+\label{fig:wind}
 \end{figure}
 
-\subsection{Tracking data: trip and ltraj objects}
+\begin{figure}
+\begin{center}
+<<echo=FALSE,fig=TRUE,height=3,width=5>>=
+library(lattice)
+library(RColorBrewer)
+b = brewer.pal(12,"Set3")
+par.settings = list(superpose.symbol = list(col = b, fill = b), 
+	superpose.line = list(col = b),
+	fontsize = list(text=9)) 
+print(xyplot(values~time, groups=sp.ID, as.data.frame(w), 
+	type='l', auto.key=list(space="right"),
+	xlab = "1961", ylab = expression(sqrt(speed)),
+	par.settings = par.settings))
+@
+\end{center}
+\caption{ Time series plot for some randomly selected grid cells of
+figure \ref{fig:wind} }
+\label{fig:windts}
+\end{figure}
 
 \subsection{Conversion from and to trip}
 
@@ -570,34 +649,42 @@ IDs), we will extend class \code{STSDF} to retain this info.
 
 Currently it does assume that time in a trip object is in order,
 as xts will order it anyhow:
-
-<<>>=
+<<fig=TRUE,height=4,width=4>>=
 library(diveMove)
 library(trip)
 
-locs <- readLocs(system.file(file.path("data", "sealLocs.csv"),
+locs = readLocs(system.file(file.path("data", "sealLocs.csv"),
 	package="diveMove"), idCol=1, dateCol=2,
 	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
 	lonCol=4, latCol=5, sep=";")
 
-ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
-coordinates(ringy) <- ringy[c("lon", "lat")]
-tr <- trip(ringy, c("time", "id"))
-
-setClass("STSDFtrip", representation("STSDF", TOR.columns = "character"))
-setAs("trip", "STSDFtrip",
+ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+coordinates(ringy) = ringy[c("lon", "lat")]
+tr = trip(ringy, c("time", "id"))
+# convert to SPSDFtraj, and plot:
+setAs("trip", "STSDFtraj",
 	function(from) {
-		new("STSDFtrip", STSDF(as(from, "SpatialPoints"), 
-				from[[from@TOR.columns[1]]], from@data), 
-			TOR.columns = from@TOR.columns)
+		from$burst = from[[from@TOR.columns[2]]]
+		time = from[[from@TOR.columns[1]]]
+		new("STSDFtraj", STSDF(as(from, "SpatialPoints"), time, from@data))
 	}
 )
-setAs("STSDFtrip", "trip", function(from) 
-	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
+x = as(tr, "STSDFtraj")
+m = map2SpatialLines(map("world", 
+	xlim = c(-100,-50), ylim = c(40,77), plot=F))
+proj4string(m) = "+proj=longlat +datum=WGS84"
+plot(m, axes=TRUE)
+plot(x, add=TRUE, line.col = "red")
+
+# convert back, compare:
+setAs("STSDFtraj", "trip", function(from) {
+		from$time = index(from@time)
+		trip(SpatialPointsDataFrame(from@sp, from@data), c("time", "burst"))
+	}
 )
-x = as(tr, "STSDFtrip")
 y = as(x, "trip")
-all.equal(y, tr)
+y$burst = NULL
+all.equal(y, tr, check.attributes = FALSE)
 @
 
 \subsection{Trajectory data: ltraj in adehabitat}
@@ -609,51 +696,29 @@ ordering is according to time, and the subsequent objects become
 unconnected. In the coercion back to \code{ltraj}, based on ID and
 burst the appropriate bursts are restored.
 
-<<>>=
+<<keep.source=TRUE,fig=TRUE,height=4,width=4>>=
 library(adehabitat)
 # from: adehabitat/demo/managltraj.r
 # demo(managltraj)
 data(puechabon)
 # locations:
-locs <- puechabon$locs
-xy <- locs[,c("X","Y")]
+locs = puechabon$locs
+xy = locs[,c("X","Y")]
 ### Conversion of the date to the format POSIX
-da <- as.character(locs$Date)
-da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
-
+da = as.character(locs$Date)
+da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
 ## object of class "ltraj"
-ltr <- as.ltraj(xy, da, id = locs$Name)
-
-foo <- function(dt) {
-    return(dt> (100*3600*24))
-}
+ltr = as.ltraj(xy, da, id = locs$Name)
+foo = function(dt) dt > 100*3600*24
 ## The function foo returns TRUE if dt is longer than 100 days
 ## We use it to cut ltr:
-l2 <- cutltraj(ltr, "foo(dt)", nextr = TRUE)
-
-setClass("ltraj", representation("list"))
-setClass("STSDFltraj", representation("STSDF"))
-setAs("ltraj", "STSDFltraj", 
-	function(from) {
-		d = do.call(rbind, from)
-		n = unlist(lapply(from, nrow))
-		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
-		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")]), d$date, d))
-	}
-)
-setAs("STSDFltraj", "ltraj", 
-	function(from) {
-		xy = coordinates(from@sp)
-		da = index(from@time)
-		as.ltraj(xy, da, id = from@data[,"id"], burst = from@data[,"burst"])
-	}
-)
-
-ltr.stsdf = as(l2, "STSDFltraj")
-ltr.stsdf[1:10,]
+l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
+ltr.stsdf = as(l2, "STSDFtraj")
+# ltr.stsdf[1:10,]
 ltr0 = as(ltr.stsdf, "ltraj")
 all.equal(l2, ltr0, check.attributes = FALSE)
+plot(ltr.stsdf, line.col = c("red", "green", "blue", "darkgreen", "black"),
+	axes=TRUE)
 @
 
 %\subsection{Panel data: plm}
@@ -663,13 +728,16 @@ all.equal(l2, ltr0, check.attributes = FALSE)
 %@
 
 % \section{TODO}
-% test for points, lines, polygons, pixels, grid
+
+% write aggregate for all 3? aggregate over time -> defer to xts?
+% split method for STSDF
+
+% write tests for points, lines, polygons, pixels, grid
 
 % How to do spatial selection for grids - use index, or c(rows,cols)
 % as spatial selector?
 
-% worked examples:
-% - trip, tripGrid.interp for different time selections
+% how to remove trip dependency?
 
 % \subsection{classes}
 % 
@@ -682,7 +750,11 @@ all.equal(l2, ltr0, check.attributes = FALSE)
 % s/t: overlay? (where,when)->index of values available? xts accepts
 % time index, sp will need overlay.
 
-% generic: summary, plot, show, 
+% generic: plot, 
+
+% DONE:
+% summary, show (automatic), spTransform (NOT: requires rgdal dependency),
+% stplot (as function)
 
 % Plotting methods: stplot -> interface to spplot with panel for
 % each time step (single attribute), or double with [attribute, time]
@@ -695,7 +767,7 @@ all.equal(l2, ltr0, check.attributes = FALSE)
 % plot maps with little time series plotted at particular points?
 
 % \subsection{coercion to external classes}
-% ltraj in adehabitat; trip in trip; spatial panel model.
+% spatial panel model.
 
 \section*{Acknowledgements}
 Michael Sumner provided helpful comments on the trip example.
@@ -731,3 +803,8 @@ Tasmania, September 2010.
 
 \end{description}
 \end{document}
+
+\item G\"{u}ting, R.H., M.H. B\"{o}hlen, M. Erwig, C.S. Jensen,
+N.A. Lorentzos, M. Schneider, and M. Vazirgiannis, A Foundation
+for Representing and Querying Moving Objects.  ACM Transactions on
+Database Systems 25:1 (2000), 1-42.

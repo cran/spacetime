@@ -87,3 +87,42 @@ asSpatialDataFrame = function(x) { # convert to lower
 	#	return(SpatialRingsDataFrame(x@sp, x@data))
 	stop("unknown Spatial class")
 }
+
+spTransform.ST = function(x, CRSobj, ...) {
+	x@sp = spTransform(x@sp, CRSobj)
+	x
+}
+#if (!isGeneric("spTransform"))
+#	setGeneric("spTransform", function(x, CRSobj, ...)
+#		standardGeneric("spTransform"))
+#setMethod("spTransform", signature("STFDF", "CRS"), spTransform.ST)
+
+summary.ST = function(object, ...) {
+    obj = list()
+    obj[["class"]] = class(object)
+	obj[["sp"]] = summary(object@sp)
+	obj[["time"]] = summary(object@time)
+    if ("data" %in% slotNames(object))
+        if (ncol(object@data) > 1)
+                obj[["data"]] = summary(object@data)
+            else obj[["data"]] = summary(object@data[[1]])
+    class(obj) = "summary.ST"
+    obj
+}
+setMethod("summary", "ST", summary.ST)
+
+print.summary.ST = function(x, ...) {
+    cat(paste("Object of class ", x[["class"]], "\n", sep = ""))
+	# cat("[[Dimensions (s,t,attr): ")
+	# cat(paste(dim(x), collapse = " "))
+	# cat("]]\n")
+	cat("[[Spatial:]]\n")
+    print(x[["sp"]])
+	cat("[[Temporal:]]\n")
+    print(x[["time"]])
+    if (!is.null(x$data)) {
+        cat("[[Data attributes:]]\n")
+        print(x$data)
+    }
+    invisible(x)
+}
