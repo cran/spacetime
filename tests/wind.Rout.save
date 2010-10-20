@@ -1,7 +1,8 @@
 
-R version 2.11.1 (2010-05-31)
+R version 2.12.0 (2010-10-15)
 Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: i486-pc-linux-gnu (32-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -136,6 +137,30 @@ FALSE
 > stplot(wind.pr, col.regions=bpy.colors(),
 + 	par.strip.text = list(cex=.5), sp.layout = spl)
 > summary(wind.pr)
-Length  Class   Mode 
-     1  STFDF     S4 
+Object of class STFDF
+[[Spatial:]]
+Object of class SpatialPixels
+Coordinates:
+       min     max
+x1  403500  832500
+x2 5583500 6309500
+Is projected: TRUE 
+proj4string :
+[+proj=utm +zone=29 +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0]
+Number of points: 286
+Grid attributes:
+   cellcentre.offset cellsize cells.dim
+x1            420000    33000        13
+x2           5600000    33000        22
+[[Temporal:]]
+     Index                      object@time   
+ Min.   :1961-04-01 12:00:00   Min.   : 1.00  
+ 1st Qu.:1961-04-08 18:00:00   1st Qu.: 3.25  
+ Median :1961-04-16 00:00:00   Median : 5.50  
+ Mean   :1961-04-16 00:00:00   Mean   : 5.50  
+ 3rd Qu.:1961-04-23 06:00:00   3rd Qu.: 7.75  
+ Max.   :1961-04-30 12:00:00   Max.   :10.00  
+[[Data attributes:]]
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.259   2.762   2.984   3.019   3.253   4.310 
 > 

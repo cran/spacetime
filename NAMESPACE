@@ -2,11 +2,13 @@ import(sp)
 import(zoo)
 import(xts)
 import(methods)
-exportClasses(xts)
 
-# importFrom("sp", "coordinates")
-
-exportClasses(ST, STF, STFDF, STP, STPDF, STS, STSDF)
+exportClasses(
+	xts, 
+	ST, STF, STFDF, 
+	STP, STPDF, 
+	STS, STSDF, STSDFtraj, 
+	ltraj)
 
 export(ST, 
 	STF, STFDF,
@@ -39,3 +41,5 @@ S3method(dim, STFDF)
 S3method(dim, STPDF)
 S3method(dim, STSDF)
 #S3method(unstack, STFDF)
+S3method(print, summary.ST)
+S3method(rbind, STSDFtraj)
