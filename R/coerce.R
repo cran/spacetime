@@ -13,7 +13,7 @@ as.STFDF.STPDF = function(from) {
 		v[index] = from@data[[i]]
 		data[[i]] = v
    	}
-   	data = data.frame(data)
+   	data = data.frame(data, stringsAsFactors = FALSE)
    	names(data) = names(from@data)
 	STFDF(from@sp, from@time, data)
 }

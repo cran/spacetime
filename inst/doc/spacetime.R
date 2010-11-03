@@ -1,6 +1,8 @@
 ###################################################
 ### chunk number 1: 
 ###################################################
+#line 143 "spacetime.Rnw"
+library(spacetime)
 s = 1:3
 t = c(1, 1.5, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -17,6 +19,7 @@ title("Layout for STFDF")
 ###################################################
 ### chunk number 2: 
 ###################################################
+#line 174 "spacetime.Rnw"
 s = 1:3
 t = c(1, 2.2, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -34,6 +37,7 @@ title("Layout for STPDF")
 ###################################################
 ### chunk number 3: 
 ###################################################
+#line 209 "spacetime.Rnw"
 s = c(1,2,3,1,4)
 t = c(1, 2.2, 3, 3, 4.5)
 g = data.frame(t,s)
@@ -50,6 +54,7 @@ title("Layout for STSDF")
 ###################################################
 ### chunk number 4: 
 ###################################################
+#line 238 "spacetime.Rnw"
 library(spacetime)
 showClass("ST")
 showClass("STFDF")
@@ -68,6 +73,7 @@ str(stfdf)
 ###################################################
 ### chunk number 5: 
 ###################################################
+#line 258 "spacetime.Rnw"
 as.data.frame(stfdf, row.names = IDs)
 as(stfdf, "data.frame")[1:4,]
 
@@ -75,6 +81,7 @@ as(stfdf, "data.frame")[1:4,]
 ###################################################
 ### chunk number 6: 
 ###################################################
+#line 271 "spacetime.Rnw"
 unstack(stfdf)
 t(unstack(stfdf))
 unstack(stfdf, which = 2)
@@ -83,12 +90,14 @@ unstack(stfdf, which = 2)
 ###################################################
 ### chunk number 7: 
 ###################################################
+#line 280 "spacetime.Rnw"
 as(stfdf, "xts")
 
 
 ###################################################
 ### chunk number 8: 
 ###################################################
+#line 289 "spacetime.Rnw"
 stfdf[[1]]
 stfdf[["values"]]
 stfdf[["newVal"]] = rnorm(12)
@@ -101,6 +110,7 @@ stfdf
 ###################################################
 ### chunk number 9: 
 ###################################################
+#line 315 "spacetime.Rnw"
 stfdf[,1] # SpatialPointsDataFrame:
 stfdf[,,1]
 stfdf[1,,1] # xts
@@ -112,12 +122,14 @@ stfdf[,1, drop=FALSE] #stays STFDF
 ###################################################
 ### chunk number 10: 
 ###################################################
+#line 335 "spacetime.Rnw"
 showClass("STPDF")
 
 
 ###################################################
 ### chunk number 11: 
 ###################################################
+#line 349 "spacetime.Rnw"
 showClass("STSDF")
 sp = expand.grid(x = 1:3, y = 1:3)
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
@@ -134,36 +146,42 @@ stsdf
 ###################################################
 ### chunk number 12: 
 ###################################################
+#line 365 "spacetime.Rnw"
 stsdf[1:2,]
 
 
 ###################################################
 ### chunk number 13: 
 ###################################################
+#line 374 "spacetime.Rnw"
 stfdf[,time[3]]
 
 
 ###################################################
 ### chunk number 14: 
 ###################################################
+#line 380 "spacetime.Rnw"
 class(stfdf[,time[3],drop=FALSE])
 
 
 ###################################################
 ### chunk number 15: 
 ###################################################
+#line 387 "spacetime.Rnw"
 stfdf[1, , "values"]
 
 
 ###################################################
 ### chunk number 16: 
 ###################################################
+#line 392 "spacetime.Rnw"
 class(stfdf[1,drop=FALSE])
 
 
 ###################################################
 ### chunk number 17: 
 ###################################################
+#line 404 "spacetime.Rnw"
 class(stfdf)
 class(as(stfdf, "STPDF"))
 class(as(as(stfdf, "STPDF"), "STSDF"))
@@ -173,6 +191,7 @@ class(as(stfdf, "STSDF"))
 ###################################################
 ### chunk number 18: 
 ###################################################
+#line 412 "spacetime.Rnw"
 x = as(stfdf, "STSDF")
 class(as(x, "STPDF"))
 class(as(as(x, "STPDF"), "STFDF"))
@@ -184,18 +203,21 @@ identical(stfdf, xx)
 ###################################################
 ### chunk number 19: 
 ###################################################
+#line 440 "spacetime.Rnw"
 .parseISO8601('2010-05')
 
 
 ###################################################
 ### chunk number 20: 
 ###################################################
+#line 447 "spacetime.Rnw"
 .parseISO8601('2010-05-01T13:30/2010-05-01T13:39')
 
 
 ###################################################
 ### chunk number 21: 
 ###################################################
+#line 461 "spacetime.Rnw"
 library(maptools)
 fname = system.file("shapes/sids.shp", package="maptools")[1]
 nc = readShapePoly(fname, proj4string=CRS("+proj=longlat +datum=NAD27"))
@@ -215,12 +237,14 @@ stplot(nct[,,"SID"],as.table=TRUE)
 ###################################################
 ### chunk number 22: 
 ###################################################
+#line 480 "spacetime.Rnw"
 print(stplot(nct[,,"SID"],as.table=TRUE))
 
 
 ###################################################
 ### chunk number 23: 
 ###################################################
+#line 517 "spacetime.Rnw"
 library(gstat)
 data(wind)
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
@@ -232,6 +256,7 @@ proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
 ###################################################
 ### chunk number 24: 
 ###################################################
+#line 528 "spacetime.Rnw"
 library(mapdata)
 plot(wind.loc, xlim = c(-11,-5.4), ylim = c(51,55.5), axes=T, col="red")
 map("worldHires", add=T, col = grey(.5))
@@ -241,12 +266,14 @@ text(coordinates(wind.loc), pos=1, label=wind.loc$Station, cex=.7)
 ###################################################
 ### chunk number 25: 
 ###################################################
+#line 544 "spacetime.Rnw"
 wind[1:3,]
 
 
 ###################################################
 ### chunk number 26: 
 ###################################################
+#line 549 "spacetime.Rnw"
 wind$time = ISOdate(wind$year+1900, wind$month, wind$day)
 wind$jday = as.numeric(format(wind$time, '%j'))
 stations = 4:15
@@ -260,6 +287,7 @@ velocities = apply(windsqrt, 2, function(x) { x - meanwind })
 ###################################################
 ### chunk number 27: 
 ###################################################
+#line 563 "spacetime.Rnw"
 # order locations to order of columns in wind;
 # connect station names to location coordinates
 wind.loc = wind.loc[match(names(wind[4:15]), wind.loc$Code),]
@@ -300,6 +328,7 @@ wind.ST = STFDF(grd, tgrd, data.frame(sqrt_speed = pred))
 ###################################################
 ### chunk number 28: 
 ###################################################
+#line 605 "spacetime.Rnw"
 layout = list(list("sp.lines", m, col='grey'),
 	list("sp.points", pts, first=F, cex=.5))
 print(stplot(wind.ST, col.regions=bpy.colors(),
@@ -309,6 +338,7 @@ print(stplot(wind.ST, col.regions=bpy.colors(),
 ###################################################
 ### chunk number 29: 
 ###################################################
+#line 621 "spacetime.Rnw"
 library(lattice)
 library(RColorBrewer)
 b = brewer.pal(12,"Set3")
@@ -324,6 +354,7 @@ print(xyplot(values~time, groups=sp.ID, as.data.frame(w),
 ###################################################
 ### chunk number 30: 
 ###################################################
+#line 649 "spacetime.Rnw"
 library(diveMove)
 library(trip)
 
@@ -335,15 +366,36 @@ locs = readLocs(system.file(file.path("data", "sealLocs.csv"),
 ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
 coordinates(ringy) = ringy[c("lon", "lat")]
 tr = trip(ringy, c("time", "id"))
-
+# convert to SPSDFtraj, and plot:
+setAs("trip", "STSDFtraj",
+	function(from) {
+		from$burst = from[[from@TOR.columns[2]]]
+		time = from[[from@TOR.columns[1]]]
+		new("STSDFtraj", STSDF(as(from, "SpatialPoints"), time, from@data))
+	}
+)
 x = as(tr, "STSDFtraj")
+m = map2SpatialLines(map("world", 
+	xlim = c(-100,-50), ylim = c(40,77), plot=F))
+proj4string(m) = "+proj=longlat +datum=WGS84"
+plot(m, axes=TRUE)
+plot(x, add=TRUE, line.col = "red")
+
+# convert back, compare:
+setAs("STSDFtraj", "trip", function(from) {
+		from$time = index(from@time)
+		trip(SpatialPointsDataFrame(from@sp, from@data), c("time", "burst"))
+	}
+)
 y = as(x, "trip")
-all.equal(y, tr)
+y$burst = NULL
+all.equal(y, tr, check.attributes = FALSE)
 
 
 ###################################################
 ### chunk number 31: 
 ###################################################
+#line 696 "spacetime.Rnw"
 library(adehabitat)
 # from: adehabitat/demo/managltraj.r
 # demo(managltraj)
@@ -354,21 +406,17 @@ xy = locs[,c("X","Y")]
 ### Conversion of the date to the format POSIX
 da = as.character(locs$Date)
 da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
-
 ## object of class "ltraj"
 ltr = as.ltraj(xy, da, id = locs$Name)
-
-foo = function(dt) {
-    return(dt > 100*3600*24)
-}
+foo = function(dt) dt > 100*3600*24
 ## The function foo returns TRUE if dt is longer than 100 days
 ## We use it to cut ltr:
 l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
-ltr.stsdf = as(l2, "STSDFltraj")
-ltr.stsdf[1:10,]
+ltr.stsdf = as(l2, "STSDFtraj")
+# ltr.stsdf[1:10,]
 ltr0 = as(ltr.stsdf, "ltraj")
 all.equal(l2, ltr0, check.attributes = FALSE)
 plot(ltr.stsdf, line.col = c("red", "green", "blue", "darkgreen", "black"),
-	axes=T)
+	axes=TRUE)
 
 

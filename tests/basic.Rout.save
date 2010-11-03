@@ -444,7 +444,7 @@ attr(,"package")
 [1] "spacetime"
 > xx = as(x, "STFDF")
 > identical(stfdf, xx)
-[1] FALSE
+[1] TRUE
 > 
 > stpdf = as(stfdf, "STPDF")
 > stpdf[[1]]
