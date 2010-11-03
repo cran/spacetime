@@ -1,4 +1,4 @@
-stplot = function(obj, names.attr = index(obj@time), ...) {
+stplot = function(obj, names.attr = index(obj@time), ..., as.table = TRUE) {
 	stopifnot(is(obj, "ST"))
     form = as.formula(paste(names(obj@data)[1], "~time"))
     sp = obj@sp
@@ -15,5 +15,5 @@ stplot = function(obj, names.attr = index(obj@time), ...) {
         x = SpatialGridDataFrame(sp, df)
     else
         stop("spatial obj of unsupported class")
-    spplot(x, names.attr = names.attr, ...)
+    spplot(x, names.attr = names.attr, as.table = as.table, ...)
 }
