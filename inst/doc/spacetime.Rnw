@@ -1,3 +1,5 @@
+% panel data: do plm analysis on STFDF object?
+%
 % time from point -> interval; can this be done generic?
 % figures:
 % - what is implicitly the time interval?
@@ -536,13 +538,13 @@ nct = STFDF(
 	sp = as(nc, "SpatialPolygons"),
 	time = time,
 	data = data)
-stplot(nct[,,"SID"],as.table=TRUE)
+stplot(nct[,,"SID"], c(1974,1979), as.table=TRUE)
 @
 
 \begin{figure}
 \begin{center}
 <<echo=FALSE,fig=TRUE,height=3,width=5.5>>=
-print(stplot(nct[,,"SID"], par.strip.text = list(cex=.5)))
+print(stplot(nct[,,"SID"], c(1974,1979), par.strip.text = list(cex=.5)))
 @
 \end{center}
 \caption{North Carolina sudden infant death syndrome data}
@@ -567,15 +569,25 @@ states = map2SpatialPolygons(states.m, IDs=IDs)
 library(plm)
 data(Produc)
 
-time = xts(1:17, as.POSIXct(paste(1970:1986, "-01-01", sep="")))
-# deselect district of columbia, polygon 8, not present in Produc:
+yrs = 1970:1986
+time = xts(1:17, as.POSIXct(paste(yrs, "-01-01", sep="")))
+# deselect District of Columbia, polygon 8, which is not present in Produc:
 Produc.st = STFDF(states[-8], time, Produc[(order(Produc[2], Produc[1])),])
-stplot(Produc.st[,,"unemp"])
+stplot(Produc.st[,,"unemp"], yrs)
 @
 The plot itself is left out for reasons of disk space. Time and
 state were not removed from the data table on construction; printing
 these data as a \code{data.frame} confirms that time and state were
-matched correctly.
+matched correctly. The plm routines can be used on the data, back
+transformed to a data.frame, when {\tt index} is specified (the first
+two columns from the back-transformed data no longer contain state and
+year):
+<<>>=
+zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
+	data = as.data.frame(Produc.st), index = c("state","year"))
+summary(zz)
+@
+
 
 %One attribute of these
 %data, \code{unempl}, is plotted in figure \ref{fig:Produc}.
@@ -725,8 +737,8 @@ print(xyplot(values~time, groups=sp.ID, as.data.frame(w),
 	par.settings = par.settings))
 @
 \end{center}
-\caption{ Time series plot for some randomly selected grid cells of
-figure \ref{fig:wind} }
+\caption{ Time series plot of daily wind speed at 12 stations, used
+for interpolation in figure \ref{fig:wind} }
 \label{fig:windts}
 \end{figure}
 
@@ -765,7 +777,7 @@ m = map2SpatialLines(map("world",
 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
 proj4string(m) = "+proj=longlat +datum=WGS84"
 plot(m, axes=TRUE, cex.axis =.7)
-plot(x, add=TRUE, line.col = "red")
+plot(x, add=TRUE, col = "red")
 
 # convert back, compare:
 setAs("STSDFtraj", "trip", function(from) {
@@ -785,8 +797,8 @@ of sequentially, connected space-time points at which an object is
 registered. When converting a list to a single STSDF object, the
 ordering is according to time, and the subsequent objects become
 unconnected. In the coercion back to \code{ltraj}, based on ID and
-burst the appropriate bursts are restored.
-
+burst the appropriate bursts are restored. A simple plot is obtained
+by:
 <<keep.source=TRUE,fig=TRUE,height=4,width=4>>=
 library(adehabitat)
 # from: adehabitat/demo/managltraj.r
@@ -804,13 +816,62 @@ foo = function(dt) dt > 100*3600*24
 ## The function foo returns TRUE if dt is longer than 100 days
 ## We use it to cut ltr:
 l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
-ltr.stsdf = as(l2, "STSDFtraj")
-# ltr.stsdf[1:10,]
-ltr0 = as(ltr.stsdf, "ltraj")
+stsdfTrj = as(l2, "STSDFtraj")
+ltr0 = as(stsdfTrj, "ltraj")
 all.equal(l2, ltr0, check.attributes = FALSE)
-plot(ltr.stsdf, line.col = c("red", "green", "blue", "darkgreen", "black"),
+plot(stsdfTrj, col = c("red", "green", "blue", "darkgreen", "black"),
 	axes=TRUE)
 @
+
+A more complicated plot is shown in figure \ref{fig:stptr}, obtained
+by the command:
+<<eval=FALSE>>=
+stplot(ltr.stsdf,by="time*id")
+@
+
+\begin{figure}
+\begin{center}
+<<echo=FALSE,fig=TRUE,height=5.5,width=5.5>>=
+print(stplot(stsdfTrj, by="time*id"))
+@
+\end{center}
+\caption{trajectories, by id (rows) and time (columns) }
+\label{fig:stptr}
+\end{figure}
+
+\subsection{Country shapes in cshapes}
+
+The \code{cshapes} package contains a GIS dataset of country
+boundaries (1946-2008), and includes functions for data extraction
+and the computation of weights matrices. The data set consist of
+a SpatialPolygonsDataFrame, with the following attributes:
+<<>>=
+library(cshapes)
+cs = cshp()
+names(cs)
+@
+where two data bases are used, "COW" (correlates of war project,
+2008), and "GW" Gleditsch and Ward (1999). The attributes COWSMONTH
+and COWEMONTH denote the start month and end month, respectively,
+according to the COW data base.
+
+To select the country boundaries corresponding to a particular date
+and system, one can use
+<<>>=
+cshp.2002 <- cshp(date=as.Date("2002-6-30"), useGW=TRUE)
+@
+
+In the following fragment, an unordered list of times {\tt t}
+is passed on to {\tt STSDF}, and this will cause the geometries
+and attributes to be reordered (in the order of {\tt t}):
+<<>>=
+t = as.POSIXct(strptime(paste(cs$COWSYEAR, 
+	cs$COWSMONTH,cs$COWSDAY, sep="-"), "%Y-%m-%d"))
+st = STSDF(geometry(cs), t, as.data.frame(cs))
+pt = SpatialPoints(cbind(7, 52), CRS(proj4string(cs)))
+as.data.frame(st[pt,,1:5])
+@
+
 
 %\subsection{Panel data: plm}
 %
@@ -885,6 +946,9 @@ R: The plm Package. Journal of Statistical Software, 27(2).
 \item Galton, A. (2004). Fields and Objects in Space, Time and
 Space-time. Spatial cognition and computation 4(1).
 
+\item G\"{u}ting, R.H., M. Schneider (2005).  Moving Objects
+Databases.  Morgan Kaufmann Publishers.
+
 \item Haslett, J. and Raftery, A. E. (1989). Space-time Modelling
 with Long-memory Dependence: Assessing Ireland's Wind Power Resource
 (with Discussion). Applied Statistics 38, 1-50.
@@ -895,6 +959,14 @@ for spatial data analysis. Boca Raton: Chapman and Hall.
 \item Sumner, M. , 2010. The tag location problem. Unpublished PhD
 thesis, Institute of Marine and Antarctic Studies University of
 Tasmania, September 2010.
+
+\item Correlates of War Project. 2008. State System Membership List,
+v2008.1. Online, \url{http://correlatesofwar.org/}
+
+\item Gleditsch, Kristian S., Michael D. Ward. 1999. Interstate
+System Membership: A Revised List of the Independent States
+since 1816.  International Interactions 25: 393-413. Online,
+\url{http://privatewww.essex.ac.uk/~ksg/statelist.html}
 
 \end{description}
 \end{document}

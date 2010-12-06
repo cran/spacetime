@@ -72,8 +72,12 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	} 
 	if (missing.i)
 		s = 1:length(x@sp)
-	else
-		s = i
+	else {
+#		if (is(i, "Spatial"))
+#			s = !is.na(overlay(geometry(i), x@sp))
+#		else 
+			s = i
+	}
 	if (missing.j)
 		t = 1:nrow(x@time)
 	else
@@ -92,7 +96,7 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 			else
 				x = xts(x@data, index(x@time))
 		} else if (length(t) == 1) # only one data item
-			x = asSpatialDataFrame(x)
+			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}
 	x
 }

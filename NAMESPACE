@@ -1,6 +1,7 @@
 import(sp)
 import(zoo)
 import(xts)
+import(lattice)
 import(methods)
 
 exportClasses(
@@ -27,6 +28,7 @@ S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
 S3method(as.data.frame, STPDF)
 S3method(as.data.frame, STSDF)
+S3method(as.xts, STSDF)
 S3method(index, STF)
 S3method(index, STP)
 S3method(index, STS)
