@@ -25,20 +25,26 @@ setAs("STSDFtraj", "ltraj",
 )
 
 plot.STSDFtraj = function(x,y,..., byBurst = TRUE, 
-			line.col = "black", add=FALSE) {
+			col = "black", lty = 1, lwd = 1, 
+			type = "l", pch = 1,
+			add = FALSE) {
+	if (! add)
+		plot(as(x@sp, "Spatial"), ...) # sets up plotting area
 	if (byBurst)
 		f = x$burst
 	else {
 		stopifnot(!is.null(x$id))
 		f = x$id
 	}
-	if (! add)
-		plot(as(x@sp, "Spatial"), ...) # sets up plotting area
 	lst = split(data.frame(coordinates(x)), f)
-	line.col = rep(line.col, length = length(lst))
+	col = rep(col, length = length(lst))
+	lwd = rep(lwd, length = length(lst))
+	lty = rep(lty, length = length(lst))
 	for (i in seq(along = lst))
-		lines(as.matrix(lst[[i]]), col = line.col[i], ...)
+		lines(as.matrix(lst[[i]]), col = col[i], lty = lty[i], lwd = lwd[i],
+			type = type, pch = pch)
 }
+
 setMethod("plot", signature(x = "STSDFtraj", y = "missing"), plot.STSDFtraj)
 
 rbind.STSDFtraj = function(...) {

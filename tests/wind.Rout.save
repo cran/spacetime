@@ -76,19 +76,59 @@ Loading required package: maps
 > pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
 > pts = SpatialPoints(pts)
 > proj4string(pts) = "+proj=longlat +datum=WGS84"
-> library(rgdal)
+> if (require(rgdal)) {
++ pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
++ t = xts(1:nrow(wind), wind$time)
++ stations = 4:15
++ # note the t() in:
++ w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
++ 
++ library(maptools)
++ m = map2SpatialLines(
++ 	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
++ proj4string(m) = "+proj=longlat +datum=WGS84"
++ m = spTransform(m, CRS("+proj=utm +zone=29 +datum=WGS84"))
++ 
++ # setup grid
++ grd = SpatialPixels(SpatialPoints(makegrid(m, n = 300)),
++ 	proj4string = proj4string(m))
++ # grd$t = rep(1, nrow(grd))
++ #coordinates(grd) = ~x1+x2
++ #gridded(grd)=TRUE
++ 
++ # select april 1961:
++ w = w[, "1961-04"]
++ 
++ covfn = function(x,y) { 
++ 	du = spDists(coordinates(x), coordinates(y))
++ 	t1 = as.numeric(index(x)) # time in seconds
++ 	t2 = as.numeric(index(y)) # time in seconds
++ 	dt = abs(outer(t1, t2, "-"))
++ 	# separable, product covariance model:
++ 	0.6 * exp(-du/750000) * exp(-dt / (1.5 * 3600 * 24))
++ }
++ 
++ n = 10
++ tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
++ pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
++ wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
++ 
++ 
++ ###################################################
++ ### chunk number 24: 
++ ###################################################
++ spl = list(list("sp.points", pts, first=F, cex=.5),
++ 	list("sp.lines", m, col='grey'))
++ stplot(wind.pr, col.regions=bpy.colors(),
++ 	par.strip.text = list(cex=.5), sp.layout = spl)
++ summary(wind.pr)
++ }
+Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Loaded GDAL runtime: GDAL 1.7.3, released 2010/11/10
 Path to GDAL shared files: /usr/share/gdal17
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
 Path to PROJ.4 shared files: (autodetected)
-> pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
-> t = xts(1:nrow(wind), wind$time)
-> stations = 4:15
-> # note the t() in:
-> w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
-> 
-> library(maptools)
 Loading required package: foreign
 Loading required package: lattice
 
@@ -99,44 +139,6 @@ Loading required package: lattice
 
 Checking rgeos availability as gpclib substitute:
 FALSE 
-> m = map2SpatialLines(
-+ 	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
-> proj4string(m) = "+proj=longlat +datum=WGS84"
-> m = spTransform(m, CRS("+proj=utm +zone=29 +datum=WGS84"))
-> 
-> # setup grid
-> grd = SpatialPixels(SpatialPoints(makegrid(m, n = 300)),
-+ 	proj4string = proj4string(m))
-> # grd$t = rep(1, nrow(grd))
-> #coordinates(grd) = ~x1+x2
-> #gridded(grd)=TRUE
-> 
-> # select april 1961:
-> w = w[, "1961-04"]
-> 
-> covfn = function(x,y) { 
-+ 	du = spDists(coordinates(x), coordinates(y))
-+ 	t1 = as.numeric(index(x)) # time in seconds
-+ 	t2 = as.numeric(index(y)) # time in seconds
-+ 	dt = abs(outer(t1, t2, "-"))
-+ 	# separable, product covariance model:
-+ 	0.6 * exp(-du/750000) * exp(-dt / (1.5 * 3600 * 24))
-+ }
-> 
-> n = 10
-> tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
-> pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
-> wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
-> 
-> 
-> ###################################################
-> ### chunk number 24: 
-> ###################################################
-> spl = list(list("sp.points", pts, first=F, cex=.5),
-+ 	list("sp.lines", m, col='grey'))
-> stplot(wind.pr, col.regions=bpy.colors(),
-+ 	par.strip.text = list(cex=.5), sp.layout = spl)
-> summary(wind.pr)
 Object of class STFDF
 [[Spatial:]]
 Object of class SpatialPixels

@@ -761,6 +761,22 @@ Slot "time":
 > stsdf[,1] # SpatialPointsDataFrame:
 An object of class "STSDF"
 Slot "data":
+  values      ID   newVal    NewID
+1   8.77 OldIDs1 1.674146 NewIDs12
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    [,1]
+2010-08-05 10:00:00    1
+
+> stsdf[,,1]
+An object of class "STSDF"
+Slot "data":
    values
 1    8.77
 2   18.70
@@ -774,44 +790,6 @@ Slot "data":
 10   9.74
 11  20.70
 12  30.50
-
-Slot "sp":
-SpatialPoints:
-       x y
-point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
-Coordinate Reference System (CRS) arguments: NA 
-
-Slot "time":
-                    [,1]
-2010-08-05 10:00:00    1
-
-> stsdf[,,1]
-An object of class "STSDF"
-Slot "data":
-   values       ID     newVal    NewID
-1    8.77  OldIDs1  1.6741462 NewIDs12
-2   18.70  OldIDs2 -1.4781924 NewIDs11
-3   29.70  OldIDs3 -1.6328961 NewIDs10
-4    8.47  OldIDs4 -0.9749092  NewIDs9
-5   21.10  OldIDs5 -0.7649901  NewIDs8
-6   32.50  OldIDs6  0.1029981  NewIDs7
-7   10.80  OldIDs7 -1.0682984  NewIDs6
-8   20.20  OldIDs8  0.4794702  NewIDs5
-9   29.00  OldIDs9  1.1748151  NewIDs4
-10   9.74 OldIDs10  1.0335365  NewIDs3
-11  20.70 OldIDs11  0.8282590  NewIDs2
-12  30.50 OldIDs12 -0.7586174  NewIDs1
 
 Slot "sp":
 SpatialPoints:
@@ -848,8 +826,8 @@ Slot "time":
 > stsdf[1,,1] # xts
 An object of class "STSDF"
 Slot "data":
-  values      ID   newVal    NewID
-1   8.77 OldIDs1 1.674146 NewIDs12
+  values
+1   8.77
 
 Slot "sp":
 SpatialPoints:
@@ -864,19 +842,19 @@ Slot "time":
 > stsdf[,,"ID"]
 An object of class "STSDF"
 Slot "data":
-   values       ID     newVal    NewID
-1    8.77  OldIDs1  1.6741462 NewIDs12
-2   18.70  OldIDs2 -1.4781924 NewIDs11
-3   29.70  OldIDs3 -1.6328961 NewIDs10
-4    8.47  OldIDs4 -0.9749092  NewIDs9
-5   21.10  OldIDs5 -0.7649901  NewIDs8
-6   32.50  OldIDs6  0.1029981  NewIDs7
-7   10.80  OldIDs7 -1.0682984  NewIDs6
-8   20.20  OldIDs8  0.4794702  NewIDs5
-9   29.00  OldIDs9  1.1748151  NewIDs4
-10   9.74 OldIDs10  1.0335365  NewIDs3
-11  20.70 OldIDs11  0.8282590  NewIDs2
-12  30.50 OldIDs12 -0.7586174  NewIDs1
+         ID
+1   OldIDs1
+2   OldIDs2
+3   OldIDs3
+4   OldIDs4
+5   OldIDs5
+6   OldIDs6
+7   OldIDs7
+8   OldIDs8
+9   OldIDs9
+10 OldIDs10
+11 OldIDs11
+12 OldIDs12
 
 Slot "sp":
 SpatialPoints:
@@ -913,8 +891,8 @@ Slot "time":
 > stsdf[1,,"values", drop=FALSE] # stays STSDF:
 An object of class "STSDF"
 Slot "data":
-  values      ID   newVal    NewID
-1   8.77 OldIDs1 1.674146 NewIDs12
+  values
+1   8.77
 
 Slot "sp":
 SpatialPoints:
@@ -929,35 +907,13 @@ Slot "time":
 > stsdf[,1, drop=FALSE] #stays STSDF
 An object of class "STSDF"
 Slot "data":
-   values
-1    8.77
-2   18.70
-3   29.70
-4    8.47
-5   21.10
-6   32.50
-7   10.80
-8   20.20
-9   29.00
-10   9.74
-11  20.70
-12  30.50
+  values      ID   newVal    NewID
+1   8.77 OldIDs1 1.674146 NewIDs12
 
 Slot "sp":
 SpatialPoints:
        x y
 point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
-point1 0 0
-point2 0 1
-point3 1 1
 Coordinate Reference System (CRS) arguments: NA 
 
 Slot "time":

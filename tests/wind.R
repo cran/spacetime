@@ -42,7 +42,7 @@ wind$jday = as.numeric(format(wind$time, '%j'))
 pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
 pts = SpatialPoints(pts)
 proj4string(pts) = "+proj=longlat +datum=WGS84"
-library(rgdal)
+if (require(rgdal)) {
 pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
 t = xts(1:nrow(wind), wind$time)
 stations = 4:15
@@ -88,3 +88,4 @@ spl = list(list("sp.points", pts, first=F, cex=.5),
 stplot(wind.pr, col.regions=bpy.colors(),
 	par.strip.text = list(cex=.5), sp.layout = spl)
 summary(wind.pr)
+}

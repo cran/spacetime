@@ -73,7 +73,7 @@ subs.STPDF <- function(x, i, j, ... , drop = TRUE) {
 			else
 				x = xts(x@data, index(x@time))
 		} else if (length(t) == 1) # only one time item
-			x = asSpatialDataFrame(x)
+			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}
 	x
 }
