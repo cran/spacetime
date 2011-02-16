@@ -1,24 +1,24 @@
 \name{stplot}
 \alias{stplot}
 \alias{stplot.STFDF} 
-\alias{stplot.STSDF} 
+\alias{stplot.STIDF} 
 \alias{stplot,STFDF-method} 
-\alias{stplot,STPDF-method} 
 \alias{stplot,STSDF-method} 
-\alias{stplot,STSDFtraj-method} 
+\alias{stplot,STIDF-method} 
+\alias{stplot,STIDFtraj-method} 
 \title{ produce trellis plot for STxDF object }
 \description{ create trellis plot for ST objects }
 \section{Methods}{
   \describe{
     \item{stplot}{\code{signature(x = "STFDF")}: plots object of class STFDF}
-    \item{stplot}{\code{signature(x = "STPDF")}: plots object of class STFDF}
     \item{stplot}{\code{signature(x = "STSDF")}: plots object of class STFDF}
+    \item{stplot}{\code{signature(x = "STIDF")}: plots object of class STFDF}
   }
 }
 \usage{ 
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = index(obj@time), ..., as.table = TRUE)
-stplot.STSDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
+stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
     NULL, ylab = NULL, type = type, number = 6, overlap = 0, asp)
 }
@@ -39,7 +39,7 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{overlap}{ see argument \code{by} }
 \item{asp}{ aspect ratio of plot }
 \item{...}{ arguments passed on to \link{spplot} in case of stplot.STFDF,
-or to \link{xyplot} in case of stplot.STSDF}
+or to \link{xyplot} in case of stplot.STIDF}
 }
 \value{ \code{stplot} is a wrapper around \link{spplot}, that automically
 plots each time stamp in a panel.}

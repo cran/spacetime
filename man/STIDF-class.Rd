@@ -1,15 +1,15 @@
-\name{STSDF-class}
+\name{STIDF-class}
 \docType{class}
-\alias{STSDF-class}
-\alias{STS-class}
-\alias{STSDF}
-\alias{STS}
-\alias{as.data.frame.STSDF}
-\alias{as.data.frame.STS}
-\alias{[,STSDF-method} 
-\alias{coerce,STSDF,STPDF-method}
+\alias{STIDF-class}
+\alias{STI-class}
+\alias{STIDF}
+\alias{STI}
+\alias{as.data.frame.STIDF}
+\alias{as.data.frame.STI}
+\alias{[,STIDF-method} 
+\alias{coerce,STIDF,STSDF-method}
 
-\title{Class "STSDF"}
+\title{Class "STIDF"}
 \description{ A class for unstructured spatio-temporal data; for
 n spatial locations and times, n observations are available }
 \section{Objects from the Class}{
@@ -24,7 +24,7 @@ Objects of this class carry full space/time grid data }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "STSDF")}: selects spatial-temporal entities, and attributes } 
+    \item{[}{\code{signature(x = "STIDF")}: selects spatial-temporal entities, and attributes } 
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -34,15 +34,15 @@ Objects of this class carry full space/time grid data }
 }
 
 \usage{
-  STS(sp, time)
-  STSDF(sp, time, data)
-  \S4method{[}{STSDF}(x, i, j, ..., drop = FALSE)
-  \S4method{coerce}{STSDF,STPDF}(from, to, strict=TRUE)
+  STI(sp, time)
+  STIDF(sp, time, data)
+  \S4method{[}{STIDF}(x, i, j, ..., drop = FALSE)
+  \S4method{coerce}{STIDF,STSDF}(from, to, strict=TRUE)
 }
 
 \arguments{
 \item{sp}{object of class \link{Spatial}}
-\item{time}{object of class \link{xts}; when STSDF is called, a vector with
+\item{time}{object of class \link{xts}; when STIDF is called, a vector with
 times, e.g. \link{POSIXct} will also work, and rearrange sp and data according
 to the ordering of time. }
 \item{data}{data frame with appropriate number of rows}

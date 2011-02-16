@@ -51,8 +51,8 @@ dim.ST = function(x) {
 dim.STDF = function(x) {
 	c(length(x@sp), nrow(x@time), ncol(x@data))
 }
-dim.STF = dim.STP = dim.STS = dim.ST
-dim.STFDF = dim.STPDF = dim.STSDF = dim.STDF
+dim.STF = dim.STS = dim.STI = dim.ST
+dim.STFDF = dim.STSDF = dim.STIDF = dim.STDF
 
 setMethod("proj4string", "ST", function(obj) proj4string(obj@sp))
 

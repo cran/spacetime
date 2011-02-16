@@ -1,0 +1,238 @@
+2010-12-12 21:46  EdzerPebesma
+
+	* DESCRIPTION: version bump
+
+2010-12-12 21:45  EdzerPebesma
+
+	* R/STFDF-methods.R: added over() for spatial selection
+
+2010-12-06 20:35  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/stplot.R, R/traj.R,
+	  inst/doc/spacetime.Rnw, man/stplot.Rd, tests/wind.Rout.save:
+	  version update; corrected trajectory plotting with stplot;
+	  corrected cshapes
+	  example; added plm to vignette.
+
+2010-12-01 01:16  EdzerPebesma
+
+	* NAMESPACE, R/STSDF-methods.R, tests/basic.Rout.save,
+	  tests/wind.Rout.save: selection for STSDF; updated tests; passes
+	  check; as.xts.STSDF
+
+2010-11-30 22:24  EdzerPebesma
+
+	* DESCRIPTION, R/STSDF-methods.R, R/traj.R, inst/doc/spacetime.Rnw,
+	  tests/wind.R: improvement of selection and plot methods; cshapes
+	  example; dependency;
+
+2010-11-22 12:01  EdzerPebesma
+
+	* R/ST-methods.R, R/STFDF-methods.R, R/STPDF-methods.R,
+	  R/STSDF-methods.R: removed SpatialDataFrame; replaced with
+	  addAttrToGeom in sp.
+
+2010-11-22 11:51  EdzerPebesma
+
+	* DESCRIPTION, R/stplot.R, inst/doc/spacetime.Rnw: update; version;
+	  typo
+
+2010-11-21 21:18  EdzerPebesma
+
+	* DESCRIPTION, R/ST-methods.R, R/STFDF-methods.R,
+	  R/STSDF-methods.R, inst/doc/spacetime.Rnw: improved caption text;
+	  selection with [
+
+2010-11-01 20:51  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/spacetime.Rnw: suggests: plm; update
+
+2010-11-01 20:44  EdzerPebesma
+
+	* tests/basic.Rout.save: corrected test
+
+2010-11-01 20:42  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: removed (large)
+	  pdf; merged sections
+
+2010-11-01 20:33  EdzerPebesma
+
+	* R/coerce.R, R/stplot.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, man/stplot.Rd: added panel / plm example,
+	  and long/wide section
+
+2010-10-19 22:11  EdzerPebesma
+
+	* DESCRIPTION, man/STSDFtraj-class.Rd, tests/basic.Rout.save:
+	  passes check; traj docs
+
+2010-10-19 21:29  EdzerPebesma
+
+	* DESCRIPTION, R/traj.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, tests/wind.Rout.save: move trip related
+	  things; version update
+
+2010-10-18 22:26  EdzerPebesma
+
+	* NAMESPACE, R/traj.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf: validity checks
+
+2010-10-16 23:00  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/traj.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf: added STSDFtraj class, removed the
+	  ltraj/trip class split.
+
+2010-10-15 20:28  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: interactions with
+	  gstat and sp
+
+2010-10-11 13:24  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf: added summary method for ST objects
+
+2010-10-11 09:12  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf: ...
+
+2010-10-11 07:12  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: vignette updates
+
+2010-10-10 21:01  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: wind example
+	  exploits separable covariance matrix
+
+2010-10-01 20:55  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: more on ISO time
+
+2010-10-01 16:02  EdzerPebesma
+
+	* R/stplot.R, inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: added
+	  nc sid polygons example.
+
+2010-10-01 06:13  EdzerPebesma
+
+	* R/STPDF-methods.R, R/STSDF-methods.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, tests, tests/basic.R,
+	  tests/basic.Rout.save, tests/traj.R, tests/traj.Rout.save,
+	  tests/wind.R, tests/wind.Rout.save: added tests; corrected
+	  as.data.frame(), spell corrections of vignette
+
+2010-09-30 16:52  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STPDF-methods.R, R/STSDF-methods.R,
+	  inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf: as.data.frame
+	  updates
+
+2010-09-30 11:56  EdzerPebesma
+
+	* DESCRIPTION, R/ST-methods.R, R/STFDF-methods.R,
+	  R/STPDF-methods.R, R/STSDF-methods.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, man/STPDF-class.Rd, man/STSDF-class.Rd:
+	  removed initTime, improved trip example.
+
+2010-09-29 20:12  EdzerPebesma
+
+	* DESCRIPTION, R/STSDF-methods.R, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, man/STSDF-class.Rd: version update;
+	  changed [ for STSDF; vignette mods
+
+2010-09-28 15:52  EdzerPebesma
+
+	* R/ST-methods.R, inst/doc/spacetime.Rnw, inst/doc/spacetime.pdf:
+	  traj stuff; still broken!
+
+2010-09-27 11:10  EdzerPebesma
+
+	* inst/doc/Rplots.pdf, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.pdf, inst/doc/sptime.Rnw, inst/doc/sptime.pdf:
+	  rename
+
+2010-09-23 19:20  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/sptime.Rnw, inst/doc/sptime.pdf: cleanup
+
+2010-09-23 13:14  EdzerPebesma
+
+	* man/STPDF-class.Rd, man/STSDF-class.Rd, man/stplot.Rd: udpated to
+	  pass check
+
+2010-09-21 20:30  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R: dim methods
+
+2010-09-20 23:00  EdzerPebesma
+
+	* man/ST-class.Rd, man/unstack.Rd: krige0 modification to accept ST
+	  objects; spacetime pass check mods
+
+2010-09-19 20:39  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-STPDF.R, R/stplot.R,
+	  inst/doc/sptime.Rnw, inst/doc/sptime.pdf: added stplot
+
+2010-09-19 19:52  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/STFDF-methods.R, R/STPDF-methods.R,
+	  R/STSDF-methods.R, inst/doc/sptime.Rnw, inst/doc/sptime.pdf:
+	  first run through Iris wind data interpolation; many fixes
+
+2010-09-18 18:50  EdzerPebesma
+
+	* R/ST-methods.R, R/STFDF-methods.R, R/STPDF-methods.R,
+	  R/STSDF-methods.R, R/coerce.R, inst/doc/sptime.Rnw,
+	  inst/doc/sptime.pdf, man/STFDF-class.Rd: add docs; make package
+	  pass R CMD check
+
+2010-09-18 10:19  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-ST.R, R/Class-STFDF.R,
+	  R/Class-STPDF.R, R/Class-STSDF.R, R/STFDF-methods.R,
+	  R/STPDF-methods.R, R/STSDF-methods.R, inst/doc/Rplots.pdf,
+	  inst/doc/sptime.Rnw, inst/doc/sptime.pdf, man/STFDF-class.Rd,
+	  man/unstack.Rd: added new layer of classes without data.frame
+
+2010-09-17 06:48  EdzerPebesma
+
+	* inst/doc/sptime.Rnw, inst/doc/sptime.pdf: update
+
+2010-09-16 08:44  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STPDF-methods.R, R/STSDF-methods.R,
+	  R/coerce.R, inst/doc/sptime.Rnw, inst/doc/sptime.pdf: updates;
+	  initial examples in vignette taken from demo(wind) in gstat.
+
+2010-09-14 12:38  EdzerPebesma
+
+	* R/Class-STFDF.R, R/Class-STPDF.R, R/Class-STSDF.R,
+	  R/STFDF-methods.R, R/STPDF-methods.R, R/STSDF-methods.R,
+	  R/coerce.R, inst/doc/Rplots.pdf, inst/doc/sptime.Rnw,
+	  inst/doc/sptime.pdf: implemented coerce methods, mainly
+
+2010-09-09 15:35  EdzerPebesma
+
+	* inst/doc/sptime-001.eps, inst/doc/sptime-001.pdf,
+	  inst/doc/sptime-002.eps, inst/doc/sptime-002.pdf,
+	  inst/doc/sptime-003.eps, inst/doc/sptime-003.pdf,
+	  inst/doc/sptime.pdf: obsolet files
+
+2010-09-09 15:34  EdzerPebesma
+
+	* ., DESCRIPTION, NAMESPACE, R, R/Class-ST.R, R/Class-STFDF.R,
+	  R/Class-STPDF.R, R/Class-STSDF.R, R/Class-xts.R, R/ST-methods.R,
+	  R/STFDF-methods.R, R/STPDF-methods.R, R/STSDF-methods.R,
+	  R/coerce.R, inst, inst/doc, inst/doc/Rplots.pdf,
+	  inst/doc/ifgi-logo_int.pdf, inst/doc/sptime-001.eps,
+	  inst/doc/sptime-001.pdf, inst/doc/sptime-002.eps,
+	  inst/doc/sptime-002.pdf, inst/doc/sptime-003.eps,
+	  inst/doc/sptime-003.pdf, inst/doc/sptime.Rnw,
+	  inst/doc/sptime.pdf, man, man/ST-class.Rd, man/STFDF-class.Rd,
+	  man/unstack.Rd: initial uploade spacetime package
+

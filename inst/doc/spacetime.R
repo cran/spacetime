@@ -1,7 +1,7 @@
 ###################################################
 ### chunk number 1: 
 ###################################################
-#line 121 "spacetime.Rnw"
+#line 126 "spacetime.Rnw"
 library(foreign)
 read.dbf(system.file("shapes/sids.dbf", package="maptools"))[1:5,c(5,9:14)]
 
@@ -9,7 +9,7 @@ read.dbf(system.file("shapes/sids.dbf", package="maptools"))[1:5,c(5,9:14)]
 ###################################################
 ### chunk number 2: 
 ###################################################
-#line 129 "spacetime.Rnw"
+#line 135 "spacetime.Rnw"
 data(wind, package = "gstat")
 wind[1:6,]
 
@@ -17,7 +17,7 @@ wind[1:6,]
 ###################################################
 ### chunk number 3: 
 ###################################################
-#line 141 "spacetime.Rnw"
+#line 149 "spacetime.Rnw"
 data("Produc", package = "plm")
 Produc[1:5,]
 
@@ -25,7 +25,7 @@ Produc[1:5,]
 ###################################################
 ### chunk number 4: 
 ###################################################
-#line 187 "spacetime.Rnw"
+#line 196 "spacetime.Rnw"
 s = 1:3
 t = c(1, 1.5, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -33,6 +33,7 @@ plot(g, xaxt = 'n', yaxt = 'n', xlab = "Time points",
 	ylab = "Space locations", xlim = c(.5,5), ylim = c(.5,3.5))
 abline(h=s, col = grey(.8))
 abline(v=t, col = grey(.8))
+plot(g)
 axis(1, at = t, labels = c("1st", "2nd", "3rd", "4th"))
 axis(2, at = s, labels = c("1st", "2nd", "3rd"))
 text(g, labels = 1:12, pos=4)
@@ -42,7 +43,7 @@ title("Layout for STFDF")
 ###################################################
 ### chunk number 5: 
 ###################################################
-#line 218 "spacetime.Rnw"
+#line 228 "spacetime.Rnw"
 s = 1:3
 t = c(1, 2.2, 3, 4.5)
 g = data.frame(rep(t, each=3), rep(s,4))
@@ -60,7 +61,7 @@ title("Layout for STPDF")
 ###################################################
 ### chunk number 6: 
 ###################################################
-#line 253 "spacetime.Rnw"
+#line 263 "spacetime.Rnw"
 s = c(1,2,3,1,4)
 t = c(1, 2.2, 3, 3, 4.5)
 g = data.frame(t,s)
@@ -77,14 +78,14 @@ title("Layout for STSDF")
 ###################################################
 ### chunk number 7: 
 ###################################################
-#line 282 "spacetime.Rnw"
+#line 292 "spacetime.Rnw"
 library(spacetime)
 showClass("ST")
 showClass("STFDF")
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
+time = xts(1:4, as.POSIXct("2010-08-05", tz = "GMT")+3600*(10:13))
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
 IDs = paste("ID",1:length(mydata), sep = "_")
@@ -96,7 +97,7 @@ str(stfdf)
 ###################################################
 ### chunk number 8: 
 ###################################################
-#line 302 "spacetime.Rnw"
+#line 312 "spacetime.Rnw"
 as.data.frame(stfdf, row.names = IDs)
 as(stfdf, "data.frame")[1:4,]
 
@@ -104,7 +105,7 @@ as(stfdf, "data.frame")[1:4,]
 ###################################################
 ### chunk number 9: 
 ###################################################
-#line 315 "spacetime.Rnw"
+#line 325 "spacetime.Rnw"
 unstack(stfdf)
 t(unstack(stfdf))
 unstack(stfdf, which = 2)
@@ -113,14 +114,14 @@ unstack(stfdf, which = 2)
 ###################################################
 ### chunk number 10: 
 ###################################################
-#line 324 "spacetime.Rnw"
+#line 334 "spacetime.Rnw"
 as(stfdf, "xts")
 
 
 ###################################################
 ### chunk number 11: 
 ###################################################
-#line 333 "spacetime.Rnw"
+#line 343 "spacetime.Rnw"
 stfdf[[1]]
 stfdf[["values"]]
 stfdf[["newVal"]] = rnorm(12)
@@ -133,7 +134,7 @@ stfdf
 ###################################################
 ### chunk number 12: 
 ###################################################
-#line 359 "spacetime.Rnw"
+#line 369 "spacetime.Rnw"
 stfdf[,1] # SpatialPointsDataFrame:
 stfdf[,,1]
 stfdf[1,,1] # xts
@@ -145,19 +146,19 @@ stfdf[,1, drop=FALSE] #stays STFDF
 ###################################################
 ### chunk number 13: 
 ###################################################
-#line 379 "spacetime.Rnw"
+#line 389 "spacetime.Rnw"
 showClass("STPDF")
 
 
 ###################################################
 ### chunk number 14: 
 ###################################################
-#line 393 "spacetime.Rnw"
+#line 403 "spacetime.Rnw"
 showClass("STSDF")
 sp = expand.grid(x = 1:3, y = 1:3)
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:9, as.POSIXct("2010-08-05")+3600*(11:19))
+time = xts(1:9, as.POSIXct("2010-08-05", tz = "GMT")+3600*(11:19))
 m = 1:9 * 10 # means for each of the 9 point locations
 mydata = rnorm(length(sp), mean=m)
 IDs = paste("ID",1:length(mydata))
@@ -169,42 +170,42 @@ stsdf
 ###################################################
 ### chunk number 15: 
 ###################################################
-#line 409 "spacetime.Rnw"
+#line 419 "spacetime.Rnw"
 stsdf[1:2,]
 
 
 ###################################################
 ### chunk number 16: 
 ###################################################
-#line 419 "spacetime.Rnw"
+#line 429 "spacetime.Rnw"
 stfdf[,time[3]]
 
 
 ###################################################
 ### chunk number 17: 
 ###################################################
-#line 425 "spacetime.Rnw"
+#line 435 "spacetime.Rnw"
 class(stfdf[,time[3],drop=FALSE])
 
 
 ###################################################
 ### chunk number 18: 
 ###################################################
-#line 432 "spacetime.Rnw"
+#line 442 "spacetime.Rnw"
 stfdf[1, , "values"]
 
 
 ###################################################
 ### chunk number 19: 
 ###################################################
-#line 437 "spacetime.Rnw"
+#line 447 "spacetime.Rnw"
 class(stfdf[1,drop=FALSE])
 
 
 ###################################################
 ### chunk number 20: 
 ###################################################
-#line 449 "spacetime.Rnw"
+#line 459 "spacetime.Rnw"
 class(stfdf)
 class(as(stfdf, "STPDF"))
 class(as(as(stfdf, "STPDF"), "STSDF"))
@@ -214,7 +215,7 @@ class(as(stfdf, "STSDF"))
 ###################################################
 ### chunk number 21: 
 ###################################################
-#line 457 "spacetime.Rnw"
+#line 467 "spacetime.Rnw"
 x = as(stfdf, "STSDF")
 class(as(x, "STPDF"))
 class(as(as(x, "STPDF"), "STFDF"))
@@ -226,21 +227,21 @@ identical(stfdf, xx)
 ###################################################
 ### chunk number 22: 
 ###################################################
-#line 485 "spacetime.Rnw"
+#line 495 "spacetime.Rnw"
 .parseISO8601('2010-05')
 
 
 ###################################################
 ### chunk number 23: 
 ###################################################
-#line 492 "spacetime.Rnw"
+#line 502 "spacetime.Rnw"
 .parseISO8601('2010-05-01T13:30/2010-05-01T13:39')
 
 
 ###################################################
 ### chunk number 24: 
 ###################################################
-#line 528 "spacetime.Rnw"
+#line 538 "spacetime.Rnw"
 library(maptools)
 fname = system.file("shapes/sids.shp", package="maptools")[1]
 nc = readShapePoly(fname, proj4string=CRS("+proj=longlat +datum=NAD27"))
@@ -249,7 +250,7 @@ data = data.frame(
 	NWBIR = c(nc$NWBIR74, nc$NWBIR79),
 	SID = c(nc$SID74, nc$SID79))
 time = xts(1:2, 
-	as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d")))
+	as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d"), tz = "GMT"))
 nct = STFDF(
 	sp = as(nc, "SpatialPolygons"),
 	time = time,
@@ -260,14 +261,14 @@ stplot(nct[,,"SID"], c(1974,1979), as.table=TRUE)
 ###################################################
 ### chunk number 25: 
 ###################################################
-#line 547 "spacetime.Rnw"
+#line 557 "spacetime.Rnw"
 print(stplot(nct[,,"SID"], c(1974,1979), par.strip.text = list(cex=.5)))
 
 
 ###################################################
 ### chunk number 26: 
 ###################################################
-#line 562 "spacetime.Rnw"
+#line 572 "spacetime.Rnw"
 library(maps)
 states.m = map('state', plot=FALSE, fill=TRUE)
 IDs <- sapply(strsplit(states.m$names, ":"), function(x) x[1])
@@ -279,7 +280,7 @@ library(plm)
 data(Produc)
 
 yrs = 1970:1986
-time = xts(1:17, as.POSIXct(paste(yrs, "-01-01", sep="")))
+time = xts(1:17, as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT"))
 # deselect District of Columbia, polygon 8, which is not present in Produc:
 Produc.st = STFDF(states[-8], time, Produc[(order(Produc[2], Produc[1])),])
 stplot(Produc.st[,,"unemp"], yrs)
@@ -288,7 +289,7 @@ stplot(Produc.st[,,"unemp"], yrs)
 ###################################################
 ### chunk number 27: 
 ###################################################
-#line 586 "spacetime.Rnw"
+#line 596 "spacetime.Rnw"
 zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp, 
 	data = as.data.frame(Produc.st), index = c("state","year"))
 summary(zz)
@@ -297,7 +298,7 @@ summary(zz)
 ###################################################
 ### chunk number 28: 
 ###################################################
-#line 623 "spacetime.Rnw"
+#line 633 "spacetime.Rnw"
 library(gstat)
 data(wind)
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
@@ -309,7 +310,7 @@ proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
 ###################################################
 ### chunk number 29: 
 ###################################################
-#line 634 "spacetime.Rnw"
+#line 644 "spacetime.Rnw"
 library(mapdata)
 plot(wind.loc, xlim = c(-11,-5.4), ylim = c(51,55.5), axes=T, col="red",
 	cex.axis =.7)
@@ -320,14 +321,14 @@ text(coordinates(wind.loc), pos=1, label=wind.loc$Station, cex=.7)
 ###################################################
 ### chunk number 30: 
 ###################################################
-#line 651 "spacetime.Rnw"
+#line 661 "spacetime.Rnw"
 wind[1:3,]
 
 
 ###################################################
 ### chunk number 31: 
 ###################################################
-#line 656 "spacetime.Rnw"
+#line 666 "spacetime.Rnw"
 wind$time = ISOdate(wind$year+1900, wind$month, wind$day)
 wind$jday = as.numeric(format(wind$time, '%j'))
 stations = 4:15
@@ -341,7 +342,7 @@ velocities = apply(windsqrt, 2, function(x) { x - meanwind })
 ###################################################
 ### chunk number 32: 
 ###################################################
-#line 670 "spacetime.Rnw"
+#line 680 "spacetime.Rnw"
 # order locations to order of columns in wind;
 # connect station names to location coordinates
 wind.loc = wind.loc[match(names(wind[4:15]), wind.loc$Code),]
@@ -382,7 +383,7 @@ wind.ST = STFDF(grd, tgrd, data.frame(sqrt_speed = pred))
 ###################################################
 ### chunk number 33: 
 ###################################################
-#line 712 "spacetime.Rnw"
+#line 722 "spacetime.Rnw"
 layout = list(list("sp.lines", m, col='grey'),
 	list("sp.points", pts, first=F, cex=.5))
 print(stplot(wind.ST, col.regions=bpy.colors(),
@@ -392,7 +393,7 @@ print(stplot(wind.ST, col.regions=bpy.colors(),
 ###################################################
 ### chunk number 34: 
 ###################################################
-#line 728 "spacetime.Rnw"
+#line 738 "spacetime.Rnw"
 library(lattice)
 library(RColorBrewer)
 b = brewer.pal(12,"Set3")
@@ -408,7 +409,7 @@ print(xyplot(values~time, groups=sp.ID, as.data.frame(w),
 ###################################################
 ### chunk number 35: 
 ###################################################
-#line 756 "spacetime.Rnw"
+#line 766 "spacetime.Rnw"
 library(diveMove)
 library(trip)
 
@@ -449,17 +450,17 @@ all.equal(y, tr, check.attributes = FALSE)
 ###################################################
 ### chunk number 36: 
 ###################################################
-#line 803 "spacetime.Rnw"
-library(adehabitat)
+#line 813 "spacetime.Rnw"
+library(adehabitatLT)
 # from: adehabitat/demo/managltraj.r
 # demo(managltraj)
-data(puechabon)
+data(puechabonsp)
 # locations:
-locs = puechabon$locs
-xy = locs[,c("X","Y")]
+locs = puechabonsp$relocs
+xy = coordinates(locs)
 ### Conversion of the date to the format POSIX
 da = as.character(locs$Date)
-da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
+da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d"), tz = "GMT") 
 ## object of class "ltraj"
 ltr = as.ltraj(xy, da, id = locs$Name)
 foo = function(dt) dt > 100*3600*24
@@ -476,21 +477,21 @@ plot(stsdfTrj, col = c("red", "green", "blue", "darkgreen", "black"),
 ###################################################
 ### chunk number 37:  eval=FALSE
 ###################################################
-## #line 829 "spacetime.Rnw"
-## stplot(ltr.stsdf,by="time*id")
+## #line 839 "spacetime.Rnw"
+## stplot(stsdfTrj,by="time*id")
 
 
 ###################################################
 ### chunk number 38: 
 ###################################################
-#line 834 "spacetime.Rnw"
-print(stplot(ltr.stsdf, by="time*id"))
+#line 846 "spacetime.Rnw"
+print(stplot(stsdfTrj, by="time*id"))
 
 
 ###################################################
 ### chunk number 39: 
 ###################################################
-#line 847 "spacetime.Rnw"
+#line 860 "spacetime.Rnw"
 library(cshapes)
 cs = cshp()
 names(cs)
@@ -499,16 +500,16 @@ names(cs)
 ###################################################
 ### chunk number 40: 
 ###################################################
-#line 859 "spacetime.Rnw"
+#line 872 "spacetime.Rnw"
 cshp.2002 <- cshp(date=as.Date("2002-6-30"), useGW=TRUE)
 
 
 ###################################################
 ### chunk number 41: 
 ###################################################
-#line 866 "spacetime.Rnw"
+#line 879 "spacetime.Rnw"
 t = as.POSIXct(strptime(paste(cs$COWSYEAR, 
-	cs$COWSMONTH,cs$COWSDAY, sep="-"), "%Y-%m-%d"))
+	cs$COWSMONTH,cs$COWSDAY, sep="-"), "%Y-%m-%d"), tz = "GMT")
 st = STSDF(geometry(cs), t, as.data.frame(cs))
 pt = SpatialPoints(cbind(7, 52), CRS(proj4string(cs)))
 as.data.frame(st[pt,,1:5])

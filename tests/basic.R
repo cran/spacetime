@@ -57,12 +57,12 @@ stfdf[,1, drop=FALSE] #stays STFDF
 ###################################################
 ### chunk number 10: 
 ###################################################
-showClass("STPDF")
+showClass("STSDF")
 
 ###################################################
 ### chunk number 11: 
 ###################################################
-showClass("STSDF")
+showClass("STIDF")
 sp = expand.grid(x = 1:3, y = 1:3)
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
@@ -71,7 +71,7 @@ m = 1:9 * 10 # means for each of the 9 point locations
 mydata = rnorm(length(sp), mean=m)
 IDs = paste("ID",1:length(mydata))
 mydata = data.frame(values = signif(mydata,3),ID=IDs)
-stsdf = STSDF(sp, time, mydata)
+stsdf = STIDF(sp, time, mydata)
 stsdf
 
 
@@ -107,22 +107,22 @@ class(stfdf[1,drop=FALSE])
 ### chunk number 17: 
 ###################################################
 class(stfdf)
-class(as(stfdf, "STPDF"))
-class(as(as(stfdf, "STPDF"), "STSDF"))
 class(as(stfdf, "STSDF"))
+class(as(as(stfdf, "STSDF"), "STIDF"))
+class(as(stfdf, "STIDF"))
 
 
 ###################################################
 ### chunk number 18: 
 ###################################################
-x = as(stfdf, "STSDF")
-class(as(x, "STPDF"))
-class(as(as(x, "STPDF"), "STFDF"))
+x = as(stfdf, "STIDF")
+class(as(x, "STSDF"))
+class(as(as(x, "STSDF"), "STFDF"))
 class(as(x, "STFDF"))
 xx = as(x, "STFDF")
 identical(stfdf, xx)
 
-stpdf = as(stfdf, "STPDF")
+stpdf = as(stfdf, "STSDF")
 stpdf[[1]]
 stpdf[["values"]]
 stpdf[["newVal"]] <- rnorm(12)
@@ -134,12 +134,12 @@ stpdf[,1] # SpatialPointsDataFrame:
 stpdf[,,1]
 stpdf[1,,1] # xts
 stpdf[,,"ID"]
-stpdf[1,,"values", drop=FALSE] # stays STSDF:
-stpdf[,1, drop=FALSE] #stays STSDF
+stpdf[1,,"values", drop=FALSE] # stays STIDF:
+stpdf[,1, drop=FALSE] #stays STIDF
 as.data.frame(stpdf)
 as(stpdf, "data.frame")
 
-stsdf = as(stfdf, "STSDF")
+stsdf = as(stfdf, "STIDF")
 stsdf[[1]]
 stsdf[["values"]]
 stsdf[["newVal"]] <- rnorm(12)
@@ -151,7 +151,7 @@ stsdf[,1] # SpatialPointsDataFrame:
 stsdf[,,1]
 stsdf[1,,1] # xts
 stsdf[,,"ID"]
-stsdf[1,,"values", drop=FALSE] # stays STSDF:
-stsdf[,1, drop=FALSE] #stays STSDF
+stsdf[1,,"values", drop=FALSE] # stays STIDF:
+stsdf[,1, drop=FALSE] #stays STIDF
 as.data.frame(stsdf)
 as(stsdf, "data.frame")

@@ -14,32 +14,31 @@ ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
 coordinates(ringy) <- ringy[c("lon", "lat")]
 tr <- trip(ringy, c("time", "id"))
 
-setClass("STSDFtrip", representation("STSDF", TOR.columns = "character"))
-setAs("trip", "STSDFtrip",
+setClass("STIDFtrip", representation("STIDF", TOR.columns = "character"))
+setAs("trip", "STIDFtrip",
 	function(from) {
-		new("STSDFtrip", STSDF(as(from, "SpatialPoints"), 
+		new("STIDFtrip", STIDF(as(from, "SpatialPoints"), 
 				from[[from@TOR.columns[1]]], from@data), 
 			TOR.columns = from@TOR.columns)
 	}
 )
-setAs("STSDFtrip", "trip", function(from) 
+setAs("STIDFtrip", "trip", function(from) 
 	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
 )
-x = as(tr, "STSDFtrip")
+x = as(tr, "STIDFtrip")
 y = as(x, "trip")
 all.equal(y, tr)
-
 
 ###################################################
 ### chunk number 26: 
 ###################################################
-library(adehabitat)
+library(adehabitatLT)
 # from: adehabitat/demo/managltraj.r
 # demo(managltraj)
-data(puechabon)
+data(puechabonsp)
 # locations:
-locs <- puechabon$locs
-xy <- locs[,c("X","Y")]
+locs <- puechabonsp$relocs
+xy <- coordinates(locs)
 ### Conversion of the date to the format POSIX
 da <- as.character(locs$Date)
 da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
@@ -55,17 +54,17 @@ foo <- function(dt) {
 l2 <- cutltraj(ltr, "foo(dt)", nextr = TRUE)
 
 setClass("ltraj", representation("list"))
-setClass("STSDFltraj", representation("STSDF"))
-setAs("ltraj", "STSDFltraj", 
+setClass("STIDFltraj", representation("STIDF"))
+setAs("ltraj", "STIDFltraj", 
 	function(from) {
 		d = do.call(rbind, from)
 		n = unlist(lapply(from, nrow))
 		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
 		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")]), d$date, d))
+		new("STIDFltraj", STIDF(SpatialPoints(d[c("x","y")]), d$date, d))
 	}
 )
-setAs("STSDFltraj", "ltraj", 
+setAs("STIDFltraj", "ltraj", 
 	function(from) {
 		xy = coordinates(from@sp)
 		da = index(from@time)
@@ -73,7 +72,7 @@ setAs("STSDFltraj", "ltraj",
 	}
 )
 
-ltr.stsdf = as(l2, "STSDFltraj")
+ltr.stsdf = as(l2, "STIDFltraj")
 ltr.stsdf[1:10,]
 ltr0 = as(ltr.stsdf, "ltraj")
 all.equal(l2, ltr0, check.attributes = FALSE)
