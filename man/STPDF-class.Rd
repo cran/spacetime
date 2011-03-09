@@ -1,16 +1,16 @@
-\name{STPDF-class}
+\name{STSDF-class}
 \docType{class}
-\alias{STPDF-class}
-\alias{STP-class}
-\alias{STPDF}
-\alias{STP}
-\alias{as.data.frame.STPDF}
-\alias{as.data.frame.STP}
-\alias{[,STPDF-method} 
-\alias{coerce,STPDF,STFDF-method}
-\alias{coerce,STPDF,STSDF-method}
+\alias{STSDF-class}
+\alias{STS-class}
+\alias{STSDF}
+\alias{STS}
+\alias{as.data.frame.STSDF}
+\alias{as.data.frame.STS}
+\alias{[,STSDF-method} 
+\alias{coerce,STSDF,STFDF-method}
+\alias{coerce,STSDF,STIDF-method}
 
-\title{Class "STPDF"}
+\title{Class "STSDF"}
 \description{ A class for spatio-temporal data with partial
 space-time grids; for n spatial locations and m times, an index
 table is kept for which nodes observations are available }
@@ -28,7 +28,7 @@ Objects of this class carry full space/time grid data }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "STPDF")}: selects spatial entities,        temporal entities, and attributes } 
+    \item{[}{\code{signature(x = "STSDF")}: selects spatial entities,        temporal entities, and attributes } 
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -38,11 +38,11 @@ Objects of this class carry full space/time grid data }
 }
 
 \usage{
-  STP(sp, time, index)
-  STPDF(sp, time, data, index)
-  \S4method{[}{STPDF}(x, i, j, ..., drop = TRUE)
-  \S4method{coerce}{STPDF,STFDF}(from, to, strict=TRUE)
-  \S4method{coerce}{STPDF,STSDF}(from, to, strict=TRUE)
+  STS(sp, time, index)
+  STSDF(sp, time, data, index)
+  \S4method{[}{STSDF}(x, i, j, ..., drop = TRUE)
+  \S4method{coerce}{STSDF,STFDF}(from, to, strict=TRUE)
+  \S4method{coerce}{STSDF,STIDF}(from, to, strict=TRUE)
 }
 
 \arguments{
@@ -76,7 +76,7 @@ IDs = paste("ID",1:length(mydata))
 mydata = data.frame(values = signif(mydata,3), ID=IDs)
 stfdf = STFDF(sp, time, mydata)
 stfdf
-stpdf = as(stfdf, "STPDF")
+stpdf = as(stfdf, "STSDF")
 stpdf[1:2,]
 stpdf[,1:2]
 stpdf[,,2]

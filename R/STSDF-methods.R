@@ -1,82 +1,80 @@
-STS = function(sp, time) {
-	new("STS", ST(sp, time))
+STS = function(sp, time, index) {
+	time[,1] = 1:nrow(time) # reset any original order
+	new("STS", sp = sp, time = time, index = index)
 }
 
-STSDF = function(sp, time, data) {
-	if (!is(time, "xts")) {
-		if (is(sp, "SpatialGrid"))
-			sp = as(sp, "SpatialPixels")
-        time = xts(1:length(time), time)
-		# rearrange sp and data in new time order:
-        o = as.vector(time[,1])
-		sp = sp[o] # won't work for SpatialGrid?
-		data = data[o,,drop=FALSE]
-	}
-	new("STSDF", STS(sp, time), data = data)
+STSDF = function(sp, time, data, index) {
+	new("STSDF", STS(sp, time, index), data = data)
 }
 
 setMethod("coordinates", "STS", function(obj) {
-		myCoordinates(obj@sp)
+		myCoordinates(obj@sp)[obj@index[,1],]
 	}
 )
+
 index.STS = function(x, ...) {
-	index(x@time)
+	index(x@time)[x@index[,2]]
 }
 index.STSDF = index.STS
 
 as.data.frame.STS = function(x, row.names = NULL, ...) {
   	data.frame(coordinates(x), 
-		sp.ID = row.names(x@sp),
+		sp.ID = row.names(x@sp)[x@index[,1]],
 		time = index(x),
 		row.names = row.names, ...)
 }
 setAs("STS", "data.frame", function(from) as.data.frame.STS(from))
 
 as.data.frame.STSDF = function(x, row.names = NULL, ...) {
-  	f = as.data.frame(as(x, "STS"))
+	f = as.data.frame(as(x, "STS"))
   	data.frame(f, x@data, row.names = row.names, ...)
 }
 setAs("STSDF", "data.frame", function(from) as.data.frame.STSDF(from))
 
-as.xts.STSDF = function(x, ...) xts(x@data, index(x@sp))
-
-subs.STSDF <- function(x, i, j, ... , drop = FALSE) {
+subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
+	n.args = nargs()
+	dots = list(...)
 	missing.i = missing(i)
 	missing.j = missing(j)
-	missing.k = k = TRUE
-	dots = list(...)
-    if (length(dots) > 0) {
-        missing.k = FALSE
-        k = dots[[1]]
-    }
-
+	if (length(dots) > 0) {
+		missing.k = FALSE
+		k = dots[[1]]
+	} else
+		missing.k = TRUE
 	if (missing.i && missing.j && missing.k)
 		return(x)
 
+	if (missing.k) {
+		k = TRUE
+	} else if (missing.j && n.args == 2) {
+		x@data = x@data[ , k, drop = FALSE]
+		return(x)
+	} 
 	if (missing.i)
-		i = TRUE
-	else if (is(i, "Spatial"))
-		i = !is.na(over(x@sp,i))
-
+		s = 1:length(x@sp)
+	else
+		s = i
 	if (missing.j)
-		j = rep(TRUE, length=nrow(x@time))
-	else {
-		t = xts(1:nrow(x@time), index(x@time))[j]
-		j = as.vector(t[,1])
+		t = 1:nrow(x@time)
+	else
+		#t = j -- will not work for character j
+		t = x@time[j,1]
+	si = rep(1:length(x@sp), nrow(x@time))
+	ti = rep(1:nrow(x@time), each = length(x@sp))
+	#x@sp = x@sp[s] -- time and space topology not touched
+	#x@time = x@time[t]
+	sel = si %in% s & ti %in% t
+	x@data = x@data[sel, k, drop = FALSE]
+	x@index = x@index[sel,] # -- so index number remain valid
+	if (drop) {
+		if (length(s) == 1) { # space index has only 1 item:
+			if (length(t) == 1)
+				x = x@data[1,1,drop=TRUE]
+			else
+				x = xts(x@data, index(x@time))
+		} else if (length(t) == 1) # only one time item
+			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}
-	
-	if(is.numeric(i))
-		i = 1:nrow(x@time) %in% i
-	if(is.numeric(j))
-		j = 1:nrow(x@time) %in% j
-
-	i = i & j
-
-	x@sp = x@sp[i]
-	x@time = x@time[i]
-	x@data = x@data[i, k, drop = FALSE]
-	if (drop && length(unique(index(x@time))) == 1)
-		x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	x
 }
 setMethod("[", "STSDF", subs.STSDF)

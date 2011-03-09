@@ -73,9 +73,9 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	if (missing.i)
 		s = 1:length(x@sp)
 	else {
-#		if (is(i, "Spatial"))
-#			s = !is.na(overlay(geometry(i), x@sp))
-#		else 
+		if (is(i, "Spatial"))
+			s = !is.na(over(x@sp, geometry(i)))
+		else 
 			s = i
 	}
 	if (missing.j)

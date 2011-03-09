@@ -1,7 +1,8 @@
 
-R version 2.11.1 (2010-05-31)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.12.2 (2011-02-25)
+Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: i486-pc-linux-gnu (32-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -38,28 +39,31 @@ Loading required package: RColorBrewer
 > coordinates(ringy) <- ringy[c("lon", "lat")]
 > tr <- trip(ringy, c("time", "id"))
 > 
-> setClass("STSDFtrip", representation("STSDF", TOR.columns = "character"))
-[1] "STSDFtrip"
-> setAs("trip", "STSDFtrip",
+> setClass("STIDFtrip", representation("STIDF", TOR.columns = "character"))
+[1] "STIDFtrip"
+> setAs("trip", "STIDFtrip",
 + 	function(from) {
-+ 		new("STSDFtrip", STSDF(as(from, "SpatialPoints"), 
++ 		new("STIDFtrip", STIDF(as(from, "SpatialPoints"), 
 + 				from[[from@TOR.columns[1]]], from@data), 
 + 			TOR.columns = from@TOR.columns)
 + 	}
 + )
-> setAs("STSDFtrip", "trip", function(from) 
+> setAs("STIDFtrip", "trip", function(from) 
 + 	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
 + )
-> x = as(tr, "STSDFtrip")
+> x = as(tr, "STIDFtrip")
 > y = as(x, "trip")
 > all.equal(y, tr)
 [1] TRUE
 > 
-> 
 > ###################################################
 > ### chunk number 26: 
 > ###################################################
-> library(adehabitat)
+> library(adehabitatLT)
+Loading required package: gpclib
+General Polygon Clipper Library for R (version 1.5-1)
+	Type 'class ? gpc.poly' for help
+
 Loading required package: ade4
 
 Attaching package: 'ade4'
@@ -68,21 +72,19 @@ The following object(s) are masked from 'package:base':
 
     within
 
-This package requires ade4 to be installed
+Loading required package: adehabitatMA
+Loading required package: CircStats
+Loading required package: MASS
+Loading required package: boot
 
-Type:
-demo(rastermaps) for demonstration of raster map analysis
-demo(homerange) for demonstration of home-range estimation
-demo(managltraj) for demonstration of animals trajectory management
-demo(analysisltraj) for demonstration of animals trajectory analysis
-demo(nichehs) for demonstration of niche/habitat selection analysis
+Attaching package: 'boot'
 
-Loading required package: gpclib
-General Polygon Clipper Library for R (version 1.5-1)
-	Type 'class ? gpc.poly' for help
+The following object(s) are masked from 'package:diveMove':
+
+    logit
 
 
-Attaching package: 'adehabitat'
+Attaching package: 'adehabitatLT'
 
 The following object(s) are masked from 'package:zoo':
 
@@ -90,10 +92,10 @@ The following object(s) are masked from 'package:zoo':
 
 > # from: adehabitat/demo/managltraj.r
 > # demo(managltraj)
-> data(puechabon)
+> data(puechabonsp)
 > # locations:
-> locs <- puechabon$locs
-> xy <- locs[,c("X","Y")]
+> locs <- puechabonsp$relocs
+> xy <- coordinates(locs)
 > ### Conversion of the date to the format POSIX
 > da <- as.character(locs$Date)
 > da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
@@ -110,18 +112,18 @@ The following object(s) are masked from 'package:zoo':
 > 
 > setClass("ltraj", representation("list"))
 [1] "ltraj"
-> setClass("STSDFltraj", representation("STSDF"))
-[1] "STSDFltraj"
-> setAs("ltraj", "STSDFltraj", 
+> setClass("STIDFltraj", representation("STIDF"))
+[1] "STIDFltraj"
+> setAs("ltraj", "STIDFltraj", 
 + 	function(from) {
 + 		d = do.call(rbind, from)
 + 		n = unlist(lapply(from, nrow))
 + 		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
 + 		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-+ 		new("STSDFltraj", STSDF(SpatialPoints(d[c("x","y")]), d$date, d))
++ 		new("STIDFltraj", STIDF(SpatialPoints(d[c("x","y")]), d$date, d))
 + 	}
 + )
-> setAs("STSDFltraj", "ltraj", 
+> setAs("STIDFltraj", "ltraj", 
 + 	function(from) {
 + 		xy = coordinates(from@sp)
 + 		da = index(from@time)
@@ -129,9 +131,9 @@ The following object(s) are masked from 'package:zoo':
 + 	}
 + )
 > 
-> ltr.stsdf = as(l2, "STSDFltraj")
+> ltr.stsdf = as(l2, "STIDFltraj")
 > ltr.stsdf[1:10,]
-An object of class "STSDFltraj"
+An object of class "STIDFltraj"
 Slot "data":
         x       y       date   dx   dy      dist     dt    R2n  abs.angle
 50 699520 3159572 1992-07-29  120 -870 878.23687 345600      0 -1.4337302

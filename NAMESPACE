@@ -7,41 +7,41 @@ import(methods)
 exportClasses(
 	xts, 
 	ST, STF, STFDF, 
-	STP, STPDF, 
-	STS, STSDF, STSDFtraj, 
+	STS, STSDF, 
+	STI, STIDF, STIDFtraj, 
 	ltraj)
 
 export(ST, 
 	STF, STFDF,
-	STP, STPDF,
 	STS, STSDF,
+	STI, STIDF,
 	as.data.frame.STF,
-	as.data.frame.STP,
 	as.data.frame.STS,
+	as.data.frame.STI,
 	as.data.frame.STFDF,
-	as.data.frame.STPDF,
 	as.data.frame.STSDF,
+	as.data.frame.STIDF,
 	unstack.STFDF,
 	stplot)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
-S3method(as.data.frame, STPDF)
 S3method(as.data.frame, STSDF)
-S3method(as.xts, STSDF)
+S3method(as.data.frame, STIDF)
+S3method(as.xts, STIDF)
 S3method(index, STF)
-S3method(index, STP)
 S3method(index, STS)
+S3method(index, STI)
 S3method(index, STFDF)
-S3method(index, STPDF)
 S3method(index, STSDF)
+S3method(index, STIDF)
 S3method(dim, ST)
 S3method(dim, STF)
-S3method(dim, STP)
 S3method(dim, STS)
+S3method(dim, STI)
 S3method(dim, STFDF)
-S3method(dim, STPDF)
 S3method(dim, STSDF)
+S3method(dim, STIDF)
 #S3method(unstack, STFDF)
 S3method(print, summary.ST)
-S3method(rbind, STSDFtraj)
+S3method(rbind, STIDFtraj)

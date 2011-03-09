@@ -11,10 +11,10 @@ stplot.STFDF = function(obj, names.attr = index(obj@time),
     spplot(x, names.attr = names.attr, as.table = as.table, ...)
 }
 
-stplot.STSDF = function(obj, names.attr = index(obj@time), ...)
+stplot.STIDF = function(obj, names.attr = index(obj@time), ...)
 	stplot(as(obj, "STFDF"), names.attr = names.attr, ...)
 
-stplot.STSDF = function(obj, names.attr = NULL, ..., 
+stplot.STIDF = function(obj, names.attr = NULL, ..., 
 		as.table = TRUE, by = c("time", "burst", "id"), 
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = type, number = 6, overlap = 0, asp) {
@@ -33,11 +33,11 @@ stplot.STSDF = function(obj, names.attr = NULL, ...,
 
 setMethod("stplot", signature("STFDF"),  stplot.STFDF)
 
-setMethod("stplot", signature("STPDF"), stplot.STSDF)
+setMethod("stplot", signature("STSDF"), stplot.STIDF)
 
-setMethod("stplot", signature("STSDF"), stplot.STSDF)
+setMethod("stplot", signature("STIDF"), stplot.STIDF)
 
-setMethod("stplot", signature("STSDFtraj"),
+setMethod("stplot", signature("STIDFtraj"),
 	function(obj, ..., names.attr = NULL, by = "burst", type = 'l')
-		stplot.STSDF(obj, names.attr = names.attr, by = by, type = type, ...)
+		stplot.STIDF(obj, names.attr = names.attr, by = by, type = type, ...)
 )

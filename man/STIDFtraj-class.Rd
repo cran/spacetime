@@ -1,11 +1,11 @@
-\name{STSDFtraj-class}
+\name{STIDFtraj-class}
 \docType{class}
-\alias{STSDFtraj-class}
+\alias{STIDFtraj-class}
 \alias{ltraj-class}
-\alias{coerce,STSDFtraj,ltraj-method} 
-\alias{coerce,ltraj,STSDFtraj-method}
+\alias{coerce,STIDFtraj,ltraj-method} 
+\alias{coerce,ltraj,STIDFtraj-method}
 
-\title{Class "STSDF"}
+\title{Class "STIDF"}
 \description{ A class for spatio-temporal trajectory data; for
 n spatial locations and times, n observations are available }
 \section{Objects from the Class}{
@@ -20,7 +20,7 @@ Objects of this class carry sparse (irregular) space/time data }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "STSDF")}: selects spatial-temporal entities, and attributes } 
+    \item{[}{\code{signature(x = "STIDF")}: selects spatial-temporal entities, and attributes } 
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -30,8 +30,8 @@ Objects of this class carry sparse (irregular) space/time data }
 }
 
 \usage{
-  \S4method{coerce}{STSDFtraj,ltraj}(from, to, strict=TRUE)
-  \S4method{coerce}{ltraj,STSDFtraj}(from, to, strict=TRUE)
+  \S4method{coerce}{STIDFtraj,ltraj}(from, to, strict=TRUE)
+  \S4method{coerce}{ltraj,STIDFtraj}(from, to, strict=TRUE)
 }
 
 \arguments{

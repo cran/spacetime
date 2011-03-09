@@ -1,4 +1,4 @@
-as.STFDF.STPDF = function(from) {
+as.STFDF.STSDF = function(from) {
 	# fill the partial grid with NAs
 	# mainly taken from as.SPixDF.SGDF in sp:
    	data = list()
@@ -17,9 +17,9 @@ as.STFDF.STPDF = function(from) {
    	names(data) = names(from@data)
 	STFDF(from@sp, from@time, data)
 }
-setAs("STPDF", "STFDF", as.STFDF.STPDF)
+setAs("STSDF", "STFDF", as.STFDF.STSDF)
 
-as.STPDF.STFDF = function(from) {
+as.STSDF.STFDF = function(from) {
 	# take out the NA cells and fill the index
 	# NOTE: does not (yet) take out empty space/time entities 
 	# -- shouls this be optional?
@@ -29,20 +29,20 @@ as.STPDF.STFDF = function(from) {
 	# copied from sp:
 	sel = apply(sapply(from@data, is.na), 1, function(x) !all(x))
 	index = index[sel,]
-	STPDF(from@sp, from@time, from@data[sel,], index)
-}
-setAs("STFDF", "STPDF", as.STPDF.STFDF)
-
-as.STSDF.STPDF = function(from) {
-	# replicate the sp and time columns; keeps time always ordered?
-	STSDF(from@sp[from@index[,1]], from@time[from@index[,2]], from@data)
-}
-setAs("STPDF", "STSDF", as.STSDF.STPDF)
-
-as.STSDF.STFDF = function(from) {
-	as(as(from, "STPDF"), "STSDF")
+	STSDF(from@sp, from@time, from@data[sel,], index)
 }
 setAs("STFDF", "STSDF", as.STSDF.STFDF)
+
+as.STIDF.STSDF = function(from) {
+	# replicate the sp and time columns; keeps time always ordered?
+	STIDF(from@sp[from@index[,1]], from@time[from@index[,2]], from@data)
+}
+setAs("STSDF", "STIDF", as.STIDF.STSDF)
+
+as.STIDF.STFDF = function(from) {
+	as(as(from, "STSDF"), "STIDF")
+}
+setAs("STFDF", "STIDF", as.STIDF.STFDF)
 
 zerodist.sp = function(from) {
 	#stopifnot(is(from@sp, "SpatialPoints"))
@@ -85,7 +85,7 @@ reduce.index = function(index, z) {
 	index
 }
 
-as.STPDF.STSDF = function(from) {
+as.STSDF.STIDF = function(from) {
 	# find replicates in sp and time, and fill index
 	n = nrow(from@data)
 	index = cbind(1:n, 1:n)
@@ -99,11 +99,11 @@ as.STPDF.STSDF = function(from) {
 		time = from@time[-z[,2],]
 		index[,2] = reduce.index(index[,2], z)
 	}
-	STPDF(sp, time, from@data, index)
+	STSDF(sp, time, from@data, index)
 }
-setAs("STSDF", "STPDF", as.STPDF.STSDF)
+setAs("STIDF", "STSDF", as.STSDF.STIDF)
 
-as.STFDF.STSDF = function(from) {
-	as(as(from, "STPDF"), "STFDF")
+as.STFDF.STIDF = function(from) {
+	as(as(from, "STSDF"), "STFDF")
 }
-setAs("STSDF", "STFDF", as.STFDF.STSDF)
+setAs("STIDF", "STFDF", as.STFDF.STIDF)
