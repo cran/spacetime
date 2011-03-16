@@ -939,6 +939,9 @@ as.data.frame(st[pt,,1:5])
 
 \section*{Acknowledgements}
 Michael Sumner provided helpful comments on the trip example.
+Members from the spatio-temporal modelling lab of the institute
+for geoinformatics of the University of Muenster contributed in
+useful discussions.
 
 \section*{References}
 \begin{description}
@@ -955,24 +958,24 @@ Architecture. Technical report, Open Geospatial Consortium.
 animals' trajectories from a data analysis perspective. Ecological
 informatics 4, 34-41.
 
-\item Croissant Y., G. Millo (2008). Panel Data Econometrics in
+\item Croissant Y., G. Millo, 2008. Panel Data Econometrics in
 R: The plm Package. Journal of Statistical Software, 27(2).
 \url{http://www.jstatsoft.org/v27/i02/}.
 
 \item Galton, A. (2004). Fields and Objects in Space, Time and
 Space-time. Spatial cognition and computation 4(1).
 
-\item G\"{u}ting, R.H., M. Schneider (2005).  Moving Objects
+\item G\"{u}ting, R.H., M. Schneider, 2005.  Moving Objects
 Databases.  Morgan Kaufmann Publishers.
 
-\item Haslett, J. and Raftery, A. E. (1989). Space-time Modelling
+\item Haslett, J. and Raftery, A. E., 1989. Space-time Modelling
 with Long-memory Dependence: Assessing Ireland's Wind Power Resource
 (with Discussion). Applied Statistics 38, 1-50.
 
 \item Schabenberger, O., and Gotway, C.A., 2004. Statistical methods
 for spatial data analysis. Boca Raton: Chapman and Hall.
 
-\item Sumner, M. , 2010. The tag location problem. Unpublished PhD
+\item Sumner, M., 2010. The tag location problem. Unpublished PhD
 thesis, Institute of Marine and Antarctic Studies University of
 Tasmania, September 2010.
 
