@@ -75,10 +75,10 @@ spTransform.ST = function(x, CRSobj, ...) {
 	x@sp = spTransform(x@sp, CRSobj)
 	x
 }
-#if (!isGeneric("spTransform"))
-#	setGeneric("spTransform", function(x, CRSobj, ...)
-#		standardGeneric("spTransform"))
-#setMethod("spTransform", signature("STFDF", "CRS"), spTransform.ST)
+if (!isGeneric("spTransform"))
+	setGeneric("spTransform", function(x, CRSobj, ...)
+		standardGeneric("spTransform"))
+setMethod("spTransform", signature("STFDF", "CRS"), spTransform.ST)
 
 summary.ST = function(object, ...) {
     obj = list()

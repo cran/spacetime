@@ -20,7 +20,7 @@ stplot(obj, ...)
 stplot.STFDF(obj, names.attr = index(obj@time), ..., as.table = TRUE)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
-    NULL, ylab = NULL, type = type, number = 6, overlap = 0, asp)
+    NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp)
 }
 \arguments{
 \item{obj}{ object of a class deriving from \code{ST}}

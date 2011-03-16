@@ -59,8 +59,10 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	else
 		#t = j -- will not work for character j
 		t = x@time[j,1]
-	si = rep(1:length(x@sp), nrow(x@time))
-	ti = rep(1:nrow(x@time), each = length(x@sp))
+	si = x@index[,1] 
+	  # instead of: si = rep(1:length(x@sp), nrow(x@time)) # BG
+	ti = x@index[,2] 
+	  # instead of: ti = rep(1:nrow(x@time), each = length(x@sp)) # BG
 	#x@sp = x@sp[s] -- time and space topology not touched
 	#x@time = x@time[t]
 	sel = si %in% s & ti %in% t
