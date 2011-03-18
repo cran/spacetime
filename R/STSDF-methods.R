@@ -67,15 +67,22 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	#x@time = x@time[t]
 	sel = si %in% s & ti %in% t
 	x@data = x@data[sel, k, drop = FALSE]
-	x@index = x@index[sel,] # -- so index number remain valid
+
+# TG: Tom Gottfried reported at
+# https://stat.ethz.ch/pipermail/r-sig-geo/2011-March/011231.html
+
+	x@index = x@index[sel,, drop=FALSE] # -- so index number remain valid
+          # inserted drop=FALSE to handle (length(i)==1 && length(j)==1) # TG
 	if (drop) {
 		if (length(s) == 1) { # space index has only 1 item:
 			if (length(t) == 1)
 				x = x@data[1,1,drop=TRUE]
 			else
-				x = xts(x@data, index(x@time))
+				x = xts(x@data, index(x@time[x@index[,2]]))
+                                  # added index to achieve (nrow(x)==length(order.by)) in index() # TG
 		} else if (length(t) == 1) # only one time item
-			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
+			x = addAttrToGeom(x@sp[x@index[,1],], x@data, match.ID = FALSE)
+                         # added index to achieve matching SpatialPoints and data.frame # TG
 	}
 	x
 }
