@@ -5,8 +5,8 @@ library(spacetime)
 library(diveMove)
 library(trip)
 
-locs <- readLocs(system.file(file.path("data", "sealLocs.csv"),
-	package="diveMove"), idCol=1, dateCol=2,
+locs <- readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
+	package="diveMove")), idCol=1, dateCol=2,
 	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
 	lonCol=4, latCol=5, sep=";")
 
