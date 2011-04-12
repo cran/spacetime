@@ -28,14 +28,14 @@ as.STSDF.STFDF = function(from) {
 	index = cbind(rep(1:n, m), rep(1:m, each=n))
 	# copied from sp:
 	sel = apply(sapply(from@data, is.na), 1, function(x) !all(x))
-	index = index[sel,]
-	STSDF(from@sp, from@time, from@data[sel,], index)
+	index = index[sel,,drop=FALSE]
+	STSDF(from@sp, from@time, from@data[sel,,drop=FALSE], index)
 }
 setAs("STFDF", "STSDF", as.STSDF.STFDF)
 
 as.STIDF.STSDF = function(from) {
 	# replicate the sp and time columns; keeps time always ordered?
-	STIDF(from@sp[from@index[,1]], from@time[from@index[,2]], from@data)
+	STIDF(from@sp[from@index[,1],], from@time[from@index[,2]], from@data)
 }
 setAs("STSDF", "STIDF", as.STIDF.STSDF)
 
@@ -74,8 +74,8 @@ reduce.index = function(index, z) {
 			map = z[which(z[,1] == g), 2]
 			gr = unique(c(g,map))
 			groups[[i]] = gr
-			z = z[!(z[,1] %in% gr),]
-			i = i+1
+			z = z[!(z[,1] %in% gr), , drop = FALSE]
+			i = i + 1
 		}
 		groups
 	}
@@ -92,6 +92,7 @@ as.STSDF.STIDF = function(from) {
 	z = zerodist.sp(from@sp)
 	if (nrow(z)) {
 		sp = from@sp[-z[,2],] # remove all subsequent duplicates
+		sp = geometry(sp) # removes lost but possibly varying attrib
 		index[,1] = reduce.index(index[,1], z) # reorganize index
 	}
 	z = zerodist.xts(from@time)

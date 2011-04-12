@@ -7,18 +7,20 @@
 \alias{as.data.frame.STF}
 \alias{[,STFDF-method} 
 \alias{coerce,STFDF,xts-method}
+\alias{na.omit.STFDF}
 
 \title{Class "STFDF"}
 \description{ A class for spatio-temporal data with full space-time grid; for
 n spatial locations and m times, n x m observations are available }
 \section{Objects from the Class}{
-Objects of this class carry full space/time grid data }
+Objects of this class represent full space/time data with a full grid 
+(or lattice) layout }
 \section{Slots}{
   \describe{
-    \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object of class \code{"xts"}}
+    \item{\code{sp}:}{spatial object; see \link{ST-class}}
+    \item{\code{time}:}{temporal object; see \link{ST-class}}
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
-	the measured values}
+	the measured values; space index cycling first, time order preserved}
   }
 }
 \section{Methods}{
@@ -40,9 +42,11 @@ Objects of this class carry full space/time grid data }
 }
 
 \arguments{
-\item{sp}{object of class \link{Spatial}}
-\item{time}{object of class \link{xts}}
-\item{data}{data frame with appropriate number of rows}
+\item{sp}{object of class \link{Spatial}, having \code{n} elements}
+\item{time}{object holding time information, of length \code{m};
+see \link{ST} for details}
+\item{data}{data frame with \code{n*m} rows corresponding to the
+observations (spatial index moving fastest)}
 \item{x}{an object of class STFDF}
 \item{i}{selection of spatial entities}
 \item{j}{selection of temporal entities (see syntax in package xts) }
@@ -56,13 +60,17 @@ if FALSE, no coercion to reduced classes takes place}
 \item{strict}{ignored}
 }
 
+\value{the \code{as.data.frame} coercion returns the full long table,
+with purely spatial attributes and purely time attributes replicated
+appropriately. }
+
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 
 \examples{
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
+time = as.POSIXct("2010-08-05")+3600*(10:13)
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
 IDs = paste("ID",1:length(mydata))

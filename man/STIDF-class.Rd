@@ -17,7 +17,7 @@ Objects of this class carry full space/time grid data }
 \section{Slots}{
   \describe{
     \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object of class \code{"xts"}}
+    \item{\code{time}:}{Object holding time information, see \link{ST-class}}
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
 	the measured values }
   }
@@ -42,9 +42,11 @@ Objects of this class carry full space/time grid data }
 
 \arguments{
 \item{sp}{object of class \link{Spatial}}
-\item{time}{object of class \link{xts}; when STIDF is called, a vector with
-times, e.g. \link{POSIXct} will also work, and rearrange sp and data according
-to the ordering of time. }
+\item{time}{object holding time information; when STIDF is called,
+a non-ordered vector with times, e.g. \link{POSIXct} will also work,
+and rearrange the \code{sp} and \code{data} slots
+according to the ordering of time; for this to work no
+ties should exist. }
 \item{data}{data frame with appropriate number of rows}
 \item{x}{an object of class STFDF}
 \item{i}{selection of record index (spatial/temporal entities),

@@ -4,12 +4,10 @@ STI = function(sp, time) {
 
 STIDF = function(sp, time, data) {
 	if (!is(time, "xts")) {
-		if (is(sp, "SpatialGrid"))
-			sp = as(sp, "SpatialPixels")
         time = xts(1:length(time), time)
 		# rearrange sp and data in new time order:
         o = as.vector(time[,1])
-		sp = sp[o] # won't work for SpatialGrid?
+		sp = sp[o]
 		data = data[o,,drop=FALSE]
 	}
 	new("STIDF", STI(sp, time), data = data)
@@ -25,10 +23,17 @@ index.STI = function(x, ...) {
 index.STIDF = index.STI
 
 as.data.frame.STI = function(x, row.names = NULL, ...) {
-  	data.frame(coordinates(x), 
+	timedata = x@time
+	if (is.null(row.names(x@sp)))
+		row.names(x@sp) = 1:nrow(x@sp)
+  	ret = data.frame(coordinates(x), 
 		sp.ID = row.names(x@sp),
 		time = index(x),
+		timedata,
 		row.names = row.names, ...)
+	if ("data" %in% slotNames(x@sp))
+		ret = data.frame(ret, x@sp@data)
+	ret
 }
 setAs("STI", "data.frame", function(from) as.data.frame.STI(from))
 
@@ -56,7 +61,7 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	if (missing.i)
 		i = TRUE
 	else if (is(i, "Spatial"))
-		i = !is.na(over(x@sp,i))
+		i = !is.na(over(x@sp, geometry(i)))
 
 	if (missing.j)
 		j = rep(TRUE, length=nrow(x@time))
@@ -72,7 +77,7 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 
 	i = i & j
 
-	x@sp = x@sp[i]
+	x@sp = x@sp[i,]
 	x@time = x@time[i]
 	x@data = x@data[i, k, drop = FALSE]
 	if (drop && length(unique(index(x@time))) == 1)

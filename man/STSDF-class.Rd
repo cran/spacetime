@@ -15,11 +15,12 @@
 space-time grids; for n spatial locations and m times, an index
 table is kept for which nodes observations are available }
 \section{Objects from the Class}{
-Objects of this class carry full space/time grid data }
+Objects of this class carry sparse space/time grid data }
 \section{Slots}{
   \describe{
     \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object of class \code{"xts"}}
+    \item{\code{time}:}{Object holding time information; see \link{ST-class}
+	for permitted types }
     \item{\code{index}:}{matrix of dimension n x 2, where n matches the number of rows
 	in slot data }
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
@@ -47,9 +48,12 @@ Objects of this class carry full space/time grid data }
 
 \arguments{
 \item{sp}{object of class \link{Spatial}}
-\item{time}{object of class \link{xts}}
-\item{data}{data frame with appropriate number of rows}
-\item{index}{n x 2 matrix, see above}
+\item{time}{object holding time information; see \link{ST-class}}
+\item{data}{data frame with rows corresponding to the observations
+(spatial index moving faster than temporal)} 
+\item{index}{two-column matrix: rows corresponding to the nodes for
+which observations are available, first column giving spatial index,
+second column giving temporal index} 
 \item{x}{an object of class STFDF}
 \item{i}{selection of spatial entities}
 \item{j}{selection of temporal entities (see syntax in package xts) }
@@ -62,6 +66,9 @@ if FALSE, no coercion to reduced classes takes place}
 \item{to}{target class}
 \item{strict}{ignored}
 }
+
+%TG: nrow(index) depends on how
+%many observations are available
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 

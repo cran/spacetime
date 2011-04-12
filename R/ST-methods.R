@@ -1,9 +1,16 @@
 ST = function(sp, time) {
+	if (!is(time, "xts")) {
+		stopifnot(is(time, 
+			c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")))
+		t = 1:length(time)
+		stopifnot(order(time, t) == t)
+		time = xts(1:length(time), time)
+	}
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")
 		warning("converted SpatialGrid to SpatialPixels")
 	}
-	new("ST", sp = geometry(sp), time = time)
+	new("ST", sp = sp, time = time)
 }
 
 setMethod("[[", c("ST", "ANY", "missing"), 

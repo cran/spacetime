@@ -1,5 +1,4 @@
 STS = function(sp, time, index) {
-	time[,1] = 1:nrow(time) # reset any original order
 	new("STS", sp = sp, time = time, index = index)
 }
 
@@ -18,10 +17,17 @@ index.STS = function(x, ...) {
 index.STSDF = index.STS
 
 as.data.frame.STS = function(x, row.names = NULL, ...) {
-  	data.frame(coordinates(x), 
+	if (is.null(row.names(x@sp)))
+		row.names(x@sp) = 1:nrow(x@sp)
+	timedata = x@time[x@index[,2],]
+  	ret = data.frame(coordinates(x), 
 		sp.ID = row.names(x@sp)[x@index[,1]],
 		time = index(x),
+		timedata,
 		row.names = row.names, ...)
+	if ("data" %in% slotNames(x@sp))
+		ret = data.frame(ret, x@sp@data[x@index[,1],,drop=FALSE])
+	ret
 }
 setAs("STS", "data.frame", function(from) as.data.frame.STS(from))
 
@@ -50,22 +56,36 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 		x@data = x@data[ , k, drop = FALSE]
 		return(x)
 	} 
+
 	if (missing.i)
 		s = 1:length(x@sp)
-	else
-		s = i
+	else {
+		if (is(i, "Spatial"))
+			s = !is.na(over(x@sp, geometry(i)))
+		else 
+			s = i
+	}
+
 	if (missing.j)
 		t = 1:nrow(x@time)
-	else
-		#t = j -- will not work for character j
-		t = x@time[j,1]
+	else {
+		nc = ncol(x@time)
+		x@time = cbind(x@time, 1:nrow(x@time))
+		# uses [.xts, deals with character/iso8601,
+		# and takes care of negative indices:
+		x@time = x@time[j] 
+		# get back the corresponding index vector t, to use for @data:
+		t = x@time[,nc+1]
+		x@time = x@time[,-(nc+1)]
+	}
+
 	si = x@index[,1] 
 	  # instead of: si = rep(1:length(x@sp), nrow(x@time)) # BG
 	ti = x@index[,2] 
 	  # instead of: ti = rep(1:nrow(x@time), each = length(x@sp)) # BG
-	#x@sp = x@sp[s] -- time and space topology not touched
+	#x@sp = x@sp[s,] -- time and space topology not touched
 	#x@time = x@time[t]
-	sel = si %in% s & ti %in% t
+	sel = (si %in% s) & (ti %in% t)
 	x@data = x@data[sel, k, drop = FALSE]
 
 # TG: Tom Gottfried reported at

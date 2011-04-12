@@ -9,17 +9,19 @@
 \alias{$<-,ST-method}
 \alias{$,ST-method}
 
-
 \title{Class "ST"}
 \description{ An abstract class from which useful spatio-temporal classes are
 derived }
 \section{Objects from the Class}{
-Objects of this class
-are never to be generated; only derived classes can be meaningful }
+Objects of this class are not meant to be useful; only derived
+classes can be meaningful }
 \section{Slots}{
   \describe{
     \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object of class \code{"xts"}}
+    \item{\code{time}:}{Object of class \code{"xts"}, or vector of
+	one of the date or time classes that can be used to form such an object
+	(currently: Date, POSIXct, timeDate, yearmon and yearqtr; 
+	see \link[xts]{xts}); in the latter case, it should be in time order}
   }
 }
 \section{Methods}{
