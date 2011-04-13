@@ -34,11 +34,11 @@
 \begin{abstract}
 This document describes a set of classes and methods for
 spatio-temporal data in R. It builds upon the classes and methods
-for spatial data are taken from package {\tt sp}, and the temporal
-classes in package {\tt xts}. The goal is to cover a number of useful
-representations for spatio-temporal sensor data, or results from
-predicting (spatial and/or temporal interpolation or smoothing),
-aggregating, or subsetting them.
+for spatial data are taken from package {\tt sp}, and all temporal
+classes supported by package {\tt xts}. The goal is to cover a
+number of useful representations for spatio-temporal sensor data,
+or results from predicting (spatial and/or temporal interpolation
+or smoothing), aggregating, or subsetting them.
 
 The goals of this package are to explore how spatio-temporal data
 can be sensibly represented in classes, and to find out which
@@ -106,15 +106,19 @@ and methods are subject to change.
 
 % what is wide and what is long format.
 
-We use \code{xts} for time because it has nice tools
-for aggregation over time and a very flexible syntax to
-select time periods that adheres ISO 8601\footnote{see
+We use \code{xts} for time, not only because it supports various
+basic types to represent type, but also because it has good
+tools for aggregation over time and a very flexible syntax
+to select time periods that adheres ISO 8601\footnote{see
 \url{http://en.wikipedia.org/wiki/ISO_8601}}. We do not use
-the \code{xts} objects to store attribute information, as it is
-restricted to \code{matrix} objects, and hence can only store
-a single type, and not combine numeric and factor. Instead, as
-in the classes of \code{sp}, we use \code{data.frame} to store
-measured values.
+the \code{xts} objects to store the spatio-temporal attribute
+information, as it is restricted to \code{matrix} objects, and
+hence can only store a single type, and not combine numeric
+and factor. Instead, as in the classes of \code{sp}, we use
+\code{data.frame} to store measured values. For information that
+is purely temporal, the \code{xts} objects can be used, and
+will be recycled appropriately when coercing to a long format
+\code{data.frame}.
 
 \section{Space-time data in wide and long formats}
 \label{sec:longwide}
@@ -222,6 +226,11 @@ out on a space time grid (figure \ref{fig:stpdf}), but instead of
 storing the full grid, only non-missing valued observations $z_{k}$
 are stored. For each $k$, an index $[i,j]$ is stored that refers
 which spatial location $i$ and time point $j$ the value belongs to.
+Storing data this way can be efficient if full space-time lattices
+have many missing values, or if a limited set of spatial locations
+each have different time instances (times of crime cases for a set
+of administrative regions), or if for a set of times the set of
+spatial locations varies (locations of crimes, registered per year).
 \begin{figure}
 \begin{center}
 <<fig=TRUE,echo=FALSE,height=5,width=5>>=
@@ -287,10 +296,10 @@ the same location is not registered. }
 
 \section{Spatio-temporal full grid \code{data.frame}s (\code{STFDF}) }
 
-For objects of class \code{STFDF}, time representation can be regular
-or irregular, as it is of class \code{xts} in package \code{xts}. Spatial
-locations need to be of a class deriving from \code{Spatial} in
-package \code{sp}.
+For objects of class \code{STFDF}, time representation can be
+regular or irregular, as is supported by class \code{xts} in package
+\code{xts}. Spatial locations need to be of a class deriving from
+\code{Spatial} in package \code{sp}.
 
 \subsection{Class definition}
 <<keep.source=TRUE>>=
@@ -300,7 +309,7 @@ showClass("STFDF")
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:4, as.POSIXct("2010-08-05", tz = "GMT")+3600*(10:13))
+time = as.POSIXct("2010-08-05", tz = "GMT")+3600*(10:13)
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
 IDs = paste("ID",1:length(mydata), sep = "_")
@@ -409,7 +418,7 @@ showClass("STIDF")
 sp = expand.grid(x = 1:3, y = 1:3)
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:9, as.POSIXct("2010-08-05", tz = "GMT")+3600*(11:19))
+time = as.POSIXct("2010-08-05", tz = "GMT")+3600*(11:19)
 m = 1:9 * 10 # means for each of the 9 point locations
 mydata = rnorm(length(sp), mean=m)
 IDs = paste("ID",1:length(mydata))
@@ -480,15 +489,17 @@ identical(stfdf, xx)
 
 \subsection{Time periods}
 
-Time series typically store for each record a time stamp, not a
-time interval.  The implicit assumption of time seems to be (i) the
-time stamp is a moment, (ii) this indicates either the real moment
-of measurement / registration, or the start of the interval over
-which something is aggregated (summed, averaged, maximized). For
-financial "Open, high, low, close" data, the "Open" and "Close"
-refer to the values at the moments the stock exchange opens and
-closes, where "high" and "low" aggregated (minimum, maximum taken
-over the time interval between opening and closing times.
+Time series structures available in R have, explicitly or implicitly,
+for each record a time stamp, not a time interval.  The implicit
+assumption seems to be (i) the time stamp is a moment, (ii) this
+indicates either the real moment of measurement / registration,
+or the start of the interval over which something is aggregated
+(summed, averaged, maximized). For financial "Open, high, low,
+close" data, the "Open" and "Close" refer to the values at the
+moments the stock exchange opens and closes, meaning time instances,
+whereas "high" and "low" are aggregated values -- the minimum and
+maximum price over the time interval between opening and closing
+times.
 
 According to \href{http://en.wikipedia.org/wiki/ISO_8601}{ISO 8601:2004},
 a time stamp like "2010-05" refers to {\em the full} month of May,
@@ -498,10 +509,10 @@ following interval:
 <<>>=
 .parseISO8601('2010-05')
 @
-and it seems that this syntax lets one define, unambiguously,
-yearly, monthly, daily, hourly or minute intervals, but not 10-
-or 30-minute intervals; for ten minutes, the full specification 
-is needed:
+and this syntax lets one define, unambiguously, yearly, monthly,
+daily, hourly or minute intervals, but not e.g.~10- or 30-minute
+intervals; for some particular ten minute interval, the full
+specification is needed:
 <<>>=
 .parseISO8601('2010-05-01T13:30/2010-05-01T13:39')
 @
@@ -547,8 +558,8 @@ data = data.frame(
 	BIR = c(nc$BIR74, nc$BIR79),
 	NWBIR = c(nc$NWBIR74, nc$NWBIR79),
 	SID = c(nc$SID74, nc$SID79))
-time = xts(1:2, 
-	as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d"), tz = "GMT"))
+time = as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d"), 
+	tz = "GMT")
 nct = STFDF(
 	sp = as(nc, "SpatialPolygons"),
 	time = time,
@@ -585,9 +596,9 @@ library(plm)
 data(Produc)
 
 yrs = 1970:1986
-time = xts(1:17, as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT"))
+time = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
 # deselect District of Columbia, polygon 8, which is not present in Produc:
-Produc.st = STFDF(states[-8], time, Produc[(order(Produc[2], Produc[1])),])
+Produc.st = STFDF(states[-8], time, Produc[order(Produc[2], Produc[1]),])
 stplot(Produc.st[,,"unemp"], yrs)
 @
 The plot itself is left out for reasons of disk space. Time and
@@ -673,7 +684,8 @@ wind$jday = as.numeric(format(wind$time, '%j'))
 stations = 4:15
 windsqrt = sqrt(0.5148 * wind[stations]) # knots -> m/s
 Jday = 1:366
-daymeans = apply(sapply(split(windsqrt - mean(windsqrt), wind$jday), mean), 2,  mean)
+daymeans = apply(sapply(split(windsqrt - mean(windsqrt), 
+	wind$jday), mean), 2,  mean)
 meanwind = lowess(daymeans ~ Jday, f = 0.1)$y[wind$jday]
 velocities = apply(windsqrt, 2, function(x) { x - meanwind })
 @
@@ -693,10 +705,10 @@ pts = SpatialPoints(pts)
 proj4string(pts) = "+proj=longlat +datum=WGS84"
 library(rgdal)
 utm29 = CRS("+proj=utm +zone=29 +datum=WGS84")
-t = xts(1:nrow(wind), wind$time)
 pts = spTransform(pts, utm29)
-# note the t() in:
-w = STFDF(pts, t, data.frame(values = as.vector(t(velocities))))
+# construct from space-wide table:
+w = stConstruct(velocities, space = list(values = 1:ncol(velocities)), 
+	time = wind$time, SpatialObj = pts)
 
 library(maptools)
 m = map2SpatialLines(
