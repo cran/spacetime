@@ -76,6 +76,7 @@ covfn = function(x,y) {
 
 n = 10
 tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
+if (FALSE) {
 pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
 wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
 
@@ -88,4 +89,5 @@ spl = list(list("sp.points", pts, first=F, cex=.5),
 stplot(wind.pr, col.regions=bpy.colors(),
 	par.strip.text = list(cex=.5), sp.layout = spl)
 summary(wind.pr)
+}
 }

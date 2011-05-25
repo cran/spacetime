@@ -17,7 +17,8 @@
 }
 \usage{ 
 stplot(obj, ...)
-stplot.STFDF(obj, names.attr = index(obj@time), ..., as.table = TRUE)
+stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
+	as.table = TRUE, at, animate = 0, mode = "xy", scaleX = 0)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
     NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp)
@@ -27,6 +28,15 @@ stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
 \item{names.attr}{ names that will be used in the strip }
 \item{as.table}{ logical; if TRUE, time will increas from top to bottom;
 if FALSE, time will increase from bottom to top }
+\item{at}{ values at which colours will change; see \link[lattice]{levelplot}}
+\item{animate}{ numeric; if larger than 0, the number of seconds between
+subsequent animated time steps (loop; press ctrl-C or Esc to stop) }
+\item{mode}{ plotting mode; if "xy", maps for time steps are plotted; if "xt",
+a space-time plot is constructed; see argument \code{scaleX},
+but read details below }
+\item{scaleX}{ integer: 0, 1 or 2; when \code{mode} is "xt", used to determine
+whether the index of the spatial location is shown (0), the x coordinate (1)
+or the y coordinate (2). }
 \item{by}{ conditioning variable(s); in case \code{time} is conditioning
 variable, it will be classified using \link{equal.count}, using parameters
 \code{overlap} and \code{number}}
@@ -41,7 +51,25 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{...}{ arguments passed on to \link{spplot} in case of stplot.STFDF,
 or to \link{xyplot} in case of stplot.STIDF}
 }
-\value{ \code{stplot} is a wrapper around \link{spplot}, that automically
-plots each time stamp in a panel.}
+\value{ In non-animation and "xy" mode, \code{stplot} is a wrapper
+around \link{spplot}, that automically plots each time stamp in
+a panel.  The returned value is is a lattice plot.
+
+In "xt" mode, a space-time plot with space on the x-axis and time
+on the y-axis is plotted. By default, the space ID is plotted on the
+x-axis, as space can be anything (points, polygons, grid cells etc).
+When \code{scaleX} is set to 1 or 2, the x- resp. y-coordinates
+of the spatial locations, obtained by \link[sp]{coordinates}, is
+used instead. Beware: when the x-coordinate is plotted, and for
+each (x,t) element multiple y-coordinates are sent to the plot,
+it is not clear which (x,y,t) value becomes the plotted value,
+so slicing single y values is adviced -- no checking is done.
+The returned value is is a lattice plot.
+
+In animation mode (\code{animate} > 0), single maps are animated
+in an endless loop, with \code{animate} seconds between each. No
+proper value is returned: the loop needs to be interrupted by
+the user.
+}
 \note{vignette("spacetime") contains several examples}
 \keyword{dplot}

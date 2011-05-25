@@ -107,6 +107,7 @@ wind.loc = wind.loc[match(names(wind[stations]), wind.loc$Code),]
 row.names(wind.loc) = wind.loc$Station
 # convert to utm zone 29, to be able to do interpolation in
 # proper Euclidian (projected) space:
+if (require(rgdal)) {
 library(rgdal)
 utm29 = CRS("+proj=utm +zone=29 +datum=WGS84")
 wind.loc = spTransform(wind.loc, utm29)
@@ -120,5 +121,6 @@ space = list(values = names(wind)[stations])
 wind.st = stConstruct(wind[stations], space, wind$time, SpatialObj = wind.loc)
 all.equal(w, wind.st)
 class(wind.st)
+}
 }
 \keyword{manip}

@@ -1,3 +1,135 @@
+2011-05-05 13:51  EdzerPebesma
+
+	* DESCRIPTION, man/stconstruct.Rd: version; conditional rgdal
+	  section
+
+2011-05-05 13:45  EdzerPebesma
+
+	* DESCRIPTION, R/coerce.R, inst/doc/spacetime.R, tests/wind.R: pass
+	  checks; version
+
+2011-04-12 22:08  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/ST-methods.R, R/STFDF-methods.R,
+	  R/STIDF-methods.R, R/STSDF-methods.R, R/apply.R, R/stconstruct.R,
+	  inst/doc/spacetime.Rnw, man/ST-class.Rd, man/STFDF-class.Rd,
+	  man/STIDF-class.Rd, man/STPDF-class.Rd, man/STSDF-class.Rd,
+	  man/stconstruct.Rd, tests/basic.Rout.save, tests/stconstruct.R,
+	  tests/traj.R, tests/traj.Rout.save, tests/wind.Rout.save: added
+	  stConstruct function;
+	  allow time vectors in addition to xts objects as time object;
+	  version update;
+	  improved documentation, thanks to Tom Gottfried
+
+2011-04-04 00:17  EdzerPebesma
+
+	* tests/stconstruct.R: added tests for stConstruct
+
+2011-04-04 00:07  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/ST-methods.R, R/STFDF-methods.R,
+	  R/STIDF-methods.R, R/STSDF-methods.R, R/coerce.R,
+	  R/stconstruct.R, man/ST-class.Rd, man/STFDF-class.Rd: allow
+	  attributes in space and time upon construction; will keep
+	  these and only replicate these when coercing to data.frame.
+	  
+	  added stConstruct, for "easy" (in any case more robust)
+	  construction
+	  from time-wide, space-wide and long tables (space-wide t.b.d.)
+
+2011-03-25 12:19  DanielNuest
+
+	* inst/doc: added pdfs to svn:ignore
+
+2011-03-20 14:31  EdzerPebesma
+
+	* DESCRIPTION: added suggested: foreign
+
+2011-03-20 11:24  EdzerPebesma
+
+	* R/STFDF-methods.R: negative indices improved
+
+2011-03-20 10:16  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/STFDF-methods.R, man/STFDF-class.Rd:
+	  added na.omit.STFDF; negative selection (testing) for STFDF
+
+2011-03-18 10:04  EdzerPebesma
+
+	* demo/sos4R.R: fix
+
+2011-03-18 07:38  EdzerPebesma
+
+	* demo/sos4R.R: added exercises
+
+2011-03-18 07:16  EdzerPebesma
+
+	* demo/sos4R.R: added worldHires data backdrop
+
+2011-03-17 20:44  EdzerPebesma
+
+	* demo/sos4R.R: swapped coordinates of no2.spdf
+
+2011-03-17 19:48  EdzerPebesma
+
+	* DESCRIPTION, R/STSDF-methods.R: patch from Tom Gottfried, see
+	  https://stat.ethz.ch/pipermail/r-sig-geo/2011-March/011231.html
+
+2011-03-16 17:51  EdzerPebesma
+
+	* demo/00Index, demo/sos4R.R: added demo
+
+2011-03-16 16:23  EdzerPebesma
+
+	* demo/00Index: added Index
+
+2011-03-16 16:00  EdzerPebesma
+
+	* demo, demo/edc.R: added edc demo
+
+2011-03-16 11:35  EdzerPebesma
+
+	* DESCRIPTION, R/ST-methods.R, R/STSDF-methods.R, R/stplot.R,
+	  inst/doc/spacetime.R, inst/doc/spacetime.Rnw, man/stplot.Rd,
+	  tests/basic.R, tests/basic.Rout.save: type = 'p' in stplot
+	  default; selection correction; spTransform generic;
+	  digits in tests
+
+2011-03-01 08:18  EdzerPebesma
+
+	* tests/traj.R, tests/traj.Rout.save: update coercion function
+	  trajectories
+
+2011-02-23 17:47  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw: several updates; sids reference
+
+2011-02-16 23:27  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/spacetime.Rnw: data update
+
+2011-02-16 23:18  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-STPDF.R, R/Class-STSDF.R,
+	  R/ST-methods.R, R/STPDF-methods.R, R/STSDF-methods.R, R/coerce.R,
+	  R/stplot.R, inst/doc/spacetime.Rnw, man/STIDF-class.Rd,
+	  man/STIDFtraj-class.Rd, man/STPDF-class.Rd, man/STSDF-class.Rd,
+	  man/STSDFtraj-class.Rd, man/stplot.Rd, tests/basic.R,
+	  tests/basic.Rout.save, tests/traj.R, tests/traj.Rout.save: class
+	  name changes; STS->STI; STP->STS
+
+2011-02-16 22:59  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-STIDF.R, R/Class-STSDF.R,
+	  R/ST-methods.R, R/STIDF-methods.R, R/STSDF-methods.R, R/coerce.R,
+	  R/stplot.R, R/traj.R, inst/doc/spacetime.Rnw: change from STS* ->
+	  STI* class names; file renames
+
+2011-02-16 11:53  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/spacetime.Rnw: version update; tz = GMT in
+	  examples
+
 2010-12-12 21:46  EdzerPebesma
 
 	* DESCRIPTION: version bump
