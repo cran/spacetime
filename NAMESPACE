@@ -24,7 +24,8 @@ export(ST,
 	unstack.STFDF,
 	stplot,
 	stConstruct,
-	na.omit.STFDF)
+	na.omit.STFDF,
+	EOF)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)

@@ -1,5 +1,5 @@
 
-R version 2.12.2 (2011-02-25)
+R version 2.13.0 (2011-04-13)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i486-pc-linux-gnu (32-bit)
@@ -110,6 +110,7 @@ Loading required package: maps
 + 
 + n = 10
 + tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
++ if (FALSE) {
 + pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
 + wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
 + 
@@ -123,10 +124,11 @@ Loading required package: maps
 + 	par.strip.text = list(cex=.5), sp.layout = spl)
 + summary(wind.pr)
 + }
++ }
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.3, released 2010/11/10
-Path to GDAL shared files: /usr/share/gdal17
+Loaded GDAL runtime: GDAL 1.8.0, released 2011/01/12
+Path to GDAL shared files: /usr/share/gdal/1.8
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
 Path to PROJ.4 shared files: (autodetected)
 Loading required package: foreign
@@ -139,30 +141,4 @@ Loading required package: lattice
  
 Checking rgeos availability as gpclib substitute:
 TRUE
-Object of class STFDF
-[[Spatial:]]
-Object of class SpatialPixels
-Coordinates:
-       min     max
-x1  403500  832500
-x2 5583500 6309500
-Is projected: TRUE 
-proj4string :
-[+proj=utm +zone=29 +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0]
-Number of points: 286
-Grid attributes:
-   cellcentre.offset cellsize cells.dim
-x1            420000    33000        13
-x2           5600000    33000        22
-[[Temporal:]]
-     Index                      object@time   
- Min.   :1961-04-01 12:00:00   Min.   : 1.00  
- 1st Qu.:1961-04-08 18:00:00   1st Qu.: 3.25  
- Median :1961-04-16 00:00:00   Median : 5.50  
- Mean   :1961-04-16 00:00:00   Mean   : 5.50  
- 3rd Qu.:1961-04-23 06:00:00   3rd Qu.: 7.75  
- Max.   :1961-04-30 12:00:00   Max.   :10.00  
-[[Data attributes:]]
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.259   2.762   2.984   3.019   3.253   4.310 
 > 

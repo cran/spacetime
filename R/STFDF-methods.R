@@ -28,7 +28,7 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 	if (is.null(row.names(x@sp)))
 		row.names(x@sp) = 1:nrow(x@sp)
 	timedata = apply(x@time, 2, rep, each = length(x@sp))
-  	ret = data.frame(coordinates(x), 
+  	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = rep(row.names(x@sp), length(x@time)),
 		time = index(x),
 		timedata,
@@ -87,7 +87,10 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	else {
 		if (is(i, "Spatial"))
 			s = !is.na(over(x@sp, geometry(i)))
-		else 
+		else if (is.logical(i)) {
+			i = rep(i, length.out = length(x@sp))
+			s = which(i)
+		} else
 			s = i
 	}
 	x@sp = x@sp[s,]
@@ -95,6 +98,8 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	if (missing.j)
 		t = 1:nrow(x@time)
 	else {
+		if (is.logical(j))
+			j = which(j)
 		nc = ncol(x@time)
 		x@time = cbind(x@time, 1:nrow(x@time))
 		# uses [.xts, deals with character/iso8601;

@@ -26,7 +26,7 @@ as.data.frame.STI = function(x, row.names = NULL, ...) {
 	timedata = x@time
 	if (is.null(row.names(x@sp)))
 		row.names(x@sp) = 1:nrow(x@sp)
-  	ret = data.frame(coordinates(x), 
+  	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = row.names(x@sp),
 		time = index(x),
 		timedata,
@@ -58,14 +58,22 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	if (missing.i && missing.j && missing.k)
 		return(x)
 
+	# space
 	if (missing.i)
 		i = TRUE
 	else if (is(i, "Spatial"))
 		i = !is.na(over(x@sp, geometry(i)))
+	else if (is.logical(i)) {
+		i = rep(i, length.out = length(x@sp))
+		i = which(i)
+	}
 
+	# time
 	if (missing.j)
 		j = rep(TRUE, length=nrow(x@time))
 	else {
+		if (is.logical(j))
+			j = which(j)
 		t = xts(1:nrow(x@time), index(x@time))[j]
 		j = as.vector(t[,1])
 	}
