@@ -1,0 +1,59 @@
+Questions: (ltraj: ID, burst) -- two levels of ID's?
+
+1. xyz -> mpoint,mreal, OR mpoint?
+2. region x point -> point; what is point if they do not intersect? point can be NULL?
+3. spatio-temporal indexing to speed up (S/T) queries? S/T tree?
+4. space-time prisms, or possibility/probabilities?
+5. mbool "moving bool" is, essentially, "changing bool" (change over time)
+6. speed: taken from t-1 to t, or t to t+1? How to deal with first or last?
+
+
+RH Gueting
+_analyzing_ movement data in the moving object dbms secondo.
+
++
++
++ st predicate.
++ towards semantic trajectories.
+
++ a trajectory is not a sequence of (x,y,t) points -- these are the
+discrete observations, not the object.
++ focus on current location, or analysis of past trajectories (focus here)
++ moving oints vs moving / evolving regions.
+
+conceptually a moving point into a data type.
+
+f: location (time) -> mpoint (moving point)
+
+trajectory: mpoint -> line.
+
+distance: mpoint x mpoint -> mreal.
+
+movement can be continuous, or discrete -- "my home address"!
+
+guarantee: atinstant(mdist(a,b),t) = mdist(atinstant(a,t),atinst(b,t)) etc.
+lifting operations to time-dependent operations.
+
+atinstant (find out where it is, if at all, at t or period [t1,t2], periods...)
+ -- whereamI(x,t)?
+at (find out whether it is at certain locations, and when)
+ -- whenamI(x,at)
+
+aabb  implies a < b
+
+a  a  b  b
+====  ==== 
+
+aa.bb implies a <= b; 
+
+abb.a:
+a ====
+b   ==
+
+let later = vec(aabb)
+let during = vec(abba a.bba abb.a)
+etc.
+Mahmoud something, PhD student.
+stpattern operator.; condition, 
+
+

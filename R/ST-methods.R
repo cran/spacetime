@@ -85,7 +85,9 @@ spTransform.ST = function(x, CRSobj, ...) {
 if (!isGeneric("spTransform"))
 	setGeneric("spTransform", function(x, CRSobj, ...)
 		standardGeneric("spTransform"))
-setMethod("spTransform", signature("STFDF", "CRS"), spTransform.ST)
+setMethod("spTransform", signature("ST", "CRS"), spTransform.ST)
+
+# setMethod("geometry", "ST", function(obj) geometry(obj@sp))
 
 summary.ST = function(object, ...) {
     obj = list()

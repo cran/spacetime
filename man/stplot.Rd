@@ -18,7 +18,7 @@
 \usage{ 
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
-	as.table = TRUE, at, animate = 0, mode = "xy", scaleX = 0)
+	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
     NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp)
@@ -29,6 +29,7 @@ stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
 \item{as.table}{ logical; if TRUE, time will increas from top to bottom;
 if FALSE, time will increase from bottom to top }
 \item{at}{ values at which colours will change; see \link[lattice]{levelplot}}
+\item{cuts}{ number of levels the range of the attribute would be divided into }
 \item{animate}{ numeric; if larger than 0, the number of seconds between
 subsequent animated time steps (loop; press ctrl-C or Esc to stop) }
 \item{mode}{ plotting mode; if "xy", maps for time steps are plotted; if "xt",

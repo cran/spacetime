@@ -114,3 +114,14 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	x
 }
 setMethod("[", "STSDF", subs.STSDF)
+
+setMethod("addAttrToGeom", signature(x = "STF", y = "data.frame"),
+    function(x, y, match.ID, ...)
+		new("STSDF", x, data = y)
+)
+
+length.STS = function(x) { nrow(x@index) }
+
+length.STSDF = function(x) { nrow(x@index) }
+
+setMethod("geometry", "STSDF", function(obj) as(obj, "STS"))

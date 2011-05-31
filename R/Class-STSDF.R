@@ -3,9 +3,9 @@ setClass("STS", # space-time partial
   validity = function(object) {
     stopifnot(ncol(object@index) == 2)
 	ix = unique(object@index[,1]) # space
-	stopifnot(min(ix) == 1 && max(ix) == length(object@sp))
+	stopifnot(min(ix) >= 1 && max(ix) <= length(object@sp))
 	ix = unique(object@index[,2]) # time
-	stopifnot(min(ix) == 1 && max(ix) == nrow(object@time))
+	stopifnot(min(ix) >= 1 && max(ix) <= nrow(object@time))
     return(TRUE)
   }
 )
@@ -16,9 +16,9 @@ setClass("STSDF", # space-time partial data frame
     stopifnot(nrow(object@index) == nrow(object@data))
     stopifnot(ncol(object@index) == 2)
 	ix = unique(object@index[,1]) # space
-	stopifnot(min(ix) == 1 && max(ix) == length(object@sp))
+	stopifnot(min(ix) >= 1 && max(ix) <= length(object@sp))
 	ix = unique(object@index[,2]) # time
-	stopifnot(min(ix) == 1 && max(ix) == nrow(object@time))
+	stopifnot(min(ix) >= 1 && max(ix) <= nrow(object@time))
     return(TRUE)
   }
 )
