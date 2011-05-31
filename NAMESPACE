@@ -3,6 +3,7 @@ import(zoo)
 import(xts)
 import(lattice)
 import(methods)
+importFrom(stats, aggregate)
 
 exportClasses(
 	xts, 
@@ -25,19 +26,14 @@ export(ST,
 	stplot,
 	stConstruct,
 	na.omit.STFDF,
-	EOF)
+	EOF, 
+	aggregate.ST)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
 S3method(as.data.frame, STSDF)
 S3method(as.data.frame, STIDF)
 S3method(as.xts, STIDF)
-S3method(index, STF)
-S3method(index, STS)
-S3method(index, STI)
-S3method(index, STFDF)
-S3method(index, STSDF)
-S3method(index, STIDF)
 S3method(dim, ST)
 S3method(dim, STF)
 S3method(dim, STS)
@@ -45,6 +41,18 @@ S3method(dim, STI)
 S3method(dim, STFDF)
 S3method(dim, STSDF)
 S3method(dim, STIDF)
+S3method(index, STF)
+S3method(index, STS)
+S3method(index, STI)
+S3method(index, STFDF)
+S3method(index, STSDF)
+S3method(index, STIDF)
+S3method(length, STF)
+S3method(length, STS)
+S3method(length, STI)
+S3method(length, STFDF)
+S3method(length, STSDF)
+S3method(length, STIDF)
 #S3method(unstack, STFDF)
 S3method(print, summary.ST)
 S3method(rbind, STIDFtraj)

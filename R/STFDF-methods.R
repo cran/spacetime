@@ -85,9 +85,9 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	if (missing.i)
 		s = 1:length(x@sp)
 	else {
-		if (is(i, "Spatial"))
-			s = !is.na(over(x@sp, geometry(i)))
-		else if (is.logical(i)) {
+		if (is(i, "Spatial")) {
+			s = which(!is.na(over(x@sp, geometry(i))))
+		} else if (is.logical(i)) {
 			i = rep(i, length.out = length(x@sp))
 			s = which(i)
 		} else
@@ -157,3 +157,14 @@ na.omit.STFDF <- function(object, drop=TRUE, ...){
                   (1:nrow(object@time))[!1:nrow(object@time) %in% t],
                   drop=drop])
 }
+
+setMethod("addAttrToGeom", signature(x = "STF", y = "data.frame"),
+    function(x, y, match.ID, ...)
+		new("STFDF", x, data = y)
+)
+
+length.STF = function(x) { prod(dim(x)[1:2]) }
+
+length.STFDF = function(x) { prod(dim(x)[1:2]) }
+
+setMethod("geometry", "STFDF", function(obj) as(obj, "STF"))

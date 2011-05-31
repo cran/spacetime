@@ -93,3 +93,14 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	x
 }
 setMethod("[", "STIDF", subs.STIDF)
+
+setMethod("addAttrToGeom", signature(x = "STF", y = "data.frame"),
+    function(x, y, match.ID, ...)
+		new("STIDF", x, data = y)
+)
+
+length.STI = function(x) { length(x@sp) }
+
+length.STIDF = function(x) { length(x@sp) }
+
+setMethod("geometry", "STIDF", function(obj) as(obj, "STI"))

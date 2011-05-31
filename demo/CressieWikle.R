@@ -7,9 +7,16 @@
 # space:
 # convert to SpatialPoints, and set CRS:
 # read locations:
-ftpSite = "ftp://ftp.wiley.com/public/sci_tech_med/spatio_temporal_data/"
-getFTP = function(f) paste(ftpSite, f, sep="")
-ecd.ll = as.matrix(read.table(getFTP("ECDovelatlon.dat"), header=FALSE))
+LOCAL = TRUE
+getFILE = function(f) { 
+	if(LOCAL) 
+		f
+	else {
+	  ftpSite = "ftp://ftp.wiley.com/public/sci_tech_med/spatio_temporal_data/"
+	  paste(ftpSite, f, sep="") 
+	}
+}
+ecd.ll = as.matrix(read.table(getFILE("ECDovelatlon.dat"), header=FALSE))
 library(sp)
 ecd.ll = SpatialPoints(ecd.ll[,c(2,1)]) # lat-lon -> lon-lat
 proj4string(ecd.ll) = "+proj=longlat +datum=WGS84"
@@ -20,17 +27,29 @@ ecd.y = as.Date(paste(ecd.years, "-01-01", sep=""), "%Y-%m-%d")
 
 # spacetime:
 # read, and convert to matrix
-ecd = as.matrix(read.table(getFTP("ECDoveBBS1986_2003.dat"), header=FALSE))
+ecd = as.matrix(read.table(getFILE("ECDoveBBS1986_2003.dat"), header=FALSE))
 # set missing values
 ecd[ecd == -1] = NA
 library(spacetime)
 ecd.st = STFDF(ecd.ll, ecd.y, data.frame(counts = as.vector(ecd)))
-stplot(ecd.st, ecd.years, col.regions=bpy.colors())
+sel = (1:6) * 3
+stplot(ecd.st[,sel], 
+	ecd.years[sel], 
+	col.regions=bpy.colors(),
+	key.space = "right",
+	main = "Figure 5.5"
+)
 
-sst = as.matrix(read.table(getFTP("SST011970_032003.dat"), header = FALSE))
+ecd.xts = as(ecd.st, "xts")
+ecd.yt = (apply(ecd.xts, 1, function(x)sum(x,na.rm=TRUE)))
+plot(index(ecd.xts), ecd.yt, type = 'b',
+	xlab = 'Year', ylab = 'Eurasian Collared Dove Count')
+title("Figure 5.3")
+
+sst = as.matrix(read.table(getFILE("SST011970_032003.dat"), header = FALSE))
 
 # space:
-sst.ll = as.matrix(read.table(getFTP("SSTlonlat.dat"), header = FALSE))
+sst.ll = as.matrix(read.table(getFILE("SSTlonlat.dat"), header = FALSE))
 sst.ll = SpatialPoints(sst.ll)
 proj4string(sst.ll) = "+proj=longlat +datum=WGS84"
 gridded(sst.ll) = TRUE
@@ -41,30 +60,59 @@ sst.m = rep(1:12, length.out = 399)
 sst.Date = as.Date(paste(sst.y, sst.m, "01", sep="-"), "%Y-%m-%d")
 
 # landmask:
-sea = (as.vector(read.table(getFTP("SSTlandmask.dat"), header=FALSE)) != 1)[,1]
+sea = (as.vector(read.table(getFILE("SSTlandmask.dat"), header=FALSE)) != 1)[,1]
 
 # spacetime:
 sst.st = STFDF(sst.ll, sst.Date, data.frame(sst = as.vector(sst)))
 
-# now make a large plot window for this one:
+# make a large plot window for the following plot:
 tsel = 1:144
-stplot(sst.st[sea,tsel], 
+stplot(sst.st[sea, tsel], 
 	format(sst.Date, "%Y-%m")[tsel],
 	col.regions=bpy.colors(), 
 	layout = c(12,12))
+
+# re-create figure 5.1, with time axis increasing upward: 
+library(rgeos) # needed for "over" method, to select pixels on a line;
+eq = SpatialLines(list(Lines(list(Line(cbind(c(0,360),c(0,0)))), "equator")),
+	CRS(proj4string(sst.st)))
+stplot(sst.st[eq, "1996::2003", drop=F], 
+	mode = "xt",
+	col.regions=bpy.colors(), cuts = 32,
+	main="Figure 5.1",
+	xlab="Longitude", ylab = "Time (Year)",
+	scaleX=1
+)
 
 # re-create Fig 5.4:
 stplot(sst.st[sea,"1998-02::1999-01"],
 	col.regions=bpy.colors(),
 	# funny order; as.table=TRUE by default, so:
 	index.cond=list(c(1,7,2,8,3,9,4,10,5,11,6,12)),
-	layout = c(2, 6), scales = list(draw = TRUE)
+	layout = c(2, 6), scales = list(draw = TRUE),
+	main = "Figure 5.4"
 )
 
+# Figure 5.17: EOF's
+eof = EOF(sst.st[sea,])
+eof.t = EOF(sst.st[sea,], "temporal")
+spplot(eof[1], col.regions = bpy.colors(), scales = list(draw=TRUE),
+	main = "First EOF (Figure 5.17a)")
+plot(eof.t[,1], main = "5.17b (note that sign has flipped)", ylab = "EOF 1")
+spplot(eof[2], col.regions = bpy.colors(), scales = list(draw=TRUE),
+	main = "5.17c; Second EOF")
+plot(eof.t[,2], main = "5.17d", ylab = "EOF 2")
+# ... and so on.
+
+# 5.19: EOF summary stats
+eof.summ = EOF(sst.st[sea,], returnPredictions = FALSE)
+v = eof.summ$sdev^2
+plot(100*cumsum(v[1:100])/sum(v),
+	ylim=c(0,100), ylab = "Percent", xlab = "EOF", main = "Figure 5.19")
 
 # canton data:
-ca_nb = read.csv(getFTP("Canton_neighbor.csv"))
-ca_ve = read.csv(getFTP("Canton_vertex.csv"))
+ca_nb = read.csv(getFILE("Canton_neighbor.csv"))
+ca_ve = read.csv(getFILE("Canton_vertex.csv"))
 
 xc = paste("X", 1:76, sep="")
 yc = paste("Y", 1:76, sep="")

@@ -3,10 +3,12 @@ if (!isGeneric("stplot"))
 		standardGeneric("stplot"))
 
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
-		..., as.table = TRUE, at, animate = 0, mode = "xy", scaleX = 0) {
+		..., as.table = TRUE, at, cuts = 15, 
+		animate = 0, mode = "xy", scaleX = 0) {
     z = names(obj@data)[1]
 	if (missing(at))
-		at = seq(min(obj[[z]]), max(obj[[z]]), length.out = 16)
+		at = seq(min(obj[[z]], na.rm = TRUE), max(obj[[z]], na.rm = TRUE), 
+			length.out = cuts + 1)
 	if (mode == "xt") { # space-time cross section
 		scales = list(...)$scales
 		if (is.null(scales))
@@ -23,7 +25,8 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			f = as.formula(paste(z, "~", cn[2], "+ time"))
 		} else
 			f = as.formula(paste(z, "~ sp.ID + time"))
-		return(levelplot(f, as.data.frame(obj), at = at, scales = scales, ...))
+		return(levelplot(f, as.data.frame(obj), at = at, scales = scales, 
+			cuts = cuts, ...))
 	}
     form = as.formula(paste(z, "~ time"))
     sp = obj@sp
@@ -39,7 +42,8 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			Sys.sleep(animate)
 		}
 	} else
-		spplot(x, names.attr = names.attr, as.table = as.table, at = at,...)
+		spplot(x, names.attr = names.attr, as.table = as.table, at = at,
+			cuts = cuts, ...)
 }
 
 stplot.STIDF = function(obj, names.attr = index(obj@time), ...)
