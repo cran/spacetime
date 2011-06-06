@@ -66,6 +66,8 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 		else if (is.logical(i)) {
 			i = rep(i, length.out = length(x@sp))
 			s = which(i)
+		} else if (is.character(i)) { # suggested by BG:
+			s = match(i, row.names(x@sp), nomatch = FALSE)
 		} else
 			s = i
 	}
@@ -76,14 +78,12 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	else {
 		if (is.logical(j))
 			j = which(j)
-		nc = ncol(x@time)
-		x@time = cbind(x@time, 1:nrow(x@time))
-		# uses [.xts, deals with character/iso8601,
+		.time = xts(1:nrow(x@time), index(x@time))
+		# the following uses [.xts, deals with character/iso8601,
 		# and takes care of negative indices:
-		x@time = x@time[j] 
-		# get back the corresponding index vector t, to use for @data:
-		t = x@time[,nc+1]
-		x@time = x@time[,-(nc+1)]
+		.time = .time[j] 
+		# retrieve the corresponding index vector t, to use for @data:
+		t = as.vector(.time[,1])
 	}
 
 	si = x@index[,1] 
@@ -98,8 +98,17 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 # TG: Tom Gottfried reported at
 # https://stat.ethz.ch/pipermail/r-sig-geo/2011-March/011231.html
 
-	x@index = x@index[sel,, drop=FALSE] # -- so index number remain valid
+	x@index = x@index[sel,, drop=FALSE]
           # inserted drop=FALSE to handle (length(i)==1 && length(j)==1) # TG
+
+# now simplify everything, and drop any S/T not refered to:
+	u1 = unique(x@index[,1])
+	u2 = unique(x@index[,2])
+	x@sp = x@sp[u1,]
+	x@time = x@time[u2,]
+	x@index[,1] <- match(x@index[,1], u1)
+	x@index[,2] <- match(x@index[,2], u2)
+
 	if (drop) {
 		if (length(s) == 1) { # space index has only 1 item:
 			if (length(t) == 1)
@@ -107,9 +116,10 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 			else
 				x = xts(x@data, index(x@time[x@index[,2]]))
                                   # added index to achieve (nrow(x)==length(order.by)) in index() # TG
-		} else if (length(t) == 1) # only one time item
+		} else if (length(t) == 1) { # only one time item
 			x = addAttrToGeom(x@sp[x@index[,1],], x@data, match.ID = FALSE)
                          # added index to achieve matching SpatialPoints and data.frame # TG
+		}
 	}
 	x
 }

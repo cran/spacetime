@@ -90,6 +90,8 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 		} else if (is.logical(i)) {
 			i = rep(i, length.out = length(x@sp))
 			s = which(i)
+		} else if (is.character(i)) { # suggested by BG:
+			s = match(i, row.names(x@sp), nomatch = FALSE)
 		} else
 			s = i
 	}

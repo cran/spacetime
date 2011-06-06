@@ -66,6 +66,8 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	else if (is.logical(i)) {
 		i = rep(i, length.out = length(x@sp))
 		i = which(i)
+	} else if (is.character(i)) { # suggested by BG:
+		i = match(i, row.names(x@sp), nomatch = FALSE)
 	}
 
 	# time

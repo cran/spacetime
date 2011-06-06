@@ -302,8 +302,8 @@ Known Subclasses: "STIDFtraj"
 > mydata = rnorm(length(sp), mean=m)
 > IDs = paste("ID",1:length(mydata))
 > mydata = data.frame(values = signif(mydata,3),ID=IDs)
-> stsdf = STIDF(sp, time, mydata)
-> stsdf
+> stidf = STIDF(sp, time, mydata)
+> stidf
 An object of class "STIDF"
 Slot "data":
   values   ID
@@ -348,7 +348,7 @@ Slot "time":
 > ###################################################
 > ### chunk number 12: 
 > ###################################################
-> stsdf[1:2,]
+> stidf[1:2,]
 An object of class "STIDF"
 Slot "data":
   values   ID
@@ -447,18 +447,18 @@ attr(,"package")
 > identical(stfdf, xx)
 [1] TRUE
 > 
-> stpdf = as(stfdf, "STSDF")
-> stpdf[[1]]
+> stsdf = as(stfdf, "STSDF")
+> stsdf[[1]]
  [1]  8.77 18.70 29.70  8.47 21.10 32.50 10.80 20.20 29.00  9.74 20.70 30.50
-> stpdf[["values"]]
+> stsdf[["values"]]
  [1]  8.77 18.70 29.70  8.47 21.10 32.50 10.80 20.20 29.00  9.74 20.70 30.50
-> stpdf[["newVal"]] <- rnorm(12)
-> stpdf$ID
+> stsdf[["newVal"]] <- rnorm(12)
+> stsdf$ID
  [1] "OldIDs1"  "OldIDs2"  "OldIDs3"  "OldIDs4"  "OldIDs5"  "OldIDs6" 
  [7] "OldIDs7"  "OldIDs8"  "OldIDs9"  "OldIDs10" "OldIDs11" "OldIDs12"
-> stpdf$ID = paste("OldIDs", 1:12, sep="")
-> stpdf$NewID = paste("NewIDs", 12:1, sep="")
-> stpdf
+> stsdf$ID = paste("OldIDs", 1:12, sep="")
+> stsdf$NewID = paste("NewIDs", 12:1, sep="")
+> stsdf
 An object of class "STSDF"
 Slot "data":
    values       ID   newVal    NewID
@@ -505,12 +505,12 @@ Slot "time":
 2010-08-05 12:00:00    3
 2010-08-05 13:00:00    4
 
-> stpdf[,1] # SpatialPointsDataFrame:
+> stsdf[,1] # SpatialPointsDataFrame:
   coordinates values      ID   newVal    NewID
 1      (0, 0)   8.77 OldIDs1 -1.24345 NewIDs12
 2      (0, 1)  18.70 OldIDs2 -1.47698 NewIDs11
 3      (1, 1)  29.70 OldIDs3 -0.84284 NewIDs10
-> stpdf[,,1]
+> stsdf[,,1]
 An object of class "STSDF"
 Slot "data":
    values
@@ -557,13 +557,13 @@ Slot "time":
 2010-08-05 12:00:00    3
 2010-08-05 13:00:00    4
 
-> stpdf[1,,1] # xts
+> stsdf[1,,1] # xts
                     values
 2010-08-05 10:00:00   8.77
 2010-08-05 11:00:00   8.47
 2010-08-05 12:00:00  10.80
 2010-08-05 13:00:00   9.74
-> stpdf[,,"ID"]
+> stsdf[,,"ID"]
 An object of class "STSDF"
 Slot "data":
          ID
@@ -610,7 +610,7 @@ Slot "time":
 2010-08-05 12:00:00    3
 2010-08-05 13:00:00    4
 
-> stpdf[1,,"values", drop=FALSE] # stays STIDF:
+> stsdf[1,,"values", drop=FALSE] # stays STIDF:
 An object of class "STSDF"
 Slot "data":
    values
@@ -630,8 +630,6 @@ Slot "sp":
 SpatialPoints:
        x y
 point1 0 0
-point2 0 1
-point3 1 1
 Coordinate Reference System (CRS) arguments: NA 
 
 Slot "time":
@@ -641,7 +639,7 @@ Slot "time":
 2010-08-05 12:00:00    3
 2010-08-05 13:00:00    4
 
-> stpdf[,1, drop=FALSE] #stays STIDF
+> stsdf[,1, drop=FALSE] #stays STIDF
 An object of class "STSDF"
 Slot "data":
   values      ID   newVal    NewID
@@ -664,10 +662,10 @@ point3 1 1
 Coordinate Reference System (CRS) arguments: NA 
 
 Slot "time":
-                    ..1
-2010-08-05 10:00:00   1
+                    [,1]
+2010-08-05 10:00:00    1
 
-> as.data.frame(stpdf)
+> as.data.frame(stsdf)
    x y  sp.ID                time timedata values       ID   newVal    NewID
 1  0 0 point1 2010-08-05 10:00:00        1   8.77  OldIDs1 -1.24345 NewIDs12
 2  0 1 point2 2010-08-05 10:00:00        1  18.70  OldIDs2 -1.47698 NewIDs11
@@ -681,7 +679,7 @@ Slot "time":
 10 0 0 point1 2010-08-05 13:00:00        4   9.74 OldIDs10  0.15138  NewIDs3
 11 0 1 point2 2010-08-05 13:00:00        4  20.70 OldIDs11 -0.38780  NewIDs2
 12 1 1 point3 2010-08-05 13:00:00        4  30.50 OldIDs12  0.46815  NewIDs1
-> as(stpdf, "data.frame")
+> as(stsdf, "data.frame")
    x y  sp.ID                time timedata values       ID   newVal    NewID
 1  0 0 point1 2010-08-05 10:00:00        1   8.77  OldIDs1 -1.24345 NewIDs12
 2  0 1 point2 2010-08-05 10:00:00        1  18.70  OldIDs2 -1.47698 NewIDs11
@@ -696,18 +694,18 @@ Slot "time":
 11 0 1 point2 2010-08-05 13:00:00        4  20.70 OldIDs11 -0.38780  NewIDs2
 12 1 1 point3 2010-08-05 13:00:00        4  30.50 OldIDs12  0.46815  NewIDs1
 > 
-> stsdf = as(stfdf, "STIDF")
-> stsdf[[1]]
+> stidf = as(stfdf, "STIDF")
+> stidf[[1]]
  [1]  8.77 18.70 29.70  8.47 21.10 32.50 10.80 20.20 29.00  9.74 20.70 30.50
-> stsdf[["values"]]
+> stidf[["values"]]
  [1]  8.77 18.70 29.70  8.47 21.10 32.50 10.80 20.20 29.00  9.74 20.70 30.50
-> stsdf[["newVal"]] <- rnorm(12)
-> stsdf$ID
+> stidf[["newVal"]] <- rnorm(12)
+> stidf$ID
  [1] "OldIDs1"  "OldIDs2"  "OldIDs3"  "OldIDs4"  "OldIDs5"  "OldIDs6" 
  [7] "OldIDs7"  "OldIDs8"  "OldIDs9"  "OldIDs10" "OldIDs11" "OldIDs12"
-> stsdf$ID = paste("OldIDs", 1:12, sep="")
-> stsdf$NewID = paste("NewIDs", 12:1, sep="")
-> stsdf
+> stidf$ID = paste("OldIDs", 1:12, sep="")
+> stidf$NewID = paste("NewIDs", 12:1, sep="")
+> stidf
 An object of class "STIDF"
 Slot "data":
    values       ID   newVal    NewID
@@ -756,7 +754,7 @@ Slot "time":
 2010-08-05 13:00:00    4
 2010-08-05 13:00:00    4
 
-> stsdf[,1] # SpatialPointsDataFrame:
+> stidf[,1] # SpatialPointsDataFrame:
 An object of class "STIDF"
 Slot "data":
   values      ID newVal    NewID
@@ -772,7 +770,7 @@ Slot "time":
                     [,1]
 2010-08-05 10:00:00    1
 
-> stsdf[,,1]
+> stidf[,,1]
 An object of class "STIDF"
 Slot "data":
    values
@@ -821,7 +819,7 @@ Slot "time":
 2010-08-05 13:00:00    4
 2010-08-05 13:00:00    4
 
-> stsdf[1,,1] # xts
+> stidf[1,,1] # xts
 An object of class "STIDF"
 Slot "data":
   values
@@ -837,7 +835,7 @@ Slot "time":
                     [,1]
 2010-08-05 10:00:00    1
 
-> stsdf[,,"ID"]
+> stidf[,,"ID"]
 An object of class "STIDF"
 Slot "data":
          ID
@@ -886,7 +884,7 @@ Slot "time":
 2010-08-05 13:00:00    4
 2010-08-05 13:00:00    4
 
-> stsdf[1,,"values", drop=FALSE] # stays STIDF:
+> stidf[1,,"values", drop=FALSE] # stays STIDF:
 An object of class "STIDF"
 Slot "data":
   values
@@ -902,7 +900,7 @@ Slot "time":
                     [,1]
 2010-08-05 10:00:00    1
 
-> stsdf[,1, drop=FALSE] #stays STIDF
+> stidf[,1, drop=FALSE] #stays STIDF
 An object of class "STIDF"
 Slot "data":
   values      ID newVal    NewID
@@ -918,7 +916,7 @@ Slot "time":
                     [,1]
 2010-08-05 10:00:00    1
 
-> as.data.frame(stsdf)
+> as.data.frame(stidf)
    x y  sp.ID                time timedata values       ID   newVal    NewID
 1  0 0 point1 2010-08-05 10:00:00        1   8.77  OldIDs1  1.67415 NewIDs12
 2  0 1 point2 2010-08-05 10:00:00        1  18.70  OldIDs2 -1.47819 NewIDs11
@@ -932,7 +930,7 @@ Slot "time":
 10 0 0 point1 2010-08-05 13:00:00        4   9.74 OldIDs10  1.03354  NewIDs3
 11 0 1 point2 2010-08-05 13:00:00        4  20.70 OldIDs11  0.82826  NewIDs2
 12 1 1 point3 2010-08-05 13:00:00        4  30.50 OldIDs12 -0.75862  NewIDs1
-> as(stsdf, "data.frame")
+> as(stidf, "data.frame")
    x y  sp.ID                time timedata values       ID   newVal    NewID
 1  0 0 point1 2010-08-05 10:00:00        1   8.77  OldIDs1  1.67415 NewIDs12
 2  0 1 point2 2010-08-05 10:00:00        1  18.70  OldIDs2 -1.47819 NewIDs11
