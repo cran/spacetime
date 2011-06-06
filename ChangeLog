@@ -1,3 +1,54 @@
+2011-05-26 15:31  EdzerPebesma
+
+	* DESCRIPTION, R/stplot.R: spplot didn't deal with missing values;
+	  version bump
+
+2011-05-25 16:14  EdzerPebesma
+
+	* DESCRIPTION, R/eof.R, man/eof.Rd: version update; added option to
+	  output prcomp object to EOF().
+
+2011-05-25 10:10  EdzerPebesma
+
+	* tests/wind.Rout.save: test output
+
+2011-05-25 10:07  EdzerPebesma
+
+	* man/eof.Rd, tests/wind.R: docs for EOF.
+
+2011-05-25 10:05  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, tests/basic.Rout.save, tests/wind.R:
+	  updated checks
+
+2011-05-25 09:47  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STSDF-methods.R, R/eof.R, R/stplot.R, demo/CressieWikle.R,
+	  inst/doc/spacetime.Rnw, man/stplot.Rd: further work on
+	  CressieWikle examples; two more stplot methods
+	  (space-time plot; animation). Added EOF, both spatial and
+	  temporal.
+
+2011-05-23 11:23  EdzerPebesma
+
+	* demo/CressieWikle.R: added spdep
+
+2011-05-23 10:40  EdzerPebesma
+
+	* R/over.R: (still non-working) over methods
+
+2011-05-23 10:20  EdzerPebesma
+
+	* demo/CressieWikle.R: updated routines
+
+2011-05-22 20:23  EdzerPebesma
+
+	* DESCRIPTION, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STSDF-methods.R, demo/00Index, demo/CressieWikle.R: allow
+	  logical selector index; added Cressie & Wikle 2011 import / plot
+	  demo
+
 2011-05-05 13:51  EdzerPebesma
 
 	* DESCRIPTION, man/stconstruct.Rd: version; conditional rgdal

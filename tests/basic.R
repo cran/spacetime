@@ -72,14 +72,14 @@ m = 1:9 * 10 # means for each of the 9 point locations
 mydata = rnorm(length(sp), mean=m)
 IDs = paste("ID",1:length(mydata))
 mydata = data.frame(values = signif(mydata,3),ID=IDs)
-stsdf = STIDF(sp, time, mydata)
-stsdf
+stidf = STIDF(sp, time, mydata)
+stidf
 
 
 ###################################################
 ### chunk number 12: 
 ###################################################
-stsdf[1:2,]
+stidf[1:2,]
 
 
 ###################################################
@@ -123,24 +123,7 @@ class(as(x, "STFDF"))
 xx = as(x, "STFDF")
 identical(stfdf, xx)
 
-stpdf = as(stfdf, "STSDF")
-stpdf[[1]]
-stpdf[["values"]]
-stpdf[["newVal"]] <- rnorm(12)
-stpdf$ID
-stpdf$ID = paste("OldIDs", 1:12, sep="")
-stpdf$NewID = paste("NewIDs", 12:1, sep="")
-stpdf
-stpdf[,1] # SpatialPointsDataFrame:
-stpdf[,,1]
-stpdf[1,,1] # xts
-stpdf[,,"ID"]
-stpdf[1,,"values", drop=FALSE] # stays STIDF:
-stpdf[,1, drop=FALSE] #stays STIDF
-as.data.frame(stpdf)
-as(stpdf, "data.frame")
-
-stsdf = as(stfdf, "STIDF")
+stsdf = as(stfdf, "STSDF")
 stsdf[[1]]
 stsdf[["values"]]
 stsdf[["newVal"]] <- rnorm(12)
@@ -156,3 +139,20 @@ stsdf[1,,"values", drop=FALSE] # stays STIDF:
 stsdf[,1, drop=FALSE] #stays STIDF
 as.data.frame(stsdf)
 as(stsdf, "data.frame")
+
+stidf = as(stfdf, "STIDF")
+stidf[[1]]
+stidf[["values"]]
+stidf[["newVal"]] <- rnorm(12)
+stidf$ID
+stidf$ID = paste("OldIDs", 1:12, sep="")
+stidf$NewID = paste("NewIDs", 12:1, sep="")
+stidf
+stidf[,1] # SpatialPointsDataFrame:
+stidf[,,1]
+stidf[1,,1] # xts
+stidf[,,"ID"]
+stidf[1,,"values", drop=FALSE] # stays STIDF:
+stidf[,1, drop=FALSE] #stays STIDF
+as.data.frame(stidf)
+as(stidf, "data.frame")

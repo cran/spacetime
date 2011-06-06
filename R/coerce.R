@@ -22,7 +22,7 @@ setAs("STSDF", "STFDF", as.STFDF.STSDF)
 as.STSDF.STFDF = function(from) {
 	# take out the NA cells and fill the index
 	# NOTE: does not (yet) take out empty space/time entities 
-	# -- shouls this be optional?
+	# -- should this be optional?
 	n = length(from@sp)
 	m = nrow(from@time)
 	index = cbind(rep(1:n, m), rep(1:m, each=n))

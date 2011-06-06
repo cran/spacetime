@@ -7,7 +7,6 @@ Questions: (ltraj: ID, burst) -- two levels of ID's?
 5. mbool "moving bool" is, essentially, "changing bool" (change over time)
 6. speed: taken from t-1 to t, or t to t+1? How to deal with first or last?
 
-
 RH Gueting
 _analyzing_ movement data in the moving object dbms secondo.
 
@@ -53,7 +52,9 @@ b   ==
 let later = vec(aabb)
 let during = vec(abba a.bba abb.a)
 etc.
-Mahmoud something, PhD student.
+Mahmoud something, PhD student.; Geoinformatica 2011.
 stpattern operator.; condition, 
+
+plot: uses colour to denote climb / descend pattern of plane.
 
 
