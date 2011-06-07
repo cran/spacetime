@@ -1,0 +1,256 @@
+% Mon Jun 20 22:48:30 CEST 2011
+
+\documentclass[nogin,a4paper]{article}
+
+%\usepackage[OT1]{fontenc}
+
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage{Sweave}
+\usepackage[utf8]{inputenc}
+\newcommand{\code}[1]{{\tt #1}}
+
+\title{\bf Spatio-temporal overlay and aggregation }
+
+\author{ \includegraphics[scale=.7]{ifgi-logo_int}\\
+\href{mailto:edzer.pebesma@uni-muenster.de}{Edzer Pebesma}
+}
+\date{\small \today }
+
+\begin{document}
+% \VignetteIndexEntry{spacetime: classes and methods for spatio-temporal data}
+\maketitle
+
+\begin{abstract}
+The so-called ``map overlay'' is not very well defined and does not
+have a simple equivalent in space-time. This paper will explain how
+the {\tt over} method for combining two spatial features (and/or
+grids), defined in package {\tt sp} and extended in package {\tt
+rgeos}, is implemented for spatio-temporal objects in package {\tt
+spacetime}. It is used to carry out aggreation of spatio-temporal
+data over space, time, or space-time.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+The so-called {\em map overlay} is a key GIS operation
+that does not seem to have a very sharp definition. The
+\href{http://cran.r-project.org/web/packages/sp/vignettes/over.pdf}{over
+vignette} in package {\tt sp} comments on what paper (visual)
+overlays are, and discusses the {\tt over} and {\tt aggregate}
+methods for spatial data.
+
+In the
+\href{http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Overlay_analysis}{ESRI
+ArcGIS} tutorial, it can be read that
+\begin{quotation}
+{\em An overlay operation is much more than a simple merging of linework;
+all the attributes of the features taking part in the overlay are
+carried through, as shown in the example below, where parcels
+(polygons) and flood zones (polygons) are overlayed (using the
+Union tool) to create a new polygon layer. The parcels are split
+where they are crossed by the flood zone boundary, and new polygons
+created. The FID\_flood value indicates whether polygons are outside
+(-1) or inside the flood zone, and all polygons retain their original
+land use category values.}
+\end{quotation}
+It later on mentions {\em raster overlays}, such as the addition
+of two (matching) raster layers (so, potentially the whole of map
+algebra functions, where two layers are involved).
+
+In the open source arena, with no budgets for English language editing, the
+\href{http://grass.fbk.eu/grass70/manuals/html70_user/v.overlay.html}{Grass
+7.0 documentation} has mentions the following:
+\begin{quotation}
+{\em {\tt v.overlay} allows the user to overlay two vector area maps. The
+resulting output map has a merged attribute-table. The origin
+column-names have a prefix (a\_ and b\_) which results from the ainput-
+and binput-map. [...] 
+Operator defines features written to output vector map Feature
+is written to output if the result of operation 'ainput operator
+binput' is true. Input feature is considered to be true, if category
+of given layer is defined.  Options: and, or, not, xor. }
+\end{quotation}
+
+\section{Overlay with method {\tt over}}
+
+Being loosely defined, {\em map overlay} seems to have several
+properties:
+\begin{itemize}
+\item it involves at least two maps
+\item it may be asymmetric ({\em overlay} is not {\em underlay})
+\item it may be a visual activity, or a numerical activity.
+\end{itemize}
+
+The method {\tt over}, as defined in package {\tt sp}, provides
+a way to numerically combine two maps. In particular,
+<<eval=FALSE>>=
+over(x, geometry(y))
+@
+retrieves an array of {\tt length(x)} with {\tt x[i]} the index
+of {\tt y}, spatially corresponding to {\tt x[i]}, so {\tt x[i]=j}
+means that {\tt x[i]} and {\tt y[j]} match (have the same location,
+touch, or overlap), or {\tt NA} if there is no match. 
+If {\tt y} has attributes, then
+<<eval=FALSE>>=
+over(x, y)
+@
+retrieves a {\tt data.frame} with {\tt length(x)} rows, where row
+{\tt i} contains the attributes of {\tt y} at the spatial location
+of {\tt x[i]}, and NA values if there is no match.
+
+If the relationship is more complex, e.g. a polygon or grid cell
+{\tt x} containing more than one point of {\tt y}, the command
+<<eval=FALSE>>=
+over(x, y, returnList = TRUE)
+@
+returns a list of length {\tt length(x)}, with each list element a
+numeric vector with all indices (if {\tt y} is geometry only) or a
+data frame with all attribute table rows of {\tt y} that spatially
+matches {\tt x[i]}.
+
+\section{Spatio-temporal overlay with method {\tt over}}
+
+Package {\tt spacetime} adds {\tt over} methods to those defined 
+for spatial data in package {\tt sp}:
+<<>>=
+library(spacetime)
+showMethods(over)
+@
+
+% <<keep.source=TRUE>>=
+% download.file("http://ifgi.uni-muenster.de/~epebe_01/cw.rda", "cw.rda")
+% load("cw.rda")
+% unlink("cw.rda")
+% @
+
+\subsection{Time intervals or time instances?}
+
+When computing the overlay 
+<<eval=FALSE>>=
+over(x, y)
+@
+A space-time feature matches another space-time feature when their
+spatial locations match (coincide, touch, intersect or overlap),
+and when their temporal extents match. For temporal extent, it
+is crucial whether time is considered to be a time interval, or a
+time instance.  Matching time instance is always considered.
+
+The {\tt over} methods in package {\tt spacetime} have a boolean
+argument {\tt timeInterval} which is by default {\tt TRUE} for
+the cases where {\tt y} derives from class {\tt STF} or {\tt STS},
+and {\tt FALSE} when {\tt y} derives from class {\tt STI}. When {\tt
+TRUE}, the times of {\tt y} are considered as time intervals, meaning
+that the times of {\tt x[i,j]} and {\tt y[k,l]} match if the time
+instant of {\tt x[i,j]} is larger than or equal to the time instant
+of {\tt y[k,l]}, but less than the next time instant.  The time
+interval length of the last time step is taken to be identical to
+the last time interval of an object. 
+
+Spatio-temporal objects with only one time step cannot be used to
+determine time intervals.
+
+\section{Aggregating spatio-temporal data}
+
+The {\tt aggregate} method for a {\tt data.frame} is defined as
+<<eval=FALSE>>=
+aggregate(x, by, FUN, ..., simplify = TRUE)
+@
+where {\tt x} is the {\tt data.frame} to be aggregated, {\tt by}
+indicates how groups of {\tt x} are formed, {\tt FUN} is applied to
+each group, and {\tt simplify} indicates whether the output should
+be simplified (to vector), or remain a {\tt data.frame}. The {\tt
+...} are passed to {\tt FUN}, e.g. passing {na.rm=TRUE} is useful
+when {\tt FUN} is {\tt mean} and missing values need to be ignored.
+
+For spatio-temporal data, the {\tt x} argument needs to be of class
+{\tt STFDF}, {\tt STSDF} or {\tt STIDF}. The {\tt by} argument
+needs to specify an aggregation medium: time, space, or space-time.
+
+\subsection{Example data: PM10}
+
+Air quality example data are loaded by
+<<>>=
+data(air)
+class(rural)
+class(DE_NUTS1)
+@
+it provides PM10 daily mean values (taken from
+\href{http://acm.eionet.europa.eu/databases/airbase}{AirBase -
+the European Air quality dataBase}), for Germany, 1998-2009, where
+only stations classified as {\em rural background} were selected.
+The object {\tt DE\_NUTS1} contains NUTS-1 level state boundaries
+for Germany, downloaded from \href{http://www.gadm.org/}{GADM}.
+
+\subsection{Spatial aggregation}
+
+A spatial aggregation of time series can be obtained by grouping
+them to the state (``Bundesland'') level. States are passed as
+a {\tt SpatialPolygons} object:
+<<fig=TRUE>>=
+dim(rural[,"2008"])
+x = aggregate(rural[,"2008"], DE_NUTS1, mean, na.rm=T)
+dim(x)
+summary(x)
+print(stplot(x, mode = "tp"))
+@
+
+An aggregation for all stations selected within a single
+area is obtained by merging all states:
+<<>>=
+library(rgeos)
+DE = gUnionCascaded(DE_NUTS1)
+@
+
+and then aggregating the observations within Germany for
+each moment in time:
+<<fig=TRUE>>=
+x = aggregate(rural[,"2008"], DE, mean, na.rm=T)
+class(x)
+plot(x)
+@
+
+\subsection{Temporal aggregation}
+
+Aggregating values {\em temporally} is done by passing
+a character string or a function to the {\tt by} argument.
+For monthly data, we will first select those stations that
+have measured (non-NA) values in 2008:
+<<fig=TRUE>>=
+sel = which(!apply(as(rural[,"2008"], "xts"), 2, function(x) all(is.na(x))))
+x = aggregate(rural[sel,"2008"], "month", mean, na.rm=T)
+print(stplot(x, mode = "tp"))
+@
+
+The strings that can be passed are e.g. {\tt "year"}, but also {\tt
+"3 days"}. See {\tt ?cut.Date} for possible values. Aggregation using
+this way is only possible if the time index is of class {\tt Date}
+or {\tt POSIXct}.
+
+An alternative is to provide a function for temporal aggregation:
+<<fig=TRUE>>=
+x = aggregate(rural[sel,"2005::2011"], as.yearqtr, mean, na.rm=T)
+print(stplot(x, mode = "tp"))
+@
+further information can be found in {\tt ?aggregate.zoo}, which is
+the function used to do the processing.
+
+\subsection{Spatio-temporal aggregation}
+
+Aggregation over spatio-temporal volumes can be done by passing
+an object inheriting from {\tt ST} to the {\tt by} argument:
+<<>>=
+DE.years = STF(DE, xts(1:2, as.POSIXct(as.Date(c("2008-01-01", "2009-01-01")))))
+aggregate(rural[,"2008::2009"], DE.years, mean, na.rm=TRUE)
+@
+
+\subsection{Time intervals?}
+
+Spatial, temporal and spatio-temporal aggregation is all based
+on the {\tt over} methods. Whether time is considered to be time
+intervals (for establising whether a space-time point falls,
+time-wise, inside an interval or coincides with the time point),
+depends on the defaults for the {\tt over} methods.
+
+\end{document}

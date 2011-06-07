@@ -29,7 +29,8 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 		row.names(x@sp) = 1:nrow(x@sp)
 	timedata = apply(x@time, 2, rep, each = length(x@sp))
   	ret = data.frame(as.data.frame(coordinates(x)), 
-		sp.ID = rep(row.names(x@sp), length(x@time)),
+		sp.ID = rep(factor(row.names(x@sp), levels = row.names(x@sp)),
+			length(x@time)),
 		time = index(x),
 		timedata,
 		row.names = row.names, ...)
@@ -126,10 +127,10 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	if (drop) {
 		if (length(s) == 1 && all(s > 0)) { # space index has only 1 item:
 			if (length(t) == 1)
-				x = x@data[1,1,drop=TRUE]
+				x = x@data[1,]
 			else
 				x = xts(x@data, index(x@time))
-		} else if (length(t) == 1) # only one data item
+		} else if (length(t) == 1) # only one time step:
 			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}
 	x

@@ -1041,22 +1041,22 @@ Warning messages:
 > x = STFDF(xy, t0, data.frame(a = 1:64))
 > over(x, y)
      a
-1   NA
-2   NA
-3   NA
-4   NA
-5   NA
-6   NA
-7   NA
-8   NA
-9   NA
-10  NA
-11  NA
-12  NA
-13  NA
-14  NA
-15  NA
-16  NA
+1   34
+2   35
+3   36
+4   38
+5   44
+6   45
+7   46
+8   48
+9   54
+10  55
+11  56
+12  58
+13  74
+14  75
+15  76
+16  78
 17 134
 18 135
 19 136
@@ -1173,6 +1173,8 @@ Warning messages:
 62 975
 63 976
 64 978
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > 
 > xy = SpatialPoints(cbind(c(1,3,5,10),c(5, 3, 8, 2)))
 > x = STIDF(xy, t0, data.frame(a = 1:4))
@@ -1182,6 +1184,8 @@ Warning messages:
 2 123
 3 375
 4 920
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > 
 > t1 = xts(1:4, c(index(t)[1]-1,index(t)[c(2,2,10)]))
 > x1 = STIDF(xy[c(1,2,2,4)], t1, data.frame(a = 1:4))
@@ -1192,12 +1196,16 @@ Warning messages:
 2 2
 3 2
 4 4
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > over(x, x1)
    a
 1  1
 2  2
 3 NA
 4  4
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > over(x1, x, returnList = TRUE)
 [[1]]
   a
@@ -1215,6 +1223,8 @@ Warning messages:
   a
 4 4
 
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > over(x, x1, returnList = TRUE)
 [[1]]
   a
@@ -1233,4 +1243,6 @@ Warning messages:
   a
 4 4
 
+Warning message:
+In .local(x, y, returnList, fn, ...) : returnList not fully supported yet
 > 

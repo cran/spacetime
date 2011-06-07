@@ -1,5 +1,6 @@
 \name{over-methods}
 \docType{methods}
+\alias{over}
 \alias{over,xts,xts-method}
 \alias{over,STF,STF-method}
 \alias{over,STS,STF-method}
@@ -27,7 +28,7 @@ retrieves the indexes or attributes from one geometry at the spatio-temporal
 points of another }
 \usage{
 \S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
-\method{aggregate}{ST}(x, by, FUN = mean, \dots)
+\method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 }
 \arguments{
 \item{x}{geometry (S/T locations) of the queries}
@@ -39,6 +40,8 @@ as instance; but read note below }
 \item{fn}{(optional) a function; see value }
 \item{by}{ geometry over which attributes in \code{x} are aggregated }
 \item{FUN}{aggregation function }
+\item{simplify}{boolean; if TRUE, and space or time dimensions can be
+dropped, the simpler (\code{Spatial} or \code{xts}) object will be returned }
 \item{...}{arguments passed on to function fn or FUN}
 }
 \value{ 
@@ -51,21 +54,32 @@ the vector of indices of the geometries in \code{y} that correspond
 to the $i$-th geometry in \code{x}.
 
 Function aggregate.ST aggregates the attribute values of \code{x}
-over the geometry of \code{by}, using aggregation function FUN.
+over the geometry (space, time, or space-time) of \code{by}, using
+aggregation function FUN.
+
 } 
 \section{Methods}{
 \describe{
 \item{x = "STF", y = "STF"}{ }
+\item{x = "xts", y = "xts"}{ finds the row index of the instance
+or interval of time instances of \code{x} matching to \code{y}. Only if
+\code{timeInterval = TRUE}, intervals are sought. In that case,
+time intervals start at the time instance of a record, and end at
+the next. The last time interval length is set to the interval length
+of the one-but-last (non-zero) interval. In case of a single time
+instance for \code{y}, its interval is right-open.  }
+
 }
 }
 
 \note{
-Argument \code{timeInterval} needs to be \code{FALSE} when
-\code{y=STI} calls, as a straightforward implementation when time
-is interval was not found for these objects.
+Argument \code{timeInterval} needs to be \code{FALSE} when \code{y}
+is of class \code{STI}, as a straightforward implementation when
+time is interval was not found for these objects.
 
-See also \link[sp]{over}; methods involving SpatialLines or SpatialPolygons with
-SpatialPolygons need rgeos to be loaded first.
+See also \link[sp]{over}; methods intersecting SpatialLines with
+anything else, or SpatialPolygons with SpatialPolygons, need rgeos
+to be loaded first.
 }
 \author{Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de}}
 

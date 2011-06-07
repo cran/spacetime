@@ -36,6 +36,7 @@ as.data.frame.STSDF = function(x, row.names = NULL, ...) {
   	data.frame(f, x@data, row.names = row.names, ...)
 }
 setAs("STSDF", "data.frame", function(from) as.data.frame.STSDF(from))
+setAs("STSDF", "xts", function(from) as(as(from, "STFDF"), "xts"))
 
 subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	n.args = nargs()
@@ -125,7 +126,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 }
 setMethod("[", "STSDF", subs.STSDF)
 
-setMethod("addAttrToGeom", signature(x = "STF", y = "data.frame"),
+setMethod("addAttrToGeom", signature(x = "STS", y = "data.frame"),
     function(x, y, match.ID, ...)
 		new("STSDF", x, data = y)
 )
