@@ -43,7 +43,9 @@ as.data.frame.STIDF = function(x, row.names = NULL, ...) {
 }
 setAs("STIDF", "data.frame", function(from) as.data.frame.STIDF(from))
 
-as.xts.STIDF = function(x, ...) xts(x@data, index(x@sp))
+as.xts.STIDF = function(x, ...) xts(x@data, index(x@time))
+
+setAs("STIDF", "xts", function(from) as.xts.STIDF(from))
 
 subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	missing.i = missing(i)
@@ -96,7 +98,7 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 }
 setMethod("[", "STIDF", subs.STIDF)
 
-setMethod("addAttrToGeom", signature(x = "STF", y = "data.frame"),
+setMethod("addAttrToGeom", signature(x = "STI", y = "data.frame"),
     function(x, y, match.ID, ...)
 		new("STIDF", x, data = y)
 )

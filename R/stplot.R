@@ -4,12 +4,33 @@ if (!isGeneric("stplot"))
 
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		..., as.table = TRUE, at, cuts = 15, 
-		animate = 0, mode = "xy", scaleX = 0) {
+		animate = 0, mode = "xy", scaleX = 0, 
+		auto.key = TRUE, key.space = "right") {
     z = names(obj@data)[1]
 	if (missing(at))
 		at = seq(min(obj[[z]], na.rm = TRUE), max(obj[[z]], na.rm = TRUE), 
 			length.out = cuts + 1)
-	if (mode == "xt") { # space-time cross section
+	if (mode == "ts") { # multiple time series
+		xyplot(as.formula(paste(z, "~", "time")), 
+				as.data.frame(obj), groups = sp.ID, 
+				type = 'l',auto.key = auto.key, as.table = as.table, ...)
+	} else if (mode == "tp") { # time series in multiple panels
+    	if (ncol(obj@data) == 1)
+			xyplot(as.formula(paste(z, "~ time | sp.ID")), 
+				as.data.frame(obj), type = 'l', auto.key = auto.key, 
+				key.space = key.space, as.table = as.table, ...)
+		else {
+			n = names(obj@data)
+			df = as.data.frame(obj)
+			st = stack(df, n) # values ~ ind
+			st$time = df$time
+			st$sp.ID = df$sp.ID
+			xyplot(as.formula(paste("values ~ time | sp.ID")), 
+				st, type = 'l', groups = ind,
+				key.space = key.space, auto.key = auto.key, 
+				as.table = as.table, ...)
+		}
+	} else if (mode == "xt") { # space-time cross section
 		scales = list(...)$scales
 		if (is.null(scales))
 			scales = list(draw=TRUE)
@@ -25,29 +46,32 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			f = as.formula(paste(z, "~", cn[2], "+ time"))
 		} else
 			f = as.formula(paste(z, "~ sp.ID + time"))
-		return(levelplot(f, as.data.frame(obj), at = at, scales = scales, 
-			cuts = cuts, ...))
+		levelplot(f, as.data.frame(obj), at = at, scales = scales, 
+			cuts = cuts, as.table = as.table, ...)
+	} else {
+    	form = as.formula(paste(z, "~ time"))
+    	sp = obj@sp
+    	df = unstack(as.data.frame(obj), form)
+		x = addAttrToGeom(sp, df, match.ID=FALSE)
+		if (animate > 0) {
+			i = 0
+			while (TRUE) {
+				i = i + 1
+				if (i > ncol(df)) 
+					i = 1
+				print(spplot(x[,i], main = names.attr[i], at = at, 
+					as.table = as.table, auto.key = auto.key, 
+					key.space = key.space, ...))
+				Sys.sleep(animate)
+			}
+		} else
+			spplot(x, names.attr = names.attr, as.table = as.table, at = at,
+				cuts = cuts, auto.key = auto.key, key.space = key.space, ...)
 	}
-    form = as.formula(paste(z, "~ time"))
-    sp = obj@sp
-    df = unstack(as.data.frame(obj), form)
-	x = addAttrToGeom(sp, df, match.ID=FALSE)
-	if (animate > 0) {
-		i = 0
-		while (TRUE) {
-			i = i + 1
-			if (i > ncol(df)) 
-				i = 1
-			print(spplot(x[,i], main = names.attr[i], at = at, ...))
-			Sys.sleep(animate)
-		}
-	} else
-		spplot(x, names.attr = names.attr, as.table = as.table, at = at,
-			cuts = cuts, ...)
 }
 
-stplot.STIDF = function(obj, names.attr = index(obj@time), ...)
-	stplot(as(obj, "STFDF"), names.attr = names.attr, ...)
+#stplot.STIDF = function(obj, names.attr = index(obj@time), ...)
+#	stplot(as(obj, "STFDF"), names.attr = names.attr, ...)
 
 stplot.STIDF = function(obj, names.attr = NULL, ..., 
 		as.table = TRUE, by = c("time", "burst", "id"), 

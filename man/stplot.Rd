@@ -18,7 +18,8 @@
 \usage{ 
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
-	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0)
+	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0,
+	auto.key = TRUE, key.space = "right")
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
     NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp)
@@ -32,16 +33,19 @@ if FALSE, time will increase from bottom to top }
 \item{cuts}{ number of levels the range of the attribute would be divided into }
 \item{animate}{ numeric; if larger than 0, the number of seconds between
 subsequent animated time steps (loop; press ctrl-C or Esc to stop) }
-\item{mode}{ plotting mode; if "xy", maps for time steps are plotted; if "xt",
-a space-time plot is constructed; see argument \code{scaleX},
-but read details below }
+\item{mode}{ plotting mode; if "xy", maps for time steps are plotted; 
+if "xt", a space-time plot is constructed (see argument \code{scaleX},
+but read details below); if "ts" multiple time series in a single plot
+are plotted; if "tp" time series in are plotted in multiple panels. }
 \item{scaleX}{ integer: 0, 1 or 2; when \code{mode} is "xt", used to determine
 whether the index of the spatial location is shown (0), the x coordinate (1)
 or the y coordinate (2). }
+\item{auto.key}{see \link[lattice]{xyplot}}
+\item{key.space}{character; see \link[lattice]{xyplot}}
 \item{by}{ conditioning variable(s); in case \code{time} is conditioning
 variable, it will be classified using \link{equal.count}, using parameters
 \code{overlap} and \code{number}}
-\item{scales}{ scales drawing; see \code{scales} argument of \link{xyplot}}
+\item{scales}{ scales drawing; see \code{scales} argument of \link[lattice]{xyplot}}
 \item{xlab}{ x-axis label}
 \item{ylab}{ y-axis label }
 \item{type}{ character; use 'l' for lines, 'p' for symbols,
@@ -49,11 +53,11 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{number}{ see argument \code{by}}
 \item{overlap}{ see argument \code{by} }
 \item{asp}{ aspect ratio of plot }
-\item{...}{ arguments passed on to \link{spplot} in case of stplot.STFDF,
-or to \link{xyplot} in case of stplot.STIDF}
+\item{...}{ arguments passed on to \link[sp]{spplot} in case of stplot.STFDF,
+or to \link[lattice]{xyplot} in case of stplot.STIDF}
 }
 \value{ In non-animation and "xy" mode, \code{stplot} is a wrapper
-around \link{spplot}, that automically plots each time stamp in
+around \link[sp]{spplot}, that automically plots each time stamp in
 a panel.  The returned value is is a lattice plot.
 
 In "xt" mode, a space-time plot with space on the x-axis and time
