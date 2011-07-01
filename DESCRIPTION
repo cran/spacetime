@@ -1,6 +1,6 @@
 Package: spacetime
-Version: 0.4-4
-Date: 2011-06-07
+Version: 0.5-0
+Date: 2011-07-01
 Title: classes and methods for spatio-temporal data
 Author: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
 Author@R: c(person("Edzer", "Pebesma", email =
@@ -20,6 +20,6 @@ Collate: Class-xts.R Class-ST.R Class-STSDF.R Class-STIDF.R
         Class-STFDF.R traj.R ST-methods.R STFDF-methods.R
         STSDF-methods.R STIDF-methods.R apply.R coerce.R stconstruct.R
         stplot.R over.R eof.R
-Packaged: 2011-06-21 12:43:31 UTC; edzer
+Packaged: 2011-07-01 06:48:47 UTC; edzer
 Repository: CRAN
-Date/Publication: 2011-06-21 13:16:32
+Date/Publication: 2011-07-02 14:22:29

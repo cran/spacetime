@@ -164,3 +164,19 @@ plot(nb, coordinates(can), col = grey(.5), add=TRUE)
 lw = nb2listw(nb)
 # need to figure out whether the output of this is nonsense:
 spautolm(Z~X1+X2, as.data.frame(can), lw)
+
+s = sst.st[,1:3]
+stplot(s)
+sp = sst.st[,1]
+class(sp)
+sp.x = spsample(sp, 630, "regular", offset = c(.5,.5))
+stplot(s, sp.layout=list("sp.points", sp.x))
+sa = aggregate(s, sp.x)
+stplot(sa)
+s1 = aggregate(s, sp.x[sample(630),])
+s2 = aggregate(s, sp.x[sample(630),])
+stplot(s1)
+s1[1,1]
+stplot(s2) # plot should be identical
+# should be different, as pixel order changed:
+s2[1,1]

@@ -17,7 +17,7 @@
 \date{\small \today }
 
 \begin{document}
-% \VignetteIndexEntry{spacetime: classes and methods for spatio-temporal data}
+% \VignetteIndexEntry{ Spatio-temporal overlay and aggregation }
 \maketitle
 
 \begin{abstract}
@@ -26,8 +26,9 @@ have a simple equivalent in space-time. This paper will explain how
 the {\tt over} method for combining two spatial features (and/or
 grids), defined in package {\tt sp} and extended in package {\tt
 rgeos}, is implemented for spatio-temporal objects in package {\tt
-spacetime}. It is used to carry out aggreation of spatio-temporal
-data over space, time, or space-time.
+spacetime}. It may carry out the numerical spatio-temporal overlay,
+and can be used for aggregation of spatio-temporal data over space,
+time, or space-time.
 \end{abstract}
 
 \tableofcontents
@@ -61,7 +62,7 @@ algebra functions, where two layers are involved).
 
 In the open source arena, with no budgets for English language editing, the
 \href{http://grass.fbk.eu/grass70/manuals/html70_user/v.overlay.html}{Grass
-7.0 documentation} has mentions the following:
+7.0 documentation} mentions the following:
 \begin{quotation}
 {\em {\tt v.overlay} allows the user to overlay two vector area maps. The
 resulting output map has a merged attribute-table. The origin
@@ -75,12 +76,12 @@ of given layer is defined.  Options: and, or, not, xor. }
 
 \section{Overlay with method {\tt over}}
 
-Being loosely defined, {\em map overlay} seems to have several
-properties:
+Being loosely defined, we characterize {\em map overlay} 
+by
 \begin{itemize}
-\item it involves at least two maps
-\item it may be asymmetric ({\em overlay} is not {\em underlay})
-\item it may be a visual activity, or a numerical activity.
+\item involving at least two maps
+\item being asymmetric -- {\em overlay} is not {\em underlay}
+\item being either a {\em visual} or a {\em numerical} activity.
 \end{itemize}
 
 The method {\tt over}, as defined in package {\tt sp}, provides
@@ -88,10 +89,10 @@ a way to numerically combine two maps. In particular,
 <<eval=FALSE>>=
 over(x, geometry(y))
 @
-retrieves an array of {\tt length(x)} with {\tt x[i]} the index
-of {\tt y}, spatially corresponding to {\tt x[i]}, so {\tt x[i]=j}
-means that {\tt x[i]} and {\tt y[j]} match (have the same location,
-touch, or overlap), or {\tt NA} if there is no match. 
+retrieves an array of {\tt length(x)} with {\tt x[i]} the index of
+{\tt y}, spatially corresponding to {\tt x[i]}, so {\tt x[i]=j} means
+that {\tt x[i]} and {\tt y[j]} match (have the same location, touch,
+or overlap/intersect etc.), or {\tt x[i]=NA} if there is no match.
 If {\tt y} has attributes, then
 <<eval=FALSE>>=
 over(x, y)
@@ -161,7 +162,7 @@ where {\tt x} is the {\tt data.frame} to be aggregated, {\tt by}
 indicates how groups of {\tt x} are formed, {\tt FUN} is applied to
 each group, and {\tt simplify} indicates whether the output should
 be simplified (to vector), or remain a {\tt data.frame}. The {\tt
-...} are passed to {\tt FUN}, e.g. passing {na.rm=TRUE} is useful
+...} are passed to {\tt FUN}, e.g. passing {\tt na.rm=TRUE} is useful
 when {\tt FUN} is {\tt mean} and missing values need to be ignored.
 
 For spatio-temporal data, the {\tt x} argument needs to be of class
@@ -185,16 +186,36 @@ for Germany, downloaded from \href{http://www.gadm.org/}{GADM}.
 
 \subsection{Spatial aggregation}
 
-A spatial aggregation of time series can be obtained by grouping
-them to the state (``Bundesland'') level. States are passed as
+To aggregate {\em completely} over space, we can coerce the
+data to a matrix and apply a function to the rows:
+<<>>=
+x = as(rural[,"2008"], "xts")
+apply(x, 1, mean, na.rm=TRUE)[1:5]
+@
+
+A more refined spatial aggregation of time series can be obtained by grouping
+them to the state (``Bundesland'') level. Here, states are passed as
 a {\tt SpatialPolygons} object:
-<<fig=TRUE>>=
+<<>>=
 dim(rural[,"2008"])
-x = aggregate(rural[,"2008"], DE_NUTS1, mean, na.rm=T)
+x = aggregate(rural[,"2008"], DE_NUTS1, mean, na.rm=TRUE)
 dim(x)
 summary(x)
-print(stplot(x, mode = "tp"))
+stplot(x, mode = "tp")
 @
+the result of which is shown in figure \ref{fig:tp1}, which was
+created by
+<<eval=FALSE>>=
+stplot(x, mode = "tp", par.strip.text = list(cex=.5))
+@
+
+\begin{figure}
+<<fig=TRUE,echo=FALSE>>=
+print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
+@
+\caption{Daily PM10 values, aggregated (averaged) over states}
+\label{fig:tp1}
+\end{figure}
 
 An aggregation for all stations selected within a single
 area is obtained by merging all states:
@@ -205,23 +226,50 @@ DE = gUnionCascaded(DE_NUTS1)
 
 and then aggregating the observations within Germany for
 each moment in time:
-<<fig=TRUE>>=
-x = aggregate(rural[,"2008"], DE, mean, na.rm=T)
+<<>>=
+x = aggregate(rural[,"2008"], DE, mean, na.rm=TRUE)
 class(x)
 plot(x)
 @
+shown in figure \ref{fig:x}.
+
+\begin{figure}
+<<fig=TRUE,echo=FALSE>>=
+plot(x)
+@
+\caption{Time series plot of daily rural background PM10, averaged
+over Germany}
+\label{fig:x}
+\end{figure}
 
 \subsection{Temporal aggregation}
+
+To aggregate {\em completely} over time, we can coerce the
+data to a matrix and apply a function to the columns:
+<<>>=
+x = as(rural[,"2008"], "xts")
+apply(x, 2, mean, na.rm=TRUE)[1:5]
+@
 
 Aggregating values {\em temporally} is done by passing
 a character string or a function to the {\tt by} argument.
 For monthly data, we will first select those stations that
-have measured (non-NA) values in 2008:
-<<fig=TRUE>>=
+have measured (non-NA) values in 2008,
+<<>>=
 sel = which(!apply(as(rural[,"2008"], "xts"), 2, function(x) all(is.na(x))))
-x = aggregate(rural[sel,"2008"], "month", mean, na.rm=T)
-print(stplot(x, mode = "tp"))
+x = aggregate(rural[sel,"2008"], "month", mean, na.rm=TRUE)
+stplot(x, mode = "tp")
 @
+shown in figure \ref{fig:tp2}
+
+\begin{figure}
+<<fig=TRUE,echo=FALSE>>=
+print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
+@
+\caption{ Monthly averaged PM10 values, for those rural background
+stations in Germany having measured values }
+\label{ fig:tp2 }
+\end{figure}
 
 The strings that can be passed are e.g. {\tt "year"}, but also {\tt
 "3 days"}. See {\tt ?cut.Date} for possible values. Aggregation using
@@ -229,12 +277,21 @@ this way is only possible if the time index is of class {\tt Date}
 or {\tt POSIXct}.
 
 An alternative is to provide a function for temporal aggregation:
-<<fig=TRUE>>=
-x = aggregate(rural[sel,"2005::2011"], as.yearqtr, mean, na.rm=T)
-print(stplot(x, mode = "tp"))
+<<>>=
+x = aggregate(rural[sel,"2005::2011"], as.yearqtr, median, na.rm=TRUE)
+stplot(x, mode = "tp")
 @
-further information can be found in {\tt ?aggregate.zoo}, which is
-the function used to do the processing.
+shown in figure \ref{fig:tp3}.  Further information can be found
+in {\tt ?aggregate.zoo}, which is the function used to do the
+processing.
+
+\begin{figure}
+<<fig=TRUE,echo=FALSE>>=
+print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
+@
+\caption{PM10 values, averaged to quarterly medians of daily averages}
+\label{fig:tp3}
+\end{figure}
 
 \subsection{Spatio-temporal aggregation}
 
@@ -245,7 +302,7 @@ DE.years = STF(DE, xts(1:2, as.POSIXct(as.Date(c("2008-01-01", "2009-01-01")))))
 aggregate(rural[,"2008::2009"], DE.years, mean, na.rm=TRUE)
 @
 
-\subsection{Time intervals?}
+\subsection{Time intervals}
 
 Spatial, temporal and spatio-temporal aggregation is all based
 on the {\tt over} methods. Whether time is considered to be time

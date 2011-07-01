@@ -28,6 +28,8 @@ retrieves the indexes or attributes from one geometry at the spatio-temporal
 points of another }
 \usage{
 \S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
+\S4method{over}{xts,xts}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = TRUE)
+\method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 \method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 }
 \arguments{
