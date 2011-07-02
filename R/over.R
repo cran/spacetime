@@ -21,35 +21,47 @@ augment.with.one = function(x) {
 	}
 }
 
-over.xts = function(x, y, returnList = FALSE, fn = NULL, ..., 
-		timeInterval = TRUE) {
-	ix = index(x)
-	iy = index(y)
-	if (!identical(class(ix), class(iy)))
-		warning("over.xts: time indices of x and y are of different class")
-	stopifnot(is.null(fn))
+.timeMatch = function(x, y, returnList = FALSE, timeInterval = TRUE) {
+	if (!identical(class(x), class(y)))
+		warning(".timeMatch: time indices of x and y are of different class")
 	if (returnList) { # get all matches:
 		if (timeInterval) {
 			#stop("timeInterval not supported when returnList = TRUE")
-			ix = augment.with.one(ix) 
-			if (length(ix) == 1)
-				list(which(iy >= ix[1]))
+			x = augment.with.one(x) 
+			if (length(x) == 1)
+				list(which(y >= x[1]))
 			else 
-				lapply(1:nrow(x), function(x) which(ix[x] <= iy & iy < ix[x+1]))
+				lapply(1:(length(x)-1), 
+					function(P) which(x[P] <= y & y < x[P+1]))
 		} else
-			lapply(1:nrow(x), function(x) { which(iy %in% ix[x]) })
+			lapply(1:length(x), function(P) { which(y %in% x[P]) })
 	} else { # get first match:
 		if (! timeInterval)
-			ret = match(ix, iy)
+			ret = match(x, y)
 		else {
 			# add a time stamp to close open interval, 
 			# if more than one time step is available
-			iy = augment.with.one(iy) 
-			l = length(iy)
-			ret = findInterval(ix, iy, ...) # before first: 0; after last: l
+			y = augment.with.one(y) 
+			l = length(y)
+			ret = findInterval(x, y) # before first: 0; after last: l
 			ret[ret == 0 | ifelse(l > 1, ret == l, FALSE)] = NA
 		}
 		ret
+	}
+}
+
+over.xts = function(x, y, returnList = FALSE, fn = NULL, ..., 
+		timeInterval = TRUE) {
+	tm = .timeMatch(index(x), index(y), returnList = TRUE, timeInterval)
+	if (returnList) { # get all matches:
+		stopifnot(is.null(fn))
+		lapply(tm, function(P) { y[P, drop=FALSE] })
+	} else { 
+		if (is.null(fn)) # get first match:
+			fn = function(x, ...) { x[1, drop=FALSE] }
+		l = lapply(tm, function(P) { apply(y[P, drop=FALSE], 2, fn, ...) })
+		ret = do.call(rbind, l)
+		xts(ret, index(x))
 	}
 }
 setMethod("over", signature(x = "xts", y = "xts"), over.xts)
@@ -59,7 +71,7 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = TRUE) {
 	if (returnList) {
     	space.index = over(x@sp, y@sp, returnList = TRUE)
-		time.index = over(x@time, y@time, returnList = TRUE,
+		time.index = .timeMatch(index(x@time), index(y@time), returnList = TRUE,
 			timeInterval = timeInterval) 
 		n = length(y@sp)
 		lst = vector("list", length(space.index) * length(time.index))
@@ -79,8 +91,8 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		lst
 	} else {
     	space.index = over(x@sp, y@sp)
-		time.index = rep(over(x@time, y@time, timeInterval = timeInterval), 
-			each = length(space.index))
+		time.index = rep(.timeMatch(index(x@time), index(y@time),
+			timeInterval = timeInterval), each = length(space.index))
 		# compute the index of x in y as y is STF:
     	(time.index - 1) * length(y@sp) + space.index # space.index gets recycled
 	}
@@ -91,7 +103,8 @@ over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = TRUE) {
 	if (returnList) warning("returnList not fully supported yet")
     space.index = over(x@sp, y@sp)[x@index[,1]]
-	time.index = over(x@time, y@time, timeInterval = timeInterval)[x@index[,2]]
+	time.index = .timeMatch(index(x@time), index(y@time), 
+		timeInterval = timeInterval)[x@index[,2]]
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
 	.index2list(idx, returnList)
@@ -102,7 +115,8 @@ over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = TRUE) {
 	if (returnList) warning("returnList not fully supported yet")
     space.index = over(x@sp, y@sp)
-	time.index = over(x@time, y@time, timeInterval = timeInterval)
+	time.index = .timeMatch(index(x@time), index(y@time), 
+		timeInterval = timeInterval)
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
 	.index2list(idx, returnList)
@@ -125,7 +139,8 @@ setMethod("over", signature(x = "STS", y = "STI"), over.STS.STI)
 over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = FALSE) {
 	if (returnList) warning("returnList not fully supported yet")
-	time.index = over(x@time, y@time, returnList = TRUE, timeInterval = timeInterval)
+	time.index = .timeMatch(index(x@time), index(y@time), 
+		returnList = TRUE, timeInterval = timeInterval)
 	ret = lapply(1:length(time.index), function(i) {
 		ti = time.index[[i]] # the x[i] matching y entry indices
 		if (length(ti) > 0)

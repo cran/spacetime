@@ -1,3 +1,4 @@
+# or is this too trivial to provide?
 STapply = function(X, MARGIN, FUN, ...) {
 	stopifnot(class(X) == "STFDF")
 	if (MARGIN == "space" || MARGIN == 1)
@@ -13,5 +14,5 @@ FOREACHSPACEapply = function(X, FUN, ...) {
 }
 
 FOREACHTIMEapply = function(X, FUN, ...) {
-	ret = lapply(1:length(X@time), function(i) FUN(X[,i], ...))
+	ret = lapply(1:nrow(X@time), function(i) FUN(X[,i], ...))
 }

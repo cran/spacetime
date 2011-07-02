@@ -6,6 +6,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		..., as.table = TRUE, at, cuts = 15, 
 		animate = 0, mode = "xy", scaleX = 0, 
 		auto.key = TRUE, key.space = "right") {
+	ind = sp.ID = NULL # keep R CMD check happy in R 2.13 
     z = names(obj@data)[1]
 	if (missing(at))
 		at = seq(min(obj[[z]], na.rm = TRUE), max(obj[[z]], na.rm = TRUE), 
@@ -50,7 +51,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			cuts = cuts, as.table = as.table, ...)
 	} else {
     	form = as.formula(paste(z, "~ time"))
-    	sp = obj@sp
+    	sp = geometry(obj@sp)
     	df = unstack(as.data.frame(obj), form)
 		x = addAttrToGeom(sp, df, match.ID=FALSE)
 		if (animate > 0) {

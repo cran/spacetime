@@ -16,7 +16,9 @@ myCoordinates = function(x) {
 
 setMethod("coordinates", "STF", function(obj) {
 		mc = myCoordinates(obj@sp)
-		matrix(apply(mc, 2, rep, length(obj@time)), ncol = ncol(mc))
+		m = matrix(apply(mc, 2, rep, nrow(obj@time)), ncol = ncol(mc))
+		dimnames(m)[[2]] = coordnames(obj@sp)
+		m
 	}
 )
 index.STF = function(x, ...) {
@@ -30,14 +32,16 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 	timedata = apply(x@time, 2, rep, each = length(x@sp))
   	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = rep(factor(row.names(x@sp), levels = row.names(x@sp)),
-			length(x@time)),
+			nrow(x@time)),
 		time = index(x),
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp)) {
-		df = data.frame(apply(x@sp@data, 2, rep, length(x@time)))
-		ret = data.frame(ret, df)
+		x = apply(x@sp@data, 2, rep, nrow(x@time))
+		row.names(x) = NULL
+		ret = data.frame(ret, x)
 	}
+	#ret = data.frame(ret, timedata)
 	ret
 }
 setAs("STF", "data.frame", function(from) as.data.frame.STF(from))
