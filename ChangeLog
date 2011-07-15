@@ -1,3 +1,152 @@
+2011-07-12 12:39  EdzerPebesma
+
+	* inst/doc/stpg.Rnw: update
+
+2011-07-12 12:08  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/stpg.Rnw, man/stconstruct.Rd: version;
+	  PostgreSQL vignette added.
+
+2011-07-06 15:00  EdzerPebesma
+
+	* DESCRIPTION, demo/CressieWikle.R, inst/doc/sto.Rnw,
+	  man/ST-class.Rd, man/air.Rd: version update; manual and vignettes
+	  updates
+
+2011-07-04 16:57  EdzerPebesma
+
+	* demo/CressieWikle.R: gridded(sp.x)=T was missing
+
+2011-07-01 06:50  EdzerPebesma
+
+	* DESCRIPTION, R/stplot.R: version update; warning from R CMD
+	  check.
+
+2011-07-01 06:45  EdzerPebesma
+
+	* R/STFDF-methods.R, R/apply.R, R/over.R, R/stplot.R,
+	  tests/basic.Rout.save: several bug fixes; row.names(), ... in
+	  findInterval().
+
+2011-06-28 08:23  EdzerPebesma
+
+	* R/over.R, inst/doc/spacetime.Rnw, inst/doc/sto.Rnw, man/over.Rd:
+	  implemented correct over.xts method; improved vignettes with some
+	  reference to eachother.
+
+2011-06-23 20:10  EdzerPebesma
+
+	* demo/CressieWikle.R: added aggregation example for sst data
+
+2011-06-21 16:06  EdzerPebesma
+
+	* inst/doc/sto.Rnw: vignette cosmetics
+
+2011-06-21 14:21  EdzerPebesma
+
+	* DESCRIPTION: version update.
+
+2011-06-21 13:02  EdzerPebesma
+
+	* DESCRIPTION, R/STFDF-methods.R, R/over.R, man/air.Rd,
+	  man/over.Rd, man/stplot.Rd: submission to CRAN.
+
+2011-06-21 10:16  EdzerPebesma
+
+	* R/STFDF-methods.R, R/over.R, R/stplot.R, inst/doc/sto.Rnw: more
+	  work on vignette("sto")
+
+2011-06-20 21:32  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/sto.Rnw: added over/aggregate
+	  vignette (draft); reference in spacetime vignette missed.
+
+2011-06-20 20:40  EdzerPebesma
+
+	* R/STIDF-methods.R, R/STSDF-methods.R, R/over.R: further
+	  corrections to aggregate.ST
+
+2011-06-20 13:45  EdzerPebesma
+
+	* R/STFDF-methods.R, R/over.R: improved aggregate
+
+2011-06-14 20:39  EdzerPebesma
+
+	* R/over.R, R/stplot.R, man/over.Rd, man/stplot.Rd: aggregate
+	  (still not working); new stplot (time series, panel time series)
+
+2011-06-14 03:49  EdzerPebesma
+
+	* R/STSDF-methods.R, R/over.R, inst/doc/spacetime.Rnw: (testing)
+	  more general aggregate.ST calls
+
+2011-06-06 15:57  EdzerPebesma
+
+	* DESCRIPTION, inst/doc/spacetime.Rnw: version update, no change to
+	  vignette
+
+2011-06-06 14:28  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STIDF-methods.R, R/STSDF-methods.R,
+	  tests/basic.R, tests/basic.Rout.save: allow row.names of @sp slot
+	  as spatial selection items;
+	  drop unselected @sp and @time items for STSDF on [ method;
+	  made object names consistent with class in basic.R
+
+2011-06-06 06:12  EdzerPebesma
+
+	* DESCRIPTION: version bump.
+
+2011-06-06 06:01  EdzerPebesma
+
+	* R/STSDF-methods.R, R/coerce.R: corrected [ method for STSDF,
+	  thanks to Ben Graeler
+
+2011-05-31 15:31  EdzerPebesma
+
+	* DESCRIPTION, R/Class-STSDF.R, R/over.R: version bump; inequality
+	  constraints on index for STS[DF]; removed
+	  dependens on sp:::.index2list.
+
+2011-05-30 20:32  EdzerPebesma
+
+	* R/over.R: removed unreleased sp dependency
+
+2011-05-30 19:03  EdzerPebesma
+
+	* R/over.R, man/over.Rd: more on over.
+
+2011-05-30 16:49  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STSDF-methods.R, R/over.R, man/over.Rd: docs; length and
+	  geometry methods;
+
+2011-05-30 13:38  EdzerPebesma
+
+	* NAMESPACE, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STSDF-methods.R, R/over.R: length() method; further over stuff.
+
+2011-05-30 13:13  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STIDF-methods.R, R/STSDF-methods.R,
+	  R/over.R, man/stplot.Rd: added further over methods; fixed docs
+	  of stplot.
+
+2011-05-30 07:20  EdzerPebesma
+
+	* R/over.R: methods over.STI.STI and over.ST.STF added
+
+2011-05-29 15:37  EdzerPebesma
+
+	* DESCRIPTION, R/over.R: over.STI.STI might now be right.
+
+2011-05-29 15:10  EdzerPebesma
+
+	* R/ST-methods.R, R/STFDF-methods.R, R/over.R, R/stplot.R,
+	  demo/CressieWikle.R: over methods (still broken); further Cressie
+	  & Wikle plots added to demo
+
 2011-05-26 15:31  EdzerPebesma
 
 	* DESCRIPTION, R/stplot.R: spplot didn't deal with missing values;

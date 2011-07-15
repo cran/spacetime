@@ -57,19 +57,21 @@ gridded(sst.ll) = TRUE
 # time:
 sst.y = rep(1970:2003, each = 12, length.out = 399)
 sst.m = rep(1:12, length.out = 399)
+# dates:
 sst.Date = as.Date(paste(sst.y, sst.m, "01", sep="-"), "%Y-%m-%d")
+# as year/months:
+sst.ym = as.yearmon(sst.Date)
 
 # landmask:
 sea = (as.vector(read.table(getFILE("SSTlandmask.dat"), header=FALSE)) != 1)[,1]
 
 # spacetime:
-sst.st = STFDF(sst.ll, sst.Date, data.frame(sst = as.vector(sst)))
+sst.st = STFDF(sst.ll, sst.ym, data.frame(sst = as.vector(sst)))
 
 # make a large plot window for the following plot:
 tsel = 1:144
 stplot(sst.st[sea, tsel], 
 	format(sst.Date, "%Y-%m")[tsel],
-	col.regions=bpy.colors(), 
 	layout = c(12,12))
 
 # re-create figure 5.1, with time axis increasing upward: 
@@ -83,6 +85,7 @@ stplot(sst.st[eq, "1996::2003", drop=F],
 	xlab="Longitude", ylab = "Time (Year)",
 	scaleX=1
 )
+# see also hovmoller() at http://rastervis.r-forge.r-project.org/
 
 # re-create Fig 5.4:
 stplot(sst.st[sea,"1998-02::1999-01"],
@@ -171,6 +174,7 @@ sp = sst.st[,1]
 class(sp)
 sp.x = spsample(sp, 630, "regular", offset = c(.5,.5))
 stplot(s, sp.layout=list("sp.points", sp.x))
+gridded(sp.x)=TRUE
 sa = aggregate(s, sp.x)
 stplot(sa)
 s1 = aggregate(s, sp.x[sample(630),])

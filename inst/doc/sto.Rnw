@@ -268,7 +268,7 @@ print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
 @
 \caption{ Monthly averaged PM10 values, for those rural background
 stations in Germany having measured values }
-\label{ fig:tp2 }
+\label{fig:tp2}
 \end{figure}
 
 The strings that can be passed are e.g. {\tt "year"}, but also {\tt

@@ -4,10 +4,10 @@
 \alias{rural}
 \title{Air quality data, rural background PM10 in Germany, daily averages 1998-2009}
 \description{
-Air quality data obtained fromt the airBase European air quality
+Air quality data obtained from the airBase European air quality
 data base.  Daily averages for rural background stations in Germany,
-1998-2009; NUTS1 regions (states, or Bundeslaender) for Germany to
-illustrate spatial aggregation.
+1998-2009. In addition, NUTS1 regions (states, or Bundeslaender) for Germany to
+illustrate spatial aggregation over irregular regions.
 }
 \usage{
 data(air)
