@@ -572,7 +572,9 @@ stplot(w, mode = "ts",  auto.key=list(space="right"),
 \subsection{Time periods}
 
 Time series structures available in R have, explicitly or implicitly,
-for each record a time stamp, not a time interval.  The implicit
+for each record a time stamp, not a time interval\footnote{with the
+exception of package \code{lubridate}, which appeared after this package}.
+The implicit
 assumption seems to be (i) the time stamp is a moment, (ii) this
 indicates either the real moment of measurement / registration,
 or the start of the interval over which something is aggregated
