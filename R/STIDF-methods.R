@@ -63,9 +63,9 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	# space
 	if (missing.i)
 		i = TRUE
-	else if (is(i, "Spatial"))
+	if (is(i, "Spatial"))
 		i = !is.na(over(x@sp, geometry(i)))
-	else if (is.logical(i)) {
+	if (is.logical(i)) {
 		i = rep(i, length.out = length(x@sp))
 		i = which(i)
 	} else if (is.character(i)) { # suggested by BG:

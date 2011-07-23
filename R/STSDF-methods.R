@@ -63,7 +63,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 		s = 1:length(x@sp)
 	else {
 		if (is(i, "Spatial"))
-			s = !is.na(over(x@sp, geometry(i)))
+			s = which(!is.na(over(x@sp, geometry(i))))
 		else if (is.logical(i)) {
 			i = rep(i, length.out = length(x@sp))
 			s = which(i)

@@ -106,18 +106,22 @@ and methods are subject to change.
 
 % what is wide and what is long format.
 
-We use \code{xts} for time, not only because it supports various
-basic types to represent type, but also because it has good
-tools for aggregation over time and a very flexible syntax
-to select time periods that adheres ISO 8601\footnote{see
-\url{http://en.wikipedia.org/wiki/ISO_8601}}. We do not use
-the \code{xts} objects to store the spatio-temporal attribute
-information, as it is restricted to \code{matrix} objects, and
-hence can only store a single type, and not combine numeric
-and factor. Instead, as in the classes of \code{sp}, we use
-\code{data.frame} to store measured values. For information that
-is purely temporal, the \code{xts} objects can be used, and
-will be recycled appropriately when coercing to a long format
+We use \code{xts} for time, not only because it supports
+various basic types to represent time or date\footnote{currently
+supported by xts are: {\tt Date}, {\tt POSIXct}, {\tt timeDate},
+{\tt yearmon}, and {\tt yearqtr}; Ripley and Hornik, 2001;
+advice on which class to use is found in Grothendiek and
+Petzoldt, 2004}, but also because it has good tools for {\em
+aggregation} over time using arbitrary aggregation functions, and
+a very flexible syntax to select time periods that adheres ISO
+8601\footnote{\url{http://en.wikipedia.org/wiki/ISO_8601}}. We
+do not use the \code{xts} objects to store the spatio-temporal
+attribute information, as it is restricted to \code{matrix}
+objects, and hence can only store a single type, and not combine
+numeric and factor. Instead, as in the classes of \code{sp}, we
+use \code{data.frame} to store measured values. For information
+that is purely temporal, the \code{xts} objects can be used,
+and will be recycled appropriately when coercing to a long format
 \code{data.frame}.
 
 \section{Space-time data in wide and long formats}
@@ -1098,6 +1102,14 @@ v2008.1. Online, \url{http://correlatesofwar.org/}
 System Membership: A Revised List of the Independent States
 since 1816.  International Interactions 25: 393-413. Online,
 \url{http://privatewww.essex.ac.uk/~ksg/statelist.html}
+
+\item Grothendieck, G. and T. Petzoldt. R
+Help Desk: Date and time classes in R. R News,
+\href{http://cran.r-project.org/doc/Rnews/Rnews_2004-1.pdf}{4(1):29-32},
+June 2004
+
+\item Ripley, B.D., and K. Hornik. Date-time classes. R News,
+1(2):8-11, June 2001.
 
 \end{description}
 \end{document}
