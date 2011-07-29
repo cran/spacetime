@@ -4,23 +4,23 @@
 \title{ write STFDF to table forms }
 \description{ create table forms of STFDF objects }
 \usage{ 
-unstack.STFDF(x, form, which = 1, ...)
-as.data.frame.STFDF(x, row.names, ...)
+\method{unstack}{STFDF}(x, form, which = 1, ...)
+\method{as.data.frame}{STFDF}(x, row.names, ...)
 }
 \arguments{
 \item{x}{ object of class \code{STFDF}}
 \item{form}{ formula; can be omitted }
 \item{which}{ column name or number to have unstacked }
 \item{row.names}{ row.names for the data.frame returned }
-\item{...}{ arguments passed on to functions \link{unstack} 
-or \link{data.frame}}
+\item{...}{ arguments passed on to the functions \link[utils]{unstack} 
+or \link{as.data.frame}}
 }
 \value{
-\code{unstack.STFDF} returns the data in wide format, with each
+\code{unstack} returns the data in wide format, with each
 row representing a spatial entity and each column a time; see
-\link{unstack} for details and default behaviour.
+\link[utils]{unstack} for details and default behaviour.
 
-\code{as.data.frame.STFDF} returns the data.frame in long format,
+\code{as.data.frame} returns the data.frame in long format,
 where the coordinates of the spatial locations (or line starting
 coordinates, or polygon center points) and time stamps are recycled
 accordingly.

@@ -1,5 +1,5 @@
 STS = function(sp, time, index) {
-	new("STS", sp = sp, time = time, index = index)
+	new("STS", ST(sp = sp, time = time), index = index)
 }
 
 STSDF = function(sp, time, data, index) {

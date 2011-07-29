@@ -52,7 +52,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 	} else {
     	form = as.formula(paste(z, "~ time"))
     	sp = geometry(obj@sp)
-    	df = unstack(as.data.frame(obj), form)
+    	df = data.frame(unstack(as.data.frame(obj), form))
 		x = addAttrToGeom(sp, df, match.ID=FALSE)
 		if (animate > 0) {
 			i = 0
@@ -78,7 +78,8 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 		as.table = TRUE, by = c("time", "burst", "id"), 
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = 'p', number = 6, overlap = 0, asp) {
-	f =  paste(rev(coordnames(obj@sp)), collapse="~")
+		#, panel = panel.xyplot, sp.layout = NULL) {
+	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
 	by = by[1]
 	f = paste(f, "|", by)
 	if (missing(asp))
@@ -87,8 +88,7 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 	if (is.numeric(number) && number > 1)
 		obj$time = equal.count(obj$time, number = number, overlap = overlap)
 	xyplot(as.formula(f), obj, asp = asp, type = type,
-		as.table = as.table, scales = scales, xlab = xlab, ylab = ylab, 
-		...)
+		as.table = as.table, scales = scales, xlab = xlab, ylab = ylab, ...)
 }
 
 setMethod("stplot", signature("STFDF"),  stplot.STFDF)

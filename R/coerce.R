@@ -82,6 +82,11 @@ reduce.index = function(index, z) {
 	g = find.groups(z)
 	for (i in seq(along = g))
 		index[(g[[i]])] = i
+	ug = unlist(g)
+	nLeft = length(index) - length(ug)
+	stopifnot(nLeft >= 0)
+	if (nLeft)
+		index[-ug] = (length(g)+1):(length(g)+nLeft)
 	index
 }
 

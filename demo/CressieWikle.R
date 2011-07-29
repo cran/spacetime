@@ -1,22 +1,19 @@
+# R script that downloads and analyzes some of the examples in
 # Noel Cressie, Christopher K. Wikle, 2011: Statistics for
 # spatio-temporal data; Wiley, NY.
 
-# data are obtained (Fri May 20 10:37:33 CEST 2011) from:
+# data obtained (checked Fri May 20 10:37:33 CEST 2011) from:
 # ftp://ftp.wiley.com/public/sci_tech_med/spatio_temporal_data
 
-# space:
-# convert to SpatialPoints, and set CRS:
-# read locations:
-LOCAL = TRUE
 getFILE = function(f) { 
-	if(LOCAL) 
+	if(file.exists(f)) 
 		f
-	else {
-	  ftpSite = "ftp://ftp.wiley.com/public/sci_tech_med/spatio_temporal_data/"
-	  paste(ftpSite, f, sep="") 
-	}
+	else paste("ftp://ftp.wiley.com/public/sci_tech_med/spatio_temporal_data/",
+	  	f, sep="") 
 }
+# read locations:
 ecd.ll = as.matrix(read.table(getFILE("ECDovelatlon.dat"), header=FALSE))
+# space: convert to SpatialPoints, and set CRS:
 library(sp)
 ecd.ll = SpatialPoints(ecd.ll[,c(2,1)]) # lat-lon -> lon-lat
 proj4string(ecd.ll) = "+proj=longlat +datum=WGS84"

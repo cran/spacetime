@@ -30,7 +30,6 @@ points of another }
 \S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
 \S4method{over}{xts,xts}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = TRUE)
 \method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
-\method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 }
 \arguments{
 \item{x}{geometry (S/T locations) of the queries}
@@ -40,7 +39,10 @@ or an index vector }
 \item{timeInterval}{logical; if TRUE, time will considered as interval, otherwise
 as instance; but read note below }
 \item{fn}{(optional) a function; see value }
-\item{by}{ geometry over which attributes in \code{x} are aggregated }
+\item{by}{ geometry over which attributes in \code{x} are aggregated
+(this can be a \code{Spatial*} geometry, or a \code{ST*} geometry), or
+temporal aggregation, such as "month", "10 minutes", or a function such
+as \link[zoo]{as.yearmon}; see \link[zoo]{aggregate.zoo}}
 \item{FUN}{aggregation function }
 \item{simplify}{boolean; if TRUE, and space or time dimensions can be
 dropped, the simpler (\code{Spatial} or \code{xts}) object will be returned }
