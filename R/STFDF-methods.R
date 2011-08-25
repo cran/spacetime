@@ -65,6 +65,8 @@ unstack.STFDF = function(x, form, which = 1,...) {
 setAs("STFDF", "xts", function(from) xts(unstack(from),index(from@time)))
 
 subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
+	nr = dim(x)[1]
+	nc = dim(x)[2]
 	n.args = nargs()
 	dots = list(...)
 	missing.i = missing(i)
@@ -77,15 +79,11 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	if (missing.i && missing.j && missing.k)
 		return(x)
 
-	if (missing.k) {
-		k = TRUE
-	} else if (missing.j && n.args == 2) {
+	if (!missing.k) {
 		x@data = x@data[ , k, drop = FALSE]
-		return(x)
+		if (missing.j && n.args == 2)
+			return(x)
 	} 
-
-	si = rep(1:length(x@sp), nrow(x@time))
-	ti = rep(1:nrow(x@time), each = length(x@sp))
 
 	if (missing.i)
 		s = 1:length(x@sp)
@@ -107,27 +105,18 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	else {
 		if (is.logical(j))
 			j = which(j)
-		nc = ncol(x@time)
+		nct = ncol(x@time)
 		x@time = cbind(x@time, 1:nrow(x@time))
 		# uses [.xts, deals with character/iso8601;
 		# takes care of negative indices:
 		x@time = x@time[j] 
 		# get back the corresponding index vector t, to use for @data:
-		t = x@time[, nc+1]
-		x@time = x@time[,-(nc+1)]
+		t = as.vector(x@time[, nct+1])
+		x@time = x@time[,-(nct+1)]
 	}
-
-	if (all(s < 0))
-		ssel = !(si %in% abs(s))
-	else
-		ssel = si %in% s
-
-	#if (all(t < 0))
-	#	tsel = !(ti %in% abs(t))
-	#else
-	tsel = ti %in% t
-
-	x@data = x@data[ssel & tsel, k, drop = FALSE]
+	#x@data = x@data[ssel & tsel, k, drop = FALSE]
+	x@data = data.frame(
+		lapply(x@data, function(v) as.vector(matrix(v, nr, nc)[s,t])))
 	if (drop) {
 		if (length(s) == 1 && all(s > 0)) { # space index has only 1 item:
 			if (length(t) == 1)
