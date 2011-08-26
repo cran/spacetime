@@ -31,8 +31,9 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 				key.space = key.space, auto.key = auto.key, 
 				as.table = as.table, ...)
 		}
-	} else if (mode == "xt") { # space-time cross section
-		scales = list(...)$scales
+	} else if (mode == "xt") { # space-time cross section == Hovmoeller
+		dots = list(...)
+		scales = dots$scales
 		if (is.null(scales))
 			scales = list(draw=TRUE)
 		else
@@ -47,8 +48,10 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			f = as.formula(paste(z, "~", cn[2], "+ time"))
 		} else
 			f = as.formula(paste(z, "~ sp.ID + time"))
-		levelplot(f, as.data.frame(obj), at = at, scales = scales, 
-			cuts = cuts, as.table = as.table, ...)
+		dots$scales = scales
+		dots = append(list(f, as.data.frame(obj), at = at,
+			cuts = cuts, as.table = as.table), dots)
+		do.call(levelplot, dots)
 	} else {
     	form = as.formula(paste(z, "~ time"))
     	sp = geometry(obj@sp)

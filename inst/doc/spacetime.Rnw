@@ -531,17 +531,23 @@ example for gridded data is shown in figure \ref{fig:wind}. The
 and inherits most of its options.
 \item[space-time plots] space-time plots show data in a space-time
 cross section, with e.g. space on the x-axis and time on the y-axis.
-An example on the sea surface temperature data in Cressie and Wikle
-(2011) is obtained by
+An example on a so-called Hovm\"{o}ller plot of the sea surface 
+temperature data in Cressie and Wikle (2011) is shown by
 <<eval=FALSE>>=
 demo(CressieWikle)
 @
-Obviously, such plots only make sense for full space-time lattices,
+Hovm\"{o}ller plots only make sense for full space-time lattices,
 i.e. objects of class \code{STFDF}.  To obtain such a plot, the
 arguments \code{mode} and \code{scaleX} should be considered; some
-special care is needed when the x- or y-axis needs to be plotted 
+special care is needed when only the x- or y-axis needs to be plotted 
 instead of the spatial index (1...n); details are found in the stplot 
-documentation.
+documentation. An example of a Hovm\"{o}ller-style plot with station
+index along the x-axis and time along the y-axis is obtained by
+<<eval=FALSE>>=
+scales=list(x=list(rot = 45))
+stplot(w, mode = "xt", scales = scales, xlab = NULL)
+@
+and shown in figure \ref{fig:hov}.
 \item[animated plots] Animation is another way of displaying change
 over time; a sequence of \code{spplot}s, one for each time step,
 is looped over when the parameter \code{animate} is set to a
@@ -854,6 +860,17 @@ for interpolation in figure \ref{fig:wind} }
 \label{fig:windts}
 \end{figure}
 
+\begin{figure}
+\begin{center}
+<<echo=FALSE,fig=TRUE>>=
+scales=list(x=list(rot=45))
+print(stplot(w, mode = "xt", scales = scales, xlab = NULL))
+@
+\end{center}
+\caption{ Space-time plot of wind station data }
+\label{fig:hov}
+\end{figure}
+
 \subsection{Calculation of EOFs}
 Empirical orthogonal functions from \code{STFDF} objects can be
 computed in spatial form (default):
@@ -874,7 +891,7 @@ wind data of figure \ref{fig:wind}.
 \begin{center}
 <<echo=FALSE,fig=TRUE,height=3.5,width=5>>=
 print(spplot(EOF(wind.ST), col.regions=bpy.colors(),
-	par.strip.text = list(cex=.5)))
+	par.strip.text = list(cex=.5), as.table = TRUE))
 @
 \end{center}
 \caption{ EOFs of space-time interpolations of wind over Ireland
