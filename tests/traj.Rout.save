@@ -1,5 +1,5 @@
 
-R version 2.12.2 (2011-02-25)
+R version 2.13.1 (2011-07-08)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i486-pc-linux-gnu (32-bit)
@@ -22,6 +22,13 @@ Type 'q()' to quit R.
 > library(spacetime)
 Loading required package: sp
 Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date
+
 Loading required package: xts
 > library(diveMove)
 Loading required package: stats4
@@ -60,10 +67,6 @@ Loading required package: RColorBrewer
 > ### chunk number 26: 
 > ###################################################
 > library(adehabitatLT)
-Loading required package: gpclib
-General Polygon Clipper Library for R (version 1.5-1)
-	Type 'class ? gpc.poly' for help
-
 Loading required package: ade4
 
 Attaching package: 'ade4'

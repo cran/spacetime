@@ -45,66 +45,35 @@ as.STIDF.STFDF = function(from) {
 setAs("STFDF", "STIDF", as.STIDF.STFDF)
 
 zerodist.sp = function(from) {
-	#stopifnot(is(from@sp, "SpatialPoints"))
-	z = zerodist(SpatialPoints(myCoordinates(from)))
+	cc = myCoordinates(from)
+	z = zerodist(SpatialPoints(cc))
 	if(!is(from, "SpatialPoints") && nrow(z) > 0) {
 		sel = apply(z, 1, function(x) identical(from[x[1]],from[x[2]]))
 		z = z[sel,]
 	}
-	z
-}
-
-zerodist.xts = function(from) {
-	t = index(from)
-	n = length(t)
-	n2 = n * n
-	d = which(as.vector(outer(t, t, "-")) == 0)
-	r = (d - 1) %% n
-	c = (d - 1) %/% n
-	ret = cbind(r,c) + 1
-	ret[r < c, ]
-}
-
-reduce.index = function(index, z) {
-	find.groups = function(z) {
-		groups = list()
-		i = 1
-		while (nrow(z)) {
-			g = min(z[,1])
-			map = z[which(z[,1] == g), 2]
-			gr = unique(c(g,map))
-			groups[[i]] = gr
-			z = z[!(z[,1] %in% gr), , drop = FALSE]
-			i = i + 1
-		}
-		groups
-	}
-	g = find.groups(z)
-	for (i in seq(along = g))
-		index[(g[[i]])] = i
-	ug = unlist(g)
-	nLeft = length(index) - length(ug)
-	stopifnot(nLeft >= 0)
-	if (nLeft)
-		index[-ug] = (length(g)+1):(length(g)+nLeft)
-	index
+	# convert to unique IDs, as zerodist(, unique.ID=TRUE) would do:
+	id = 1:nrow(cc)
+	id[z[,1]] = id[z[,2]]
+	return(id)
 }
 
 as.STSDF.STIDF = function(from) {
-	# find replicates in sp and time, and fill index
+	# find replicates in sp and time, and fill index:
 	n = nrow(from@data)
-	index = cbind(1:n, 1:n)
+	index = matrix(as.integer(NA), n, 2)
+	# space:
 	z = zerodist.sp(from@sp)
-	if (nrow(z)) {
-		sp = from@sp[-z[,2],] # remove all subsequent duplicates
-		sp = geometry(sp) # removes lost but possibly varying attrib
-		index[,1] = reduce.index(index[,1], z) # reorganize index
-	}
-	z = zerodist.xts(from@time)
-	if (nrow(z)) {
-		time = from@time[-z[,2],]
-		index[,2] = reduce.index(index[,2], z)
-	}
+	uz = unique(z)
+	sp = from@sp[uz,] # different attributes at duplicate points get lost...
+	index[,1] = match(z, uz)
+	# time -- use the fact that xts objects are in time order:
+	ix = index(from@time)
+	time = unique(ix)
+	ir = rle(as.numeric(ix))$lengths
+	index[,2] = rep(1:length(ir), ir)
+	# check:
+	stopifnot(!any(is.na(index)))
+	# glue together:
 	STSDF(sp, time, from@data, index)
 }
 setAs("STIDF", "STSDF", as.STSDF.STIDF)
@@ -113,3 +82,20 @@ as.STFDF.STIDF = function(from) {
 	as(as(from, "STSDF"), "STFDF")
 }
 setAs("STIDF", "STFDF", as.STFDF.STIDF)
+
+as.STFDF.Spatial = function(from) {
+	#from@data$time = index(from@time)
+	df = as.data.frame(t(as(from, "xts")))
+	ret = addAttrToGeom(geometry(from@sp), df, match.ID = FALSE)
+	# data.frame names will now be mangled time-like strings, so
+	attr(ret, "time") = index(from@time) # to make it somehow accessible...
+	ret
+}
+setAs("STFDF", "Spatial", as.STFDF.Spatial)
+
+as.STIDF.Spatial = function(from) {
+	from@data$time = index(from@time)
+	addAttrToGeom(geometry(from@sp), from@data, match.ID = FALSE)
+}
+setAs("STIDF", "Spatial", as.STIDF.Spatial)
+setAs("STSDF", "Spatial", function(from) as(as(from, "STIDF"), "Spatial"))

@@ -7,6 +7,7 @@
 \alias{as.data.frame.STF}
 \alias{[,STFDF-method} 
 \alias{coerce,STFDF,xts-method}
+\alias{coerce,STFDF,Spatial-method}
 \alias{na.omit.STFDF}
 
 \title{Class "STFDF"}
@@ -26,6 +27,9 @@ Objects of this class represent full space/time data with a full grid
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "STFDF")}: selects spatial entities,        temporal entities, and attributes } 
+   \item{coerce}{STFDF,xts}
+   \item{coerce}{STFDF,Spatial}(from) coerces to (wide form) SpatialXxDataFrame,
+   where SpatialXx is the spatial class of from@sp
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -39,6 +43,7 @@ Objects of this class represent full space/time data with a full grid
   STFDF(sp, time, data)
   \S4method{[}{STFDF}(x, i, j, ..., drop = TRUE)
   \S4method{coerce}{STFDF,xts}(from, to, strict=TRUE)
+  \S4method{coerce}{STFDF,Spatial}(from, to)
 }
 
 \arguments{

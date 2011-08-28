@@ -1,5 +1,5 @@
 
-R version 2.13.0 (2011-04-13)
+R version 2.13.1 (2011-07-08)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i486-pc-linux-gnu (32-bit)
@@ -22,6 +22,13 @@ Type 'q()' to quit R.
 > library(spacetime)
 Loading required package: sp
 Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date
+
 Loading required package: xts
 > library(gstat)
 > data(wind)
@@ -129,7 +136,7 @@ Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
 Loaded GDAL runtime: GDAL 1.8.0, released 2011/01/12
 Path to GDAL shared files: /usr/share/gdal/1.8
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
 Path to PROJ.4 shared files: (autodetected)
 Loading required package: foreign
 Loading required package: lattice
