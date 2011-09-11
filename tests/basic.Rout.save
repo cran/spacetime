@@ -1,5 +1,5 @@
 
-R version 2.13.0 (2011-04-13)
+R version 2.13.1 (2011-07-08)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i486-pc-linux-gnu (32-bit)
@@ -23,6 +23,13 @@ Type 'q()' to quit R.
 > library(spacetime)
 Loading required package: sp
 Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date
+
 Loading required package: xts
 > set.seed(13579) # to make outcome a bit predictable!
 > sp = cbind(x = c(0,0,1), y = c(0,1,1))
@@ -223,11 +230,11 @@ Slot "time":
 > stfdf[1,,"values", drop=FALSE] # stays STFDF:
 An object of class "STFDF"
 Slot "data":
-   values
-1    8.77
-4    8.47
-7   10.80
-10   9.74
+  values
+1   8.77
+2   8.47
+3  10.80
+4   9.74
 
 Slot "sp":
 SpatialPoints:
@@ -374,9 +381,9 @@ Slot "time":
 > ###################################################
 > stfdf[,time[3]]
   coordinates values      ID    newVal   NewID
-7      (0, 0)   10.8 OldIDs7 -0.861698 NewIDs6
-8      (0, 1)   20.2 OldIDs8  0.659911 NewIDs5
-9      (1, 1)   29.0 OldIDs9 -0.036842 NewIDs4
+1      (0, 0)   10.8 OldIDs7 -0.861698 NewIDs6
+2      (0, 1)   20.2 OldIDs8  0.659911 NewIDs5
+3      (1, 1)   29.0 OldIDs9 -0.036842 NewIDs4
 > 
 > 
 > ###################################################

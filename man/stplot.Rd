@@ -22,7 +22,8 @@ stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ...,
 	auto.key = TRUE, key.space = "right")
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
-    NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp)
+    NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp,
+	col = 1, panel = panel.stpointsplot, sp.layout = NULL)
 }
 \arguments{
 \item{obj}{ object of a class deriving from \code{ST}}
@@ -53,6 +54,9 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{number}{ see argument \code{by}}
 \item{overlap}{ see argument \code{by} }
 \item{asp}{ aspect ratio of plot }
+\item{col}{ color for symbols }
+\item{panel}{ panel function }
+\item{sp.layout}{list or NULL; see \link[sp]{spplot}}
 \item{...}{ arguments passed on to \link[sp]{spplot} in case of stplot.STFDF,
 or to \link[lattice]{xyplot} in case of stplot.STIDF}
 }

@@ -220,7 +220,7 @@ title("STFDF (Space-time full data.frame) layout")
 \caption{space-time layout of STFDF (STF: ST-Full) objects: all space-time
 combinations are stored; numbers refer to the ordering of rows in
 the \code{data.frame} with measured values: time is kept ordered, space
-cycles first }
+cycles first}
 \label{fig:stfdf}
 \end{figure}
 
@@ -258,7 +258,7 @@ non-missing part of the space-time combinations on a lattice
 are stored; numbers refer to the
 ordering of rows in the \code{data.frame}; an index is kept where e.g. [3,4]
 refers to the third item in the list of spatial locations and fourth
-item in the list of temporal points. }
+item in the list of temporal points.}
 \label{fig:stpdf}
 \end{figure}
 
@@ -294,7 +294,7 @@ title("STIDF (Space-time irregular data.frame) layout")
 \caption{space-time layout of STIDF (STI: ST-Irregular) objects: each
 observation has its spatial location and time stamp stored; in this
 example, spatial location 1 is stored twice--observations 1 and 4 having
-the same location is not registered. }
+the same location is not registered.}
 \label{fig:stidf}
 \end{figure}
 
@@ -514,6 +514,24 @@ class(as(as(x, "STSDF"), "STFDF"))
 class(as(x, "STFDF"))
 xx = as(x, "STFDF")
 identical(stfdf, xx)
+@
+
+\subsection{Coercion to class {\tt SpatialXxDataFrame}}
+Spatio-temporal data objects can be coerced to the corresponding
+purely spatial objects.  Objects of class {\tt STFDF} will be 
+represented in wide form, where only the first (selected) attribute
+is retained:
+<<>>=
+xs1 = as(stfdf, "Spatial")
+class(xs1)
+xs1
+@
+whereas objects of class {\tt STSDF} or {\tt STIDF} will be represented
+in long form, where time is added as additional attribute:
+<<>>=
+xs2 = as(x, "Spatial")
+class(xs2)
+xs2
 @
 
 \section{Graphs of spatio-temporal data: \code{stplot}}
@@ -834,10 +852,10 @@ print(stplot(wind.ST, col.regions=bpy.colors(),
 	par.strip.text = list(cex=.5), sp.layout = layout))
 @
 \end{center}
-\caption{ Space-time interpolations of wind (square root transformed,
+\caption{Space-time interpolations of wind (square root transformed,
 detrended) over Ireland using a separable product covariance model,
 for 10 time points regularly distributed over the month for which
-daily data was considered (April, 1961) }
+daily data was considered (April, 1961)}
 \label{fig:wind}
 \end{figure}
 
@@ -867,7 +885,7 @@ scales=list(x=list(rot=45))
 print(stplot(w, mode = "xt", scales = scales, xlab = NULL))
 @
 \end{center}
-\caption{ Space-time plot of wind station data }
+\caption{Space-time plot of wind station data}
 \label{fig:hov}
 \end{figure}
 
@@ -894,9 +912,9 @@ print(spplot(EOF(wind.ST), col.regions=bpy.colors(),
 	par.strip.text = list(cex=.5), as.table = TRUE))
 @
 \end{center}
-\caption{ EOFs of space-time interpolations of wind over Ireland
+\caption{EOFs of space-time interpolations of wind over Ireland
 (for spatial reference, see figure \ref{fig:wind}), for the 10 time
-points at which daily data was chosen above (April, 1961) }
+points at which daily data was chosen above (April, 1961)}
 \label{fig:eof}
 \end{figure}
 
@@ -994,7 +1012,7 @@ the output of which is shown in figure \ref{fig:stptr}.
 print(stplot(stidfTrj, by="time*id"))
 @
 \end{center}
-\caption{trajectories, by id (rows) and time (columns) }
+\caption{trajectories, by id (rows) and time (columns)}
 \label{fig:stptr}
 \end{figure}
 

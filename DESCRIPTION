@@ -1,11 +1,12 @@
 Package: spacetime
-Version: 0.5-3
-Date: 2011-08-25
+Version: 0.5-4
+Date: 2011-08-28
 Title: classes and methods for spatio-temporal data
 Author: Edzer Pebesma, with contributions by Benedict Graeler and Tom
         Gottfried
-Authors@R: c(person("Edzer", "Pebesma", email =
-        "edzer.pebesma@uni-muenster.de"))
+Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email =
+        "edzer.pebesma@uni-muenster.de"), person("Benedict", "Graeler",
+        role = "ctb"), person("Tom", "Gottfried", role = "ctb"))
 Maintainer: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
 Depends: R (>= 2.10.0), methods, sp (>= 0.9-76), zoo, xts
 Suggests: gstat (>= 0.9-74), rgdal, rgeos, maps, mapdata, maptools,
@@ -30,6 +31,6 @@ Collate: Class-xts.R Class-ST.R Class-STSDF.R Class-STIDF.R
         Class-STFDF.R traj.R ST-methods.R STFDF-methods.R
         STSDF-methods.R STIDF-methods.R apply.R coerce.R stconstruct.R
         stplot.R over.R eof.R
-Packaged: 2011-08-25 11:03:42 UTC; edzer
+Packaged: 2011-09-11 16:54:27 UTC; edzer
 Repository: CRAN
-Date/Publication: 2011-08-26 13:09:00
+Date/Publication: 2011-09-11 20:31:27

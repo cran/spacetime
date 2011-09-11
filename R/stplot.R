@@ -77,11 +77,16 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 #stplot.STIDF = function(obj, names.attr = index(obj@time), ...)
 #	stplot(as(obj, "STFDF"), names.attr = names.attr, ...)
 
+panel.stpointsplot = function(x, y, col, sp.layout, ...) {
+    sp:::sp.panel.layout(sp.layout, panel.number())
+	panel.xyplot(x, y, col = col, ...)
+}
+
 stplot.STIDF = function(obj, names.attr = NULL, ..., 
 		as.table = TRUE, by = c("time", "burst", "id"), 
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
-		type = 'p', number = 6, overlap = 0, asp) {
-		#, panel = panel.xyplot, sp.layout = NULL) {
+		type = 'p', number = 6, overlap = 0, asp,
+		col = 1, panel = panel.stpointsplot, sp.layout = NULL) {
 	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
 	by = by[1]
 	f = paste(f, "|", by)
@@ -91,8 +96,10 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 	if (is.numeric(number) && number > 1)
 		obj$time = equal.count(obj$time, number = number, overlap = overlap)
 	xyplot(as.formula(f), obj, asp = asp, type = type,
-		as.table = as.table, scales = scales, xlab = xlab, ylab = ylab, ...)
+		as.table = as.table, scales = scales, xlab = xlab, ylab = ylab, 
+		panel = panel, sp.layout = sp.layout, ...)
 }
+
 
 setMethod("stplot", signature("STFDF"),  stplot.STFDF)
 

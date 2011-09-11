@@ -87,5 +87,5 @@ to be loaded first.
 }
 \author{Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de}}
 
-\seealso{\link[sp]{over}; \code{vignette('over')}}
+\seealso{\link[sp]{over}; \code{vignette('sto')}, \code{vignette('over')}}
 \keyword{methods}
