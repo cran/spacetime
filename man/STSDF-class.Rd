@@ -9,6 +9,7 @@
 \alias{[,STSDF-method} 
 \alias{coerce,STSDF,STFDF-method}
 \alias{coerce,STSDF,STIDF-method}
+\alias{rbind.STSDF}
 
 \title{Class "STSDF"}
 \description{ A class for spatio-temporal data with partial

@@ -61,30 +61,29 @@ dim.STDF = function(x) {
 dim.STF = dim.STS = dim.STI = dim.ST
 dim.STFDF = dim.STSDF = dim.STIDF = dim.STDF
 
+if (!isGeneric("proj4string"))
+	setGeneric("proj4string", function(obj)
+		standardGeneric("proj4string"))
 setMethod("proj4string", "ST", function(obj) proj4string(obj@sp))
-
+if (!isGeneric("proj4string<-"))
+	setGeneric("proj4string<-", function(obj, value)
+		standardGeneric("proj4string<-"))
+setReplaceMethod("proj4string", signature(obj = "ST", value = "CRS"), 
+	function(obj,value) { proj4string(obj@sp) = value; obj })
+setReplaceMethod("proj4string", signature(obj = "ST", value = "character"), 
+	function(obj, value) { proj4string(obj@sp) = value; obj })
+if (!isGeneric("is.projected"))
+	setGeneric("is.projected", function(obj)
+		standardGeneric("is.projected"))
 setMethod("is.projected", "ST", function(obj) is.projected(obj@sp))
 
-setReplaceMethod("proj4string", signature(obj = "ST", value = "CRS"), 
-	function(obj,value) {
-		proj4string(obj@sp) = value
-		obj
-	}
-)
-setReplaceMethod("proj4string", signature(obj = "ST", value = "character"), 
-	function(obj, value) {
-		proj4string(obj@sp) = value
-		obj
-	}
-)
-
+if (!isGeneric("spTransform"))
+	setGeneric("spTransform", function(x, CRSobj, ...)
+		standardGeneric("spTransform"))
 spTransform.ST = function(x, CRSobj, ...) {
 	x@sp = spTransform(x@sp, CRSobj)
 	x
 }
-if (!isGeneric("spTransform"))
-	setGeneric("spTransform", function(x, CRSobj, ...)
-		standardGeneric("spTransform"))
 setMethod("spTransform", signature("ST", "CRS"), spTransform.ST)
 
 # setMethod("geometry", "ST", function(obj) geometry(obj@sp))

@@ -37,14 +37,7 @@ Loading required package: xts
 > library(maptools)
 Loading required package: foreign
 Loading required package: lattice
-
-	Note: polygon geometry computations in maptools
- 	depend on the package gpclib, which has a
- 	restricted licence. It is disabled by default;
- 	to enable gpclib, type gpclibPermit()
- 
-Checking rgeos availability as gpclib substitute:
-TRUE
+Checking rgeos availability: TRUE
 > states = map2SpatialPolygons(states.m, IDs=IDs)
 > 
 > library(plm)

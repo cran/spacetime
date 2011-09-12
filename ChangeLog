@@ -1,3 +1,88 @@
+2011-08-26 13:40  EdzerPebesma
+
+	* DESCRIPTION: modified Authors@R field
+
+2011-08-25 21:20  EdzerPebesma
+
+	* R/coerce.R: coercing STIDF to STSDF did not work when data were
+	  completely irregular
+	  on a ST layout.
+
+2011-08-25 19:36  EdzerPebesma
+
+	* data, data/air.rda: added air.rda air quality data set
+
+2011-08-25 11:11  EdzerPebesma
+
+	* DESCRIPTION: updated Authors@R in DESCRIPTION
+
+2011-08-04 13:35  EdzerPebesma
+
+	* R/STFDF-methods.R, R/stplot.R, inst/doc/spacetime.Rnw,
+	  inst/doc/stpg.Rnw: selection for STFDF did reorder, e.g. x[2:1,]
+	  would yield x[1:2,].
+	  Added Hovmoeller-like plot to spacetime vignette.
+	  stplot now deals with scales argument passed as ...
+
+2011-07-28 11:14  EdzerPebesma
+
+	* R/coerce.R, R/stplot.R, demo/CressieWikle.R: still work to do to
+	  allow sp.layout in stplot.STIDF;
+	  coerce work with help from Tom Gottfried
+
+2011-07-25 18:02  EdzerPebesma
+
+	* R/STSDF-methods.R: ST() around sp and time in STSDF constructor
+
+2011-07-23 21:43  EdzerPebesma
+
+	* man/unstack.Rd: s3 method doc style
+
+2011-07-23 15:33  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, man/unstack.Rd: s3 method doc warning
+
+2011-07-21 21:38  EdzerPebesma
+
+	* man/over.Rd: update;
+
+2011-07-19 22:20  EdzerPebesma
+
+	* R/stplot.R: added data.frame() around unstack()
+
+2011-07-19 09:30  EdzerPebesma
+
+	* demo/CressieWikle.R: now use file.exist()
+
+2011-07-16 12:06  EdzerPebesma
+
+	* DESCRIPTION: version increase; improved description
+
+2011-07-15 09:13  EdzerPebesma
+
+	* DESCRIPTION: date update
+
+2011-07-15 09:12  EdzerPebesma
+
+	* inst/doc/stpg.Rnw: eval=FALSE for all database access
+
+2011-07-15 08:43  EdzerPebesma
+
+	* R/STIDF-methods.R: subs [ method bug fix.
+
+2011-07-14 22:41  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw: added reference to time / date classes
+
+2011-07-14 20:43  EdzerPebesma
+
+	* R/STSDF-methods.R, inst/doc/stpg.Rnw: repaired bug when selecting
+	  STSDF with feature; vignette improvement.
+
+2011-07-14 20:08  EdzerPebesma
+
+	* inst/doc/stpg.Rnw: added spatial selection example.
+
 2011-07-12 12:39  EdzerPebesma
 
 	* inst/doc/stpg.Rnw: update

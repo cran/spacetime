@@ -7,7 +7,7 @@ STIDF = function(sp, time, data) {
         time = xts(1:length(time), time)
 		# rearrange sp and data in new time order:
         o = as.vector(time[,1])
-		sp = sp[o]
+		sp = sp[o,]
 		data = data[o,,drop=FALSE]
 	}
 	new("STIDF", STI(sp, time), data = data)

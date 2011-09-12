@@ -8,6 +8,7 @@
 \alias{as.data.frame.STI}
 \alias{[,STIDF-method} 
 \alias{coerce,STIDF,STSDF-method}
+\alias{rbind.STIDF}
 
 \title{Class "STIDF"}
 \description{ A class for unstructured spatio-temporal data; for
