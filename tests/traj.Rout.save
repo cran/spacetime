@@ -36,6 +36,19 @@ Loading required package: caTools
 Loading required package: bitops
 Loading required package: RColorBrewer
 > library(trip)
+Loading required package: spatstat
+Loading required package: mgcv
+This is mgcv 1.7-6. For overview type 'help("mgcv-package")'.
+Loading required package: deldir
+deldir 0.0-15
+
+     Please note: The process for determining duplicated points
+     has changed from that used in version 0.0-9 (and previously).
+
+spatstat 1.23-4 
+Type 'help(spatstat)' for an overview of spatstat 
+     'latest.news()' for news on latest version 
+     'licence.polygons()' for licence information on polygon calculations
 > 
 > locs <- readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
 + 	package="diveMove")), idCol=1, dateCol=2,
@@ -71,6 +84,10 @@ Loading required package: ade4
 
 Attaching package: 'ade4'
 
+The following object(s) are masked from 'package:spatstat':
+
+    disc
+
 The following object(s) are masked from 'package:base':
 
     within
@@ -81,6 +98,10 @@ Loading required package: MASS
 Loading required package: boot
 
 Attaching package: 'boot'
+
+The following object(s) are masked from 'package:spatstat':
+
+    envelope
 
 The following object(s) are masked from 'package:diveMove':
 

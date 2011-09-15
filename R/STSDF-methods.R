@@ -100,7 +100,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 # https://stat.ethz.ch/pipermail/r-sig-geo/2011-March/011231.html
 
 	x@index = x@index[sel,, drop=FALSE]
-          # inserted drop=FALSE to handle (length(i)==1 && length(j)==1) # TG
+    # inserted drop=FALSE to handle (length(i)==1 && length(j)==1) # TG
 
 # now simplify everything, and drop any S/T not refered to:
 	u1 = unique(x@index[,1])
@@ -116,10 +116,11 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 				x = x@data[1,1,drop=TRUE]
 			else
 				x = xts(x@data, index(x@time[x@index[,2]]))
-                                  # added index to achieve (nrow(x)==length(order.by)) in index() # TG
+                # added index to achieve 
+				#   (nrow(x)==length(order.by)) in index() # TG
 		} else if (length(t) == 1) { # only one time item
 			x = addAttrToGeom(x@sp[x@index[,1],], x@data, match.ID = FALSE)
-                         # added index to achieve matching SpatialPoints and data.frame # TG
+            # added index to achieve matching SpatialPoints and data.frame # TG
 		}
 	}
 	x

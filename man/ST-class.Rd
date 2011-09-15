@@ -8,6 +8,11 @@
 \alias{[[,ST,ANY,missing-method}
 \alias{$<-,ST-method}
 \alias{$,ST-method}
+\alias{cbind.ST}
+\alias{is.projected,ST-method}
+\alias{proj4string,ST-method}
+\alias{proj4string<-,ST,CRS-method}
+\alias{proj4string<-,ST,character-method}
 
 \title{Class "ST"}
 \description{ An abstract class from which useful spatio-temporal classes are

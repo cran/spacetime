@@ -9,6 +9,7 @@
 \alias{coerce,STFDF,xts-method}
 \alias{coerce,STFDF,Spatial-method}
 \alias{na.omit.STFDF}
+\alias{rbind.STFDF}
 
 \title{Class "STFDF"}
 \description{ A class for spatio-temporal data with full space-time grid; for

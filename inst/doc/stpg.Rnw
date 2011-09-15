@@ -41,11 +41,12 @@ In case the commands are not evaluated because CRAN packages cannot
 access an external data base, a document with evaluated commands
 is found \href{http://ifgi.uni-muenster.de/~epebe_01/stpg.pdf}{here}.
 
-This vignette was run in the following session:
-<<>>=
+This vignette was run using the following libraries:
+<<eval=FALSE>>=
 library(RPostgreSQL)
+@
+<<>>=
 library(spacetime)
-sessionInfo()
 @
 
 \section{Setting up a database}

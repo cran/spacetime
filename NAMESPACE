@@ -27,7 +27,13 @@ export(ST,
 	stConstruct,
 	na.omit.STFDF,
 	EOF, 
-	aggregate.ST)
+	aggregate.ST,
+	cbind.ST,
+	rbind.STIDF,
+	rbind.STSDF,
+	rbind.STFDF)
+
+exportMethods(proj4string, "proj4string<-", is.projected)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
