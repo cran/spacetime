@@ -1,3 +1,112 @@
+2011-10-05 19:55  EdzerPebesma
+
+	* ChangeLog, inst/doc/spacetime.Rnw, inst/doc/spacetime.aux,
+	  inst/doc/spacetime.bib, man/over.Rd, svn2cl.xsl: paper version
+	  that was submitted to JSS
+
+2011-10-05 16:08  EdzerPebesma
+
+	* inst/doc/jss.bst, inst/doc/jss.cls, inst/doc/jsslogo.jpg,
+	  inst/doc/spacetime.Rnw, inst/doc/spacetime.aux,
+	  inst/doc/spacetime.bib: rearranged vignette to JSS style; added
+	  bibtex file
+
+2011-09-23 14:38  EdzerPebesma
+
+	* svn2cl.xsl, tests/over.R, tests/over.Rout.save,
+	  tests/stconstruct.Rout.save: (apparently forgotten to add these
+	  files)
+
+2011-09-21 19:19  EdzerPebesma
+
+	* R/stplot.R: reversed changes back
+
+2011-09-21 18:25  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw: explained new tp and ts stplot types.
+
+2011-09-21 16:26  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/bind.R, R/over.R, R/stplot.R,
+	  man/stplot.Rd: made aggregate into S4 generic; extended "ts"
+	  options for multiple attributes,
+	  using panels; addes stack method, that returns long-form
+	  data.frame.
+
+2011-09-19 18:22  EdzerPebesma
+
+	* R/over.R: retain attributes of by argument (spatial, temporal,
+	  spatio-temporal).
+
+2011-09-18 18:10  EdzerPebesma
+
+	* ChangeLog: changelog update
+
+2011-09-18 16:48  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/ST-methods.R: added proj4string
+	  methods; updated sp dependency to (so far unreleased) sp_0.9-89
+
+2011-09-16 08:10  EdzerPebesma
+
+	* DESCRIPTION: version update
+
+2011-09-15 09:42  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/STSDF-methods.R, inst/doc/stpg.Rnw,
+	  man/ST-class.Rd, tests/traj.Rout.save, tests/wind.Rout.save:
+	  version update;
+	  updated test results;
+	  dealt with proj4string<- S4/S3 issue (?) from sp;
+	  uncommented RPostgreSQL evals in stpg vignette.
+
+2011-09-14 12:53  EdzerPebesma
+
+	* ChangeLog: update.
+
+2011-09-14 12:51  EdzerPebesma
+
+	* ChangeLog: added changelog.
+
+2011-09-12 17:35  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/STIDF-methods.R, R/bind.R,
+	  R/stconstruct.R, man/ST-class.Rd, man/STFDF-class.Rd,
+	  man/STIDF-class.Rd, man/STSDF-class.Rd: version increase;
+	  added cbind and rbind methods
+
+2011-09-11 17:06  EdzerPebesma
+
+	* R/coerce.R, man/STFDF-class.Rd: version; as(xx, "Spatial")
+	  methods.
+
+2011-09-07 09:34  EdzerPebesma
+
+	* R/ST-methods.R, R/coerce.R, inst/doc/spacetime.Rnw,
+	  man/stplot.Rd: added as(x, "Spatial") methods, added examples to
+	  vignette;
+	  improved STIDF->STSDF coercion;
+	  completed stplot documentation for STIDF (now accepts sp.layout)
+
+2011-09-05 11:34  EdzerPebesma
+
+	* man/over.Rd: typo
+
+2011-09-02 15:05  EdzerPebesma
+
+	* DESCRIPTION: version increase
+
+2011-08-28 12:35  EdzerPebesma
+
+	* R/stplot.R, data/fires.rda, man/fires.Rd: added fires data set
+	  from ptproc; sp.layout for stplot'ing STIDF's
+
+2011-08-27 21:23  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, inst/doc/stpg.Rnw, tests/basic.Rout.save,
+	  tests/traj.Rout.save, tests/wind.Rout.save: updated clean check
+	  results
+
 2011-08-26 13:40  EdzerPebesma
 
 	* DESCRIPTION: modified Authors@R field

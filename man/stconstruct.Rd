@@ -94,7 +94,7 @@ nc.st = stConstruct(as(nc, "data.frame"), geometry(nc), timesList,
 	TimeObj = t)
 
 # stConstruct multivariable, space-wide
-library(gstat)
+if (require(gstat)) {
 data(wind)
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
 wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
@@ -117,5 +117,6 @@ space = list(values = names(wind)[stations])
 wind.st = stConstruct(wind[stations], space, wind$time, SpatialObj = wind.loc)
 all.equal(w, wind.st)
 class(wind.st)
+}
 }
 \keyword{manip}

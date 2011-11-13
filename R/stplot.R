@@ -12,7 +12,11 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		at = seq(min(obj[[z]], na.rm = TRUE), max(obj[[z]], na.rm = TRUE), 
 			length.out = cuts + 1)
 	if (mode == "ts") { # multiple time series
-		xyplot(as.formula(paste(z, "~", "time")), 
+		if (length(names(obj@data)) > 1) # , stack, add | which.var
+			xyplot(values ~ time | ind, stack(obj), groups = sp.ID, 
+				type = 'l',auto.key = auto.key, as.table = as.table, ...)
+		else
+			xyplot(as.formula(paste(z, "~", "time")), 
 				as.data.frame(obj), groups = sp.ID, 
 				type = 'l',auto.key = auto.key, as.table = as.table, ...)
 	} else if (mode == "tp") { # time series in multiple panels
@@ -52,11 +56,14 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		dots = append(list(f, as.data.frame(obj), at = at,
 			cuts = cuts, as.table = as.table), dots)
 		do.call(levelplot, dots)
-	} else {
+	} else { # multiple spplots: panel for each time step.
     	form = as.formula(paste(z, "~ time"))
     	sp = geometry(obj@sp)
     	df = data.frame(unstack(as.data.frame(obj), form))
 		x = addAttrToGeom(sp, df, match.ID=FALSE)
+		## OR:
+		## x = as(obj, "Spatial")
+		## x@data = data.frame(x@data) # cripples column names
 		if (animate > 0) {
 			i = 0
 			while (TRUE) {
@@ -111,3 +118,14 @@ setMethod("stplot", signature("STIDFtraj"),
 	function(obj, ..., names.attr = NULL, by = "burst", type = 'l')
 		stplot.STIDF(obj, names.attr = names.attr, by = by, type = type, ...)
 )
+
+stackST = function(x, select, ...) {
+	nc = ncol(x@data)
+	df = stack(x@data)
+	g = as.data.frame(geometry(x))
+	gf = do.call(rbind, lapply(1:nc, function(x) g))
+	data.frame(gf, df)
+}
+stack.STFDF = stackST
+stack.STSDF = stackST
+stack.STIDF = stackST

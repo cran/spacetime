@@ -1,9 +1,10 @@
-import(sp)
+# import(sp)
 import(zoo)
 import(xts)
 import(lattice)
-import(methods)
+# import(methods)
 importFrom(stats, aggregate)
+importFrom(utils, stack)
 
 exportClasses(
 	xts, 
@@ -27,13 +28,14 @@ export(ST,
 	stConstruct,
 	na.omit.STFDF,
 	EOF, 
-	aggregate.ST,
+	#aggregate.ST,
 	cbind.ST,
 	rbind.STIDF,
 	rbind.STSDF,
 	rbind.STFDF)
 
-exportMethods(proj4string, "proj4string<-", is.projected)
+#exportMethods(proj4string, "proj4string<-", is.projected)
+exportMethods(aggregate)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
@@ -62,3 +64,6 @@ S3method(length, STIDF)
 #S3method(unstack, STFDF)
 S3method(print, summary.ST)
 S3method(rbind, STIDFtraj)
+S3method(stack, STFDF)
+S3method(stack, STSDF)
+S3method(stack, STIDF)
