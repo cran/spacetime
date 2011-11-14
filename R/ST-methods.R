@@ -68,10 +68,8 @@ setMethod("proj4string", "ST", function(obj) proj4string(obj@sp))
 if (!isGeneric("proj4string<-"))
 	setGeneric("proj4string<-", function(obj, value)
 		standardGeneric("proj4string<-"))
-setReplaceMethod("proj4string", signature(obj = "ST", value = "CRS"), 
+setReplaceMethod("proj4string", signature(obj = "ST", value = "ANY"), 
 	function(obj,value) { proj4string(obj@sp) = value; obj })
-setReplaceMethod("proj4string", signature(obj = "ST", value = "character"), 
-	function(obj, value) { proj4string(obj@sp) = value; obj })
 if (!isGeneric("is.projected"))
 	setGeneric("is.projected", function(obj)
 		standardGeneric("is.projected"))
@@ -135,3 +133,10 @@ print.summary.ST = function(x, ...) {
 #	#	return(SpatialRingsDataFrame(x@sp, x@data))
 #	stop("unknown Spatial class")
 #}
+
+if (!isGeneric("aggregate"))
+	setGeneric("aggregate", function(x, ...)
+		standardGeneric("aggregate"))
+if (!isGeneric("aggregateBy"))
+	setGeneric("aggregateBy", function(x, by, ...)
+		standardGeneric("aggregateBy"))

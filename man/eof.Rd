@@ -21,7 +21,8 @@ In spatial mode, the appropriate \code{Spatial*} object. In temporal
 mode, an object of class \code{xts}.
 }
 \examples{
-library(gstat)
+
+if (require(gstat)) {
 data(wind)
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
 wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
@@ -42,5 +43,6 @@ EOF(wind.st, "temporal", returnPredictions=FALSE)
 summary(EOF(wind.st, returnPredictions=FALSE))
 summary(EOF(wind.st, "temporal", returnPredictions=FALSE))
 plot(EOF(wind.st, "temporal", returnPredictions=FALSE))
+}
 }
 \keyword{manip}

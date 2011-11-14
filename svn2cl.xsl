@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
 
    svn2cl.xsl - xslt stylesheet for converting svn log to a normal

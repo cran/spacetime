@@ -20,7 +20,7 @@
 \alias{over,STF,STIDF-method}
 \alias{over,STS,STIDF-method}
 \alias{over,STI,STIDF-method}
-\alias{aggregate.ST}
+\alias{aggregate,ST-method}
 \title{ consistent spatio-temporal overlay for objects inheriting from ST }
 \description{ consistent spatio-temporal overlay for STF, STS and STI
 objects, as well as their *DF counterpart: 
@@ -29,7 +29,7 @@ points of another }
 \usage{
 \S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
 \S4method{over}{xts,xts}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = TRUE)
-\method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
+\S4method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 }
 \arguments{
 \item{x}{geometry (S/T locations) of the queries}

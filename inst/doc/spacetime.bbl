@@ -1,0 +1,188 @@
+\begin{thebibliography}{27}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Allen(1983)}]{allen}
+Allen JF (1983).
+\newblock \enquote{Maintaining Knowledge about Temporal Intervals.}
+\newblock \emph{Commun. ACM}, \textbf{26}, 832--843.
+\newblock ISSN 0001-0782.
+\newblock \doi{http://doi.acm.org/10.1145/182.358434}.
+\newblock \urlprefix\url{http://doi.acm.org/10.1145/182.358434}.
+
+\bibitem[{Baltagi(2001)}]{baltagi}
+Baltagi B (2001).
+\newblock \emph{Econometric Analaysis of Panel Data, 3rd edition}.
+\newblock John Wiley \& Sons, New York.
+\newblock \urlprefix\url{http://www.wiley.com/legacy/wileychi/baltagi/}.
+
+\bibitem[{Bivand \emph{et~al.}(2008)Bivand, Pebesma, and Gomez-Rubio}]{bivand}
+Bivand RS, Pebesma EJ, Gomez-Rubio V (2008).
+\newblock \emph{Applied Spatial Data Analysis with {R}}.
+\newblock Springer-Verlag, New York.
+\newblock \urlprefix\url{http://www.asdar-book.org/}.
+
+\bibitem[{Botts \emph{et~al.}(2007)Botts, Percivall, Reed, and
+  Davidson}]{botts}
+Botts M, Percivall G, Reed C, Davidson J (2007).
+\newblock \enquote{OGC Sensor Web Enablement: Overview And High Level
+  Architecture.}
+\newblock \emph{Technical report}, Open Geospatial Consortium.
+\newblock
+  \urlprefix\url{http://portal.opengeospatial.org/files/?artifact_id=25562}.
+
+\bibitem[{Brownrigg and Minka(2011)}]{maps}
+Brownrigg R, Minka TP (2011).
+\newblock \emph{maps: Draw Geographical Maps}.
+\newblock R package version 2.1-6,
+  \urlprefix\url{http://CRAN.R-project.org/package=maps}.
+
+\bibitem[{Calenge \emph{et~al.}(2008)Calenge, Dray, and
+  Royer-Carenzi}]{calenge}
+Calenge C, Dray S, Royer-Carenzi M (2008).
+\newblock \enquote{The Concept of Animals' Trajectories from a Data Analysis
+  Perspective.}
+\newblock \emph{Ecological informatics}, \textbf{4}, 34--41.
+
+\bibitem[{Cressie and Wikle(2011)}]{cressie}
+Cressie N, Wikle C (2011).
+\newblock \emph{Statistics for Spatio-temporal Data}.
+\newblock John Wiley \& Sons, New York.
+
+\bibitem[{Galton(2004)}]{galton}
+Galton A (2004).
+\newblock \enquote{Fields and Objects in Space, Time and Space-time.}
+\newblock \emph{Spatial cognition and computation}, \textbf{4}.
+
+\bibitem[{Gleditsch and Ward(1999)}]{gleditsch}
+Gleditsch KS, Ward MD (1999).
+\newblock \enquote{Interstate System Membership: A Revised List of the
+  Independent States since 1816.}
+\newblock \emph{International Interactions}, \textbf{25}, 393--413.
+\newblock \urlprefix\url{http://privatewww.essex.ac.uk/~ksg/statelist.html}.
+
+\bibitem[{Grolemund and Wickham(2011)}]{grolemund}
+Grolemund G, Wickham H (2011).
+\newblock \enquote{Dates and Times Made Easy with {lubridate}.}
+\newblock \emph{Journal of Statistical Software}, \textbf{40}(3), 1--25.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v40/i03/}.
+
+\bibitem[{Grothendieck and Petzoldt(2004)}]{grothendieck}
+Grothendieck G, Petzoldt T (2004).
+\newblock \enquote{R Help Desk: Date and Time Classes in R.}
+\newblock \emph{R News}, \textbf{4}, 29--32.
+\newblock \urlprefix\url{http://cran.r-project.org/doc/Rnews/Rnews_2004-1.pdf}.
+
+\bibitem[{Haslett and Raftery(1989)}]{haslet}
+Haslett J, Raftery AE (1989).
+\newblock \enquote{Space-time Modelling with Long-memory Dependence: Assessing
+  Ireland's Wind Power Resource (with Discussion).}
+\newblock \emph{Applied Statistics}, \textbf{38}, 1--50.
+
+\bibitem[{Keitt \emph{et~al.}(2011)Keitt, Bivand, Pebesma, and
+  Rowlingson}]{rgdal}
+Keitt TH, Bivand R, Pebesma E, Rowlingson B (2011).
+\newblock \emph{rgdal: Bindings for the Geospatial Data Abstraction Library}.
+\newblock R package version 0.7-1,
+  \urlprefix\url{http://CRAN.R-project.org/package=rgdal}.
+
+\bibitem[{Lewin-Koh \emph{et~al.}(2011)Lewin-Koh, Bivand, contributions~by
+  Edzer J.~Pebesma, Archer, Baddeley, Bibiko, Dray, Forrest, Friendly,
+  Giraudoux, Golicher, Rubio, Hausmann, Hufthammer, Jagger, Luque, MacQueen,
+  Niccolai, Short, Stabler, and Turner}]{maptools}
+Lewin-Koh NJ, Bivand R, contributions~by Edzer J~Pebesma, Archer E, Baddeley A,
+  Bibiko HJ, Dray S, Forrest D, Friendly M, Giraudoux P, Golicher D, Rubio VG,
+  Hausmann P, Hufthammer KO, Jagger T, Luque SP, MacQueen D, Niccolai A, Short
+  T, Stabler B, Turner R (2011).
+\newblock \emph{maptools: Tools for Reading and Handling Spatial Objects}.
+\newblock R package version 0.8-10,
+  \urlprefix\url{http://CRAN.R-project.org/package=maptools}.
+
+\bibitem[{Luque(2007)}]{luque}
+Luque SP (2007).
+\newblock \enquote{Diving Behaviour Analysis in {R}.}
+\newblock \emph{{R News}}, \textbf{7}(3), 8--14.
+\newblock ISSN -2022.
+\newblock Contributions from: John P.Y. Arnould, Laurent Dubroca, and Andy
+  Liaw, \urlprefix\url{http://cran.r-project.org/doc/Rnews/}.
+
+\bibitem[{Neuwirth(2011)}]{neuwirth}
+Neuwirth E (2011).
+\newblock \emph{RColorBrewer: ColorBrewer palettes}.
+\newblock R package version 1.0-5,
+  \urlprefix\url{http://CRAN.R-project.org/package=RColorBrewer}.
+
+\bibitem[{Pebesma(2004)}]{pebesma04}
+Pebesma EJ (2004).
+\newblock \enquote{Multivariable Geostatistics in {S}: the gstat Package.}
+\newblock \emph{Computers \& Geosciences}, \textbf{30}(7), 683--691.
+
+\bibitem[{Pebesma and Bivand(2005)}]{pebesma}
+Pebesma EJ, Bivand RS (2005).
+\newblock \enquote{Classes and Methods for Spatial Data in {R}.}
+\newblock \emph{R News}, \textbf{5}(2), 9--13.
+\newblock \urlprefix\url{http://cran.r-project.org/doc/Rnews/}.
+
+\bibitem[{{R Development Core Team}(2011)}]{RR}
+{R Development Core Team} (2011).
+\newblock \emph{R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+\newblock {ISBN} 3-900051-07-0, \urlprefix\url{http://www.R-project.org/}.
+
+\bibitem[{Ripley and Hornik(2001)}]{ripleyhornik}
+Ripley B, Hornik K (2001).
+\newblock \enquote{Date-time Classes.}
+\newblock \emph{R News}, \textbf{1}, 8--11.
+
+\bibitem[{Ryan and Ulrich(2011)}]{ryan}
+Ryan JA, Ulrich JM (2011).
+\newblock \emph{xts: eXtensible Time Series}.
+\newblock R package version 0.8-2,
+  \urlprefix\url{http://CRAN.R-project.org/package=xts}.
+
+\bibitem[{Sarkar(2008)}]{sarkar}
+Sarkar D (2008).
+\newblock \emph{Lattice: Multivariate Data Visualization with R}.
+\newblock Springer-Verlag, New York.
+\newblock ISBN 978-0-387-75968-5,
+  \urlprefix\url{http://lmdvr.r-forge.r-project.org}.
+
+\bibitem[{Schabenberger and Gotway(2004)}]{schabenberger}
+Schabenberger O, Gotway C (2004).
+\newblock \emph{Statistical Methods for Spatial Data Analysis}.
+\newblock Chapman and Hall, Boca Raton.
+
+\bibitem[{Sumner(2010)}]{sumner}
+Sumner M (2010).
+\newblock \enquote{The Tag Location Problem.}
+\newblock \emph{Technical report}, Institute of Marine and Antarctic Studies
+  University of Tasmania.
+\newblock Unpublished PhD thesis.
+
+\bibitem[{Weidmann \emph{et~al.}(2011)Weidmann, Kuse, and Gleditsch}]{weidmann}
+Weidmann NB, Kuse D, Gleditsch KS (2011).
+\newblock \emph{cshapes: CShapes Dataset and Utilities}.
+\newblock R package version 0.3-1,
+  \urlprefix\url{http://CRAN.R-project.org/package=cshapes}.
+
+\bibitem[{Y. and Millo(2008)}]{croissant}
+Y C, Millo G (2008).
+\newblock \enquote{Panel Data Econometrics in R: The plm Package.}
+\newblock \emph{Journal of Statistical Software}, \textbf{27}.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v27/i02/}.
+
+\bibitem[{Zeileis and Grothendieck(2005)}]{zeileis}
+Zeileis A, Grothendieck G (2005).
+\newblock \enquote{zoo: S3 Infrastructure for Regular and Irregular Time
+  Series.}
+\newblock \emph{Journal of Statistical Software}, \textbf{14}(6), 1--27.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v14/i06/}.
+
+\end{thebibliography}

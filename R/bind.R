@@ -15,13 +15,6 @@ rbind.STIDF = function(..., deparse.level = 1) {
 	STIDF(sp, time, df)
 }
 
-# pretty "lazy" implementations follow:
-
-rbind.STSDF = function(..., deparse.level = 1) {
-	args = list(...)
-	as(do.call(rbind, lapply(args, function(x) as(x, "STIDF"))), "STSDF")
-}
-
 rbind.STFDF = function(..., deparse.level = 1) {
 	args = list(...)
 	n = names(args[[1]]@data)
@@ -32,4 +25,11 @@ rbind.STFDF = function(..., deparse.level = 1) {
 	ret = stConstruct(args, sp)
 	names(ret@data) = n
 	ret
+}
+
+# pretty "lazy" implementation follow:
+
+rbind.STSDF = function(..., deparse.level = 1) {
+	args = list(...)
+	as(do.call(rbind, lapply(args, function(x) as(x, "STIDF"))), "STSDF")
 }

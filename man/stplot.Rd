@@ -6,6 +6,9 @@
 \alias{stplot,STSDF-method} 
 \alias{stplot,STIDF-method} 
 \alias{stplot,STIDFtraj-method} 
+\alias{stack.STFDF} 
+\alias{stack.STSDF} 
+\alias{stack.STIDF} 
 \title{ produce trellis plot for STxDF object }
 \description{ create trellis plot for ST objects }
 \section{Methods}{
@@ -36,8 +39,10 @@ if FALSE, time will increase from bottom to top }
 subsequent animated time steps (loop; press ctrl-C or Esc to stop) }
 \item{mode}{ plotting mode; if "xy", maps for time steps are plotted; 
 if "xt", a space-time plot is constructed (see argument \code{scaleX},
-but read details below); if "ts" multiple time series in a single plot
-are plotted; if "tp" time series in are plotted in multiple panels. }
+but read details below); if "ts", multiple-locations time series
+are plotted in a single plot, or in a separate panel for each
+attribute; if "tp" single- or multi-attribute time series are
+plotted in multiple panels, one panel per location. }
 \item{scaleX}{ integer: 0, 1 or 2; when \code{mode} is "xt", used to determine
 whether the index of the spatial location is shown (0), the x coordinate (1)
 or the y coordinate (2). }
