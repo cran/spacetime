@@ -1,5 +1,5 @@
 5133e41cc89d83cb8d02b0545d6f1026 *ChangeLog
-9f4148080bcc6a558a94e40d27148747 *DESCRIPTION
+bc620ffb0b346f0220c2718c923e80d9 *DESCRIPTION
 4bab501b26a3d8d10916d8b3211a4b24 *NAMESPACE
 b032b59079ff783425aec99933c8116d *R/Class-ST.R
 56dfc8c95d3b41c179a1083ccb4c1179 *R/Class-STFDF.R
@@ -34,11 +34,11 @@ b9564ddd59a06782310989e8f33db55e *inst/doc/jsslogo.jpg
 9f7d6ed69e506505d92f15af72738399 *inst/doc/spacetime.bbl
 3875499070ee50af8daa2cd7d7b9d72b *inst/doc/spacetime.bib
 f978c23c2fbfd48392d2b1e2c7ebe3d7 *inst/doc/spacetime.blg
-7e6bfd62ccb424b751e282e6474502ad *inst/doc/spacetime.pdf
+94e2ad3286a95b84b877ae89cb0b68b4 *inst/doc/spacetime.pdf
 59d02ddb2f4f53ecbcf219f1493cba3a *inst/doc/sto.Rnw
-d1c57d3a190fef6948074a3aa3724d90 *inst/doc/sto.pdf
+16a1fa38a2762f77f04a1d44edefadfe *inst/doc/sto.pdf
 acfc097d3f353e5fed2e755757a2644e *inst/doc/stpg.Rnw
-53fa0ff9017a0d4881b399204785363e *inst/doc/stpg.pdf
+93c6123dba42115ab8cd8c371373d0f1 *inst/doc/stpg.pdf
 01b6c93dadb16baf0d02b068778dc5f6 *man/ST-class.Rd
 18fec5edc51ce7aaf8b096de190bf992 *man/STFDF-class.Rd
 778e777da6b1e9c4a82a36728d56f324 *man/STIDF-class.Rd
@@ -60,5 +60,5 @@ dc5cbc3adec5d8345e68c60bab867d51 *tests/stconstruct.R
 8c05c15e03fdaab5f5069006c3a00c7b *tests/stconstruct.Rout.save
 7079d99c32a6735919eaaa7b0e27b76d *tests/traj.R
 742f2fa21dfd93c2a615b67a3979774b *tests/traj.Rout.save
-20c4567a5c775c14e98d746d27223368 *tests/wind.R
-7ea51bcc7eae360f011d8be35719fc73 *tests/wind.Rout.save
+2d5d4a4f455796cc44fc6259234e1f2a *tests/wind.R
+ee95c049675d2af0587aa52e460ef91f *tests/wind.Rout.save

@@ -2,7 +2,7 @@
 ### chunk number 19: 
 ###################################################
 library(spacetime)
-library(gstat)
+if (require(gstat)) {
 data(wind)
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
 wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
@@ -89,5 +89,6 @@ spl = list(list("sp.points", pts, first=F, cex=.5),
 stplot(wind.pr, col.regions=bpy.colors(),
 	par.strip.text = list(cex=.5), sp.layout = spl)
 summary(wind.pr)
+}
 }
 }
