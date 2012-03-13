@@ -1,26 +1,30 @@
-\name{STIDFtraj-class}
+\name{STTDF-class}
 \docType{class}
-\alias{STIDFtraj-class}
+\alias{STT-class}
+\alias{STTDF-class}
 \alias{ltraj-class}
-\alias{coerce,STIDFtraj,ltraj-method} 
-\alias{coerce,ltraj,STIDFtraj-method}
-
-\title{Class "STIDF"}
-\description{ A class for spatio-temporal trajectory data; for
-n spatial locations and times, n observations are available }
+\alias{coerce,STTDF,ltraj-method} 
+\alias{coerce,ltraj,STTDF-method}
+\alias{stplot,STTDF-method}
+\title{Class "STTDF"}
+\description{ A class for spatio-temporal trajectory data }
 \section{Objects from the Class}{
 Objects of this class carry sparse (irregular) space/time data }
 \section{Slots}{
   \describe{
-    \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object of class \code{"xts"}}
+    \item{\code{sp}:}{Object of class \code{"Spatial"}, containing the bounding
+	box of all trajectories}
+    \item{\code{time}:}{Object of class \code{"xts"}, containing the temporal bounding
+	box of all trajectories}
+	\item{\code{traj}:}{Object of class \code{list}, which element holding
+	a \link{STI} object with an individual trajectory; }
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
-	the measured values }
+	the data values }
   }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "STIDF")}: selects spatial-temporal entities, and attributes } 
+    \item{[}{\code{signature(x = "STTDF")}: selects spatial-temporal entities, and attributes } 
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -30,12 +34,12 @@ Objects of this class carry sparse (irregular) space/time data }
 }
 
 \usage{
-  \S4method{coerce}{STIDFtraj,ltraj}(from, to, strict=TRUE)
-  \S4method{coerce}{ltraj,STIDFtraj}(from, to, strict=TRUE)
+  \S4method{coerce}{STTDF,ltraj}(from, to, strict=TRUE)
+  \S4method{coerce}{ltraj,STTDF}(from, to, strict=TRUE)
 }
 
 \arguments{
-\item{from}{object}
+\item{from}{from object}
 \item{to}{target class}
 \item{strict}{ignored}
 }

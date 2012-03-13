@@ -134,20 +134,19 @@ over(x, y)
 @
 A space-time feature matches another space-time feature when their
 spatial locations match (coincide, touch, intersect or overlap),
-and when their temporal extents match. For temporal extent, it
-is crucial whether time is considered to be a time interval, or a
-time instance.  Matching time instance is always considered.
+and when their temporal properties match. For temporal properties,
+it is crucial whether time is considered to be a time interval,
+or a time instance.  Matching time instance is always considered.
 
 The {\tt over} methods in package {\tt spacetime} have a boolean
 argument {\tt timeInterval} which is by default {\tt TRUE} for
 the cases where {\tt y} derives from class {\tt STF} or {\tt STS},
-and {\tt FALSE} when {\tt y} derives from class {\tt STI}. When {\tt
-TRUE}, the times of {\tt y} are considered as time intervals, meaning
-that the times of {\tt x[i,j]} and {\tt y[k,l]} match if the time
-instant of {\tt x[i,j]} is larger than or equal to the time instant
-of {\tt y[k,l]}, but less than the next time instant.  The time
-interval length of the last time step is taken to be identical to
-the last time interval of an object. 
+and {\tt FALSE} otherwise. When {\tt TRUE}, the times of {\tt y} are
+considered as time intervals, meaning that the times of {\tt x[i,j]}
+and {\tt y[k,l]} match if the time instant of {\tt x[i,j]} is larger
+than or equal to the time instant of {\tt y[k,l]}, but less than
+the next time instant.  The time interval length of the last time
+step is taken to be identical to the last time interval of an object.
 
 Spatio-temporal objects with only one time step cannot be used to
 determine time intervals.

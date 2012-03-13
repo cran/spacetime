@@ -1,8 +1,8 @@
 
-R version 2.13.1 (2011-07-08)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R version 2.14.2 (2012-02-29)
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: i486-pc-linux-gnu (32-bit)
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -16,9 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> ###################################################
-> ### chunk number 25: 
-> ###################################################
 > library(spacetime)
 Loading required package: sp
 Loading required package: zoo
@@ -27,59 +24,79 @@ Attaching package: 'zoo'
 
 The following object(s) are masked from 'package:base':
 
-    as.Date
+    as.Date, as.Date.numeric
 
 Loading required package: xts
-> library(diveMove)
+> library(maps)
+> library(mapdata)
+> library(maptools)
+Loading required package: foreign
+Loading required package: lattice
+Checking rgeos availability: TRUE
+> ###################################################
+> ### code chunk number 48: spacetime.Rnw:1039-1049
+> ###################################################
+> library("diveMove")
 Loading required package: stats4
 Loading required package: caTools
 Loading required package: bitops
 Loading required package: RColorBrewer
-> library(trip)
+> library("trip")
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-6. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-13. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
-deldir 0.0-15
+deldir 0.0-16
 
      Please note: The process for determining duplicated points
      has changed from that used in version 0.0-9 (and previously).
 
-spatstat 1.23-4 
+spatstat 1.25-4 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
-> 
-> locs <- readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
+> locs = readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
 + 	package="diveMove")), idCol=1, dateCol=2,
 + 	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
 + 	lonCol=4, latCol=5, sep=";")
 > 
-> ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
-> coordinates(ringy) <- ringy[c("lon", "lat")]
-> tr <- trip(ringy, c("time", "id"))
+> ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+> coordinates(ringy) = ringy[c("lon", "lat")]
+> tr = trip(ringy, c("time", "id"))
 > 
-> setClass("STIDFtrip", representation("STIDF", TOR.columns = "character"))
-[1] "STIDFtrip"
-> setAs("trip", "STIDFtrip",
+> 
+> ###################################################
+> ### code chunk number 49: spacetime.Rnw:1052-1068
+> ###################################################
+> setAs("trip", "STTDF",
 + 	function(from) {
-+ 		new("STIDFtrip", STIDF(as(from, "SpatialPoints"), 
-+ 				from[[from@TOR.columns[1]]], from@data), 
-+ 			TOR.columns = from@TOR.columns)
++ 		from$burst = from[[from@TOR.columns[2]]]
++ 		time = from[[from@TOR.columns[1]]]
++ 		#from = from[order(time),]
++         STIbox = STI(SpatialPoints(t(bbox(from))), range(time))
++ 		STT = new("STT", STIbox, traj = list(STI(geometry(from), time)))
++ 		new("STTDF", STT, data = from@data)
 + 	}
 + )
-> setAs("STIDFtrip", "trip", function(from) 
-+ 	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
-+ )
-> x = as(tr, "STIDFtrip")
-> y = as(x, "trip")
-> all.equal(y, tr)
-[1] TRUE
+> x = as(tr, "STTDF")
+> m = map2SpatialLines(map("world", 
++ 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
+> proj4string(m) = "+proj=longlat +datum=WGS84"
+> plot(m, axes=TRUE, cex.axis =.7)
+> plot(x, add=TRUE, col = "red")
+> 
 > 
 > ###################################################
-> ### chunk number 26: 
+> ### code chunk number 50: spacetime.Rnw:1073-1075
 > ###################################################
-> library(adehabitatLT)
+> plot(m, axes=TRUE, cex.axis =.7)
+> plot(x, add=TRUE, col = "red")
+> 
+> 
+> ###################################################
+> ### code chunk number 51: spacetime.Rnw:1089-1098
+> ###################################################
+> library("adehabitatLT")
 Loading required package: ade4
 
 Attaching package: 'ade4'
@@ -107,6 +124,10 @@ The following object(s) are masked from 'package:diveMove':
 
     logit
 
+The following object(s) are masked from 'package:lattice':
+
+    melanoma
+
 
 Attaching package: 'adehabitatLT'
 
@@ -114,104 +135,18 @@ The following object(s) are masked from 'package:zoo':
 
     is.regular
 
-> # from: adehabitat/demo/managltraj.r
-> # demo(managltraj)
-> data(puechabonsp)
-> # locations:
-> locs <- puechabonsp$relocs
-> xy <- coordinates(locs)
-> ### Conversion of the date to the format POSIX
-> da <- as.character(locs$Date)
-> da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
+> data("puechabonsp")
+> locs = puechabonsp$relocs
+> xy = coordinates(locs)
+> da = as.character(locs$Date)
+> da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d"), tz = "GMT") 
+> ltr = as.ltraj(xy, da, id = locs$Name)
+> foo = function(dt) dt > 100*3600*24
+> l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
 > 
-> ## object of class "ltraj"
-> ltr <- as.ltraj(xy, da, id = locs$Name)
-> 
-> foo <- function(dt) {
-+     return(dt> (100*3600*24))
-+ }
-> ## The function foo returns TRUE if dt is longer than 100 days
-> ## We use it to cut ltr:
-> l2 <- cutltraj(ltr, "foo(dt)", nextr = TRUE)
-> 
-> setClass("ltraj", representation("list"))
-[1] "ltraj"
-> setClass("STIDFltraj", representation("STIDF"))
-[1] "STIDFltraj"
-> setAs("ltraj", "STIDFltraj", 
-+ 	function(from) {
-+ 		d = do.call(rbind, from)
-+ 		n = unlist(lapply(from, nrow))
-+ 		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
-+ 		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-+ 		new("STIDFltraj", STIDF(SpatialPoints(d[c("x","y")]), d$date, d))
-+ 	}
-+ )
-> setAs("STIDFltraj", "ltraj", 
-+ 	function(from) {
-+ 		xy = coordinates(from@sp)
-+ 		da = index(from@time)
-+ 		as.ltraj(xy, da, id = from@data[,"id"], burst = from@data[,"burst"])
-+ 	}
-+ )
-> 
-> ltr.stsdf = as(l2, "STIDFltraj")
-> ltr.stsdf[1:10,]
-An object of class "STIDFltraj"
-Slot "data":
-        x       y       date   dx   dy      dist     dt    R2n  abs.angle
-50 699520 3159572 1992-07-29  120 -870 878.23687 345600      0 -1.4337302
-51 699640 3158702 1992-08-02   49  155 162.56076  86400 771300  1.2646087
-52 699689 3158857 1992-08-03  -19  -13  23.02173  86400 539786 -2.5415424
-53 699670 3158844 1992-08-04  128  -84 153.10127  86400 552484 -0.5807564
-54 699798 3158760 1992-08-05  -67   11  67.89698 345600 736628  2.9788653
-55 699731 3158771 1992-08-09  -63  -86 106.60675  86400 686122 -2.2030409
-56 699668 3158685 1992-08-10  343   79 351.98011  86400 808673  0.2263730
-57 700011 3158764 1992-08-11 -326 -116 346.02312 259200 893945 -2.7997351
-58 699685 3158648 1992-08-14   34   61  69.83552 259200 881001  1.0623070
-59 699719 3158709 1992-08-17   32  202 204.51895 172800 784370  1.4136861
-    rel.angle   id  burst
-50         NA Chou Chou.1
-51  2.6983389 Chou Chou.1
-52  2.4770341 Chou Chou.1
-53  1.9607861 Chou Chou.1
-54 -2.7235637 Chou Chou.1
-55  1.1012792 Chou Chou.1
-56  2.4294138 Chou Chou.1
-57 -3.0261081 Chou Chou.1
-58 -2.4211432 Chou Chou.1
-59  0.3513791 Chou Chou.1
-
-Slot "sp":
-SpatialPoints:
-           x       y
- [1,] 699520 3159572
- [2,] 699640 3158702
- [3,] 699689 3158857
- [4,] 699670 3158844
- [5,] 699798 3158760
- [6,] 699731 3158771
- [7,] 699668 3158685
- [8,] 700011 3158764
- [9,] 699685 3158648
-[10,] 699719 3158709
-Coordinate Reference System (CRS) arguments: NA 
-
-Slot "time":
-           [,1]
-1992-07-29   50
-1992-08-02   51
-1992-08-03   52
-1992-08-04   53
-1992-08-05   54
-1992-08-09   55
-1992-08-10   56
-1992-08-11   57
-1992-08-14   58
-1992-08-17   59
-
-> ltr0 = as(ltr.stsdf, "ltraj")
-> all.equal(l2, ltr0, check.attributes = FALSE)
-[1] TRUE
-> 
+> ###################################################
+> ### code chunk number 52: spacetime.Rnw:1102-1104 (eval = FALSE)
+> ###################################################
+> sttdf = as(l2, "STTDF")
+> print(stplot(sttdf, by="time*id"))
 > 

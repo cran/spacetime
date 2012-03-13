@@ -114,9 +114,9 @@ setMethod("stplot", signature("STSDF"), stplot.STIDF)
 
 setMethod("stplot", signature("STIDF"), stplot.STIDF)
 
-setMethod("stplot", signature("STIDFtraj"),
+setMethod("stplot", signature("STTDF"),
 	function(obj, ..., names.attr = NULL, by = "burst", type = 'l')
-		stplot.STIDF(obj, names.attr = names.attr, by = by, type = type, ...)
+		stplot.STIDF(as(obj, "STIDF"), names.attr = names.attr, by = by, type = type, ...)
 )
 
 stackST = function(x, select, ...) {

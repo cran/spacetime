@@ -10,7 +10,8 @@ exportClasses(
 	xts, 
 	ST, STF, STFDF, 
 	STS, STSDF, 
-	STI, STIDF, STIDFtraj, 
+	STI, STIDF, 
+	STT, STTDF, 
 	ltraj)
 
 export(ST, 
@@ -32,7 +33,8 @@ export(ST,
 	cbind.ST,
 	rbind.STIDF,
 	rbind.STSDF,
-	rbind.STFDF)
+	rbind.STFDF,
+	timeMatch)
 
 #exportMethods(proj4string, "proj4string<-", is.projected)
 exportMethods(aggregate)
@@ -63,7 +65,7 @@ S3method(length, STSDF)
 S3method(length, STIDF)
 #S3method(unstack, STFDF)
 S3method(print, summary.ST)
-S3method(rbind, STIDFtraj)
+#S3method(rbind, STIDFtraj)
 S3method(stack, STFDF)
 S3method(stack, STSDF)
 S3method(stack, STIDF)

@@ -1,79 +1,65 @@
-###################################################
-### chunk number 25: 
-###################################################
 library(spacetime)
-library(diveMove)
-library(trip)
-
-locs <- readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
+library(maps)
+library(mapdata)
+library(maptools)
+###################################################
+### code chunk number 48: spacetime.Rnw:1039-1049
+###################################################
+library("diveMove")
+library("trip")
+locs = readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
 	package="diveMove")), idCol=1, dateCol=2,
 	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
 	lonCol=4, latCol=5, sep=";")
 
-ringy <- subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
-coordinates(ringy) <- ringy[c("lon", "lat")]
-tr <- trip(ringy, c("time", "id"))
+ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+coordinates(ringy) = ringy[c("lon", "lat")]
+tr = trip(ringy, c("time", "id"))
 
-setClass("STIDFtrip", representation("STIDF", TOR.columns = "character"))
-setAs("trip", "STIDFtrip",
-	function(from) {
-		new("STIDFtrip", STIDF(as(from, "SpatialPoints"), 
-				from[[from@TOR.columns[1]]], from@data), 
-			TOR.columns = from@TOR.columns)
-	}
-)
-setAs("STIDFtrip", "trip", function(from) 
-	trip(SpatialPointsDataFrame(from@sp, from@data), from@TOR.columns)
-)
-x = as(tr, "STIDFtrip")
-y = as(x, "trip")
-all.equal(y, tr)
 
 ###################################################
-### chunk number 26: 
+### code chunk number 49: spacetime.Rnw:1052-1068
 ###################################################
-library(adehabitatLT)
-# from: adehabitat/demo/managltraj.r
-# demo(managltraj)
-data(puechabonsp)
-# locations:
-locs <- puechabonsp$relocs
-xy <- coordinates(locs)
-### Conversion of the date to the format POSIX
-da <- as.character(locs$Date)
-da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d")) 
-
-## object of class "ltraj"
-ltr <- as.ltraj(xy, da, id = locs$Name)
-
-foo <- function(dt) {
-    return(dt> (100*3600*24))
-}
-## The function foo returns TRUE if dt is longer than 100 days
-## We use it to cut ltr:
-l2 <- cutltraj(ltr, "foo(dt)", nextr = TRUE)
-
-setClass("ltraj", representation("list"))
-setClass("STIDFltraj", representation("STIDF"))
-setAs("ltraj", "STIDFltraj", 
+setAs("trip", "STTDF",
 	function(from) {
-		d = do.call(rbind, from)
-		n = unlist(lapply(from, nrow))
-		d$id = rep(unlist(t(sapply(from, attributes))[,4]), times = n)
-		d$burst = rep(unlist(t(sapply(from, attributes))[,5]), times = n)
-		new("STIDFltraj", STIDF(SpatialPoints(d[c("x","y")]), d$date, d))
+		from$burst = from[[from@TOR.columns[2]]]
+		time = from[[from@TOR.columns[1]]]
+		#from = from[order(time),]
+        STIbox = STI(SpatialPoints(t(bbox(from))), range(time))
+		STT = new("STT", STIbox, traj = list(STI(geometry(from), time)))
+		new("STTDF", STT, data = from@data)
 	}
 )
-setAs("STIDFltraj", "ltraj", 
-	function(from) {
-		xy = coordinates(from@sp)
-		da = index(from@time)
-		as.ltraj(xy, da, id = from@data[,"id"], burst = from@data[,"burst"])
-	}
-)
+x = as(tr, "STTDF")
+m = map2SpatialLines(map("world", 
+	xlim = c(-100,-50), ylim = c(40,77), plot=F))
+proj4string(m) = "+proj=longlat +datum=WGS84"
+plot(m, axes=TRUE, cex.axis =.7)
+plot(x, add=TRUE, col = "red")
 
-ltr.stsdf = as(l2, "STIDFltraj")
-ltr.stsdf[1:10,]
-ltr0 = as(ltr.stsdf, "ltraj")
-all.equal(l2, ltr0, check.attributes = FALSE)
 
+###################################################
+### code chunk number 50: spacetime.Rnw:1073-1075
+###################################################
+plot(m, axes=TRUE, cex.axis =.7)
+plot(x, add=TRUE, col = "red")
+
+
+###################################################
+### code chunk number 51: spacetime.Rnw:1089-1098
+###################################################
+library("adehabitatLT")
+data("puechabonsp")
+locs = puechabonsp$relocs
+xy = coordinates(locs)
+da = as.character(locs$Date)
+da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d"), tz = "GMT") 
+ltr = as.ltraj(xy, da, id = locs$Name)
+foo = function(dt) dt > 100*3600*24
+l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
+
+###################################################
+### code chunk number 52: spacetime.Rnw:1102-1104 (eval = FALSE)
+###################################################
+sttdf = as(l2, "STTDF")
+print(stplot(sttdf, by="time*id"))

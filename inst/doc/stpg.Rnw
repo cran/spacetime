@@ -58,8 +58,8 @@ from the open geospatial consortium is described
 \href{http://www.opengeospatial.org/standards/sfs}{here}.}
 <<>>=
 dbname = "postgis"
-user = "user"
-password = "password"
+user = "edzer"
+password = "pw"
 @
 
 Next, we will create a driver and connect to the database: 
