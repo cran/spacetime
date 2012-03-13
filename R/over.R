@@ -12,56 +12,88 @@
 augment.with.one = function(x) {
 	ux = unique(x)
 	l = length(ux)
-	if (l == 1) # there's only one (unique) time stamp ...
-		x
-	else { 
-		last = ux[l]
-		dt = last - ux[l-1]
-		c(x, last + dt)
-	}
+	if (l <= 1)
+		stop("cannot derivable time interval from length 1 or constant sequence")
+	last = ux[l]
+	dt = last - ux[l-1]
+	c(x, last + dt)
 }
 
-.timeMatch = function(x, y, returnList = FALSE, timeInterval = TRUE) {
+timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
+	timeInterval = rep(timeInterval, length = 2)
+	ti.x = timeInterval[1]
+	ti.y = timeInterval[2]
 	if (!identical(class(x), class(y)))
 		warning(".timeMatch: time indices of x and y are of different class")
+	# now go through T/F for { returnList, ti.x, ti.y }:
 	if (returnList) { # get all matches:
-		if (timeInterval) {
-			#stop("timeInterval not supported when returnList = TRUE")
-			x = augment.with.one(x) 
-			if (length(x) == 1)
-				list(which(y >= x[1]))
-			else 
-				lapply(1:(length(x)-1), 
-					function(P) which(x[P] <= y & y < x[P+1]))
-		} else
-			lapply(1:length(x), function(P) { which(y %in% x[P]) })
-	} else { # get first match:
-		if (! timeInterval)
-			ret = match(x, y)
-		else {
-			# add a time stamp to close open interval, 
-			# if more than one time step is available
-			y = augment.with.one(y) 
-			l = length(y)
-			ret = findInterval(x, y) # before first: 0; after last: l
-			ret[ret == 0 | ifelse(l > 1, ret == l, FALSE)] = NA
+		if (ti.x == FALSE && ti.y == FALSE)
+			return(lapply(x, function(X) which(X == y)))
+		if (ti.x == TRUE && ti.y == FALSE) {
+			x1 = augment.with.one(x) 
+			lst = lapply(y, function(Y) which(!(Y >= x1[-1] | Y < x)))
+			return(sp:::.invert(lst, length(lst), length(x)))
 		}
-		ret
+		if (ti.x == FALSE && ti.y == TRUE) {
+			# when more than one time step is available
+			# add a time stamp to close the last (open) interval
+			y1 = augment.with.one(y) 
+			return(lapply(x, function(X) which(!(X >= y1[-1] | X < y))))
+		}
+		if (ti.x == TRUE && ti.y == TRUE) {
+			x1 = augment.with.one(x) 
+			y1 = augment.with.one(y) 
+			ret = vector("list", length(x))
+			for (i in 1:length(x))
+				ret[[i]] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))
+			return(ret)
+		}
+	} else { # get first match:
+		if (ti.x == FALSE && ti.y == FALSE)
+			return(match(x, y))
+		if (ti.x == TRUE && ti.y == FALSE) {
+			x1 = augment.with.one(x) 
+			ret = findInterval(y, x1) # before first: 0; after last: l
+			l = length(x1)
+			ret[ret == 0 | ret == l] = NA
+			return(sapply(1:length(x), function(P) which(ret == P)[1]))
+		}
+		if (ti.x == FALSE && ti.y == TRUE) {
+			# when more than one time step is available
+			# add a time stamp to close the last (open) interval
+			y = augment.with.one(y) 
+			ret = findInterval(x, y) # before first: 0; after last: l
+			l = length(y)
+			ret[ret == 0 | ret == l] = NA
+			return(ret)
+		}
+		if (ti.x == TRUE && ti.y == TRUE) {
+			x1 = augment.with.one(x) 
+			y1 = augment.with.one(y) 
+			ret = rep(as.integer(NA), length(x))
+			for (i in 1:length(x))
+				ret[i] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))[1]
+			return(ret)
+		}
+		stop("impossible to reach this point")
 	}
 }
 
 over.xts = function(x, y, returnList = FALSE, fn = NULL, ..., 
-		timeInterval = TRUE) {
-	tm = .timeMatch(index(x), index(y), returnList = TRUE, timeInterval)
+		timeInterval = c(FALSE, TRUE)) {
 	if (returnList) { # get all matches:
+		tm = timeMatch(index(x), index(y), returnList = TRUE, timeInterval)
 		stopifnot(is.null(fn))
 		lapply(tm, function(P) { y[P, drop=FALSE] })
 	} else { 
+		tm = timeMatch(index(x), index(y), returnList = FALSE, timeInterval)
 		if (is.null(fn)) # get first match:
-			fn = function(x, ...) { x[1, drop=FALSE] }
-		l = lapply(tm, function(P) { apply(y[P, drop=FALSE], 2, fn, ...) })
-		ret = do.call(rbind, l)
-		xts(ret, index(x))
+			y[tm,]
+		else {
+			l = lapply(tm, function(P) { apply(y[P, drop=FALSE], 2, fn, ...) })
+			ret = do.call(rbind, l)
+			xts(ret, index(x))
+		}
 	}
 }
 setMethod("over", signature(x = "xts", y = "xts"), over.xts)
@@ -71,7 +103,7 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = TRUE) {
 	if (returnList) {
     	space.index = over(x@sp, y@sp, returnList = TRUE)
-		time.index = .timeMatch(index(x@time), index(y@time), returnList = TRUE,
+		time.index = timeMatch(index(x@time), index(y@time), returnList = TRUE,
 			timeInterval = timeInterval) 
 		n = length(y@sp)
 		lst = vector("list", length(space.index) * length(time.index))
@@ -91,7 +123,7 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		lst
 	} else {
     	space.index = over(x@sp, y@sp)
-		time.index = rep(.timeMatch(index(x@time), index(y@time),
+		time.index = rep(timeMatch(index(x@time), index(y@time),
 			timeInterval = timeInterval), each = length(space.index))
 		# compute the index of x in y as y is STF:
     	(time.index - 1) * length(y@sp) + space.index # space.index gets recycled
@@ -101,9 +133,9 @@ setMethod("over", signature(x = "STF", y = "STF"), over.STF.STF)
 
 over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		timeInterval = TRUE) {
-	if (returnList) warning("returnList not fully supported yet")
+	if (returnList) warning("returnList not supported yet")
     space.index = over(x@sp, y@sp)[x@index[,1]]
-	time.index = .timeMatch(index(x@time), index(y@time), 
+	time.index = timeMatch(index(x@time), index(y@time), 
 		timeInterval = timeInterval)[x@index[,2]]
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
@@ -112,34 +144,34 @@ over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 setMethod("over", signature(x = "STS", y = "STF"), over.STS.STF)
 
 over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = TRUE) {
-	if (returnList) warning("returnList not fully supported yet")
+		timeInterval = c(FALSE, TRUE)) {
+	#if (returnList) warning("returnList not supported yet")
     space.index = over(x@sp, y@sp)
-	time.index = .timeMatch(index(x@time), index(y@time), 
-		timeInterval = timeInterval)
+	time.index = timeMatch(index(x@time), index(y@time), 
+		returnList, timeInterval)
 	# compute the index of x in y as y is STF:
-    idx = (time.index - 1) * length(y@sp) + space.index
+    idx = (unlist(time.index) - 1) * length(y@sp) + unlist(space.index)
 	.index2list(idx, returnList)
 }
 setMethod("over", signature(x = "STI", y = "STF"), over.STI.STF)
 
 # y = STI:
 over.STF.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = FALSE)
+		timeInterval = c(TRUE, FALSE))
 	over(as(x, "STS"), y, returnList = returnList, fn=fn,
 		timeInterval = timeInterval, ...)
 setMethod("over", signature(x = "STF", y = "STI"), over.STF.STI)
 
 over.STS.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = FALSE)
+		timeInterval = c(TRUE, FALSE))
 	over(as(x, "STI"), y, returnList = returnList, fn=fn,
 		timeInterval = timeInterval, ...)
 setMethod("over", signature(x = "STS", y = "STI"), over.STS.STI)
 
 over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = FALSE) {
+		timeInterval = c(FALSE, FALSE)) {
 	if (returnList) warning("returnList not fully supported yet")
-	time.index = .timeMatch(index(x@time), index(y@time), 
+	time.index = timeMatch(index(x@time), index(y@time), 
 		returnList = TRUE, timeInterval = timeInterval)
 	ret = lapply(1:length(time.index), function(i) {
 		ti = time.index[[i]] # the x[i] matching y entry indices
@@ -155,9 +187,10 @@ over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
 }
 setMethod("over", signature(x = "STI", y = "STI"), over.STI.STI)
 
+STisFS = function(x) { is(x, "STF") || is(x, "STS") }
 # y = STS:
 over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = TRUE) {
+		timeInterval = c(STisFS(x), TRUE)) {
 	if (returnList) warning("returnList not fully supported yet")
 	ret = over(x, STF(y@sp, y@time), returnList = returnList, fn = fn,
 		timeInterval = timeInterval)
@@ -169,10 +202,15 @@ over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...,
 setMethod("over", signature(x = "ST", y = "STS"), over.ST.STS)
 
 overDFGenericST = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = TRUE) {
+		timeInterval = c(STisFS(x), STisFS(y))) {
     stopifnot(identical(proj4string(x),proj4string(y)))
-    r = over(x, geometry(y), returnList = TRUE, timeInterval = timeInterval)
-    ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
+	if (is.null(fn) && returnList == FALSE) {
+    	r = over(x, geometry(y), returnList = FALSE, timeInterval = timeInterval)
+		ret = y@data[r,,drop=FALSE]
+	} else {
+    	r = over(x, geometry(y), returnList = TRUE, timeInterval = timeInterval)
+    	ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
+	}
     if (!returnList)
         row.names(ret) = row.names(x)
     ret
@@ -183,15 +221,9 @@ setMethod("over", signature(x = "STI", y = "STFDF"), overDFGenericST)
 setMethod("over", signature(x = "STF", y = "STSDF"), overDFGenericST)
 setMethod("over", signature(x = "STS", y = "STSDF"), overDFGenericST)
 setMethod("over", signature(x = "STI", y = "STSDF"), overDFGenericST)
-setMethod("over", signature(x = "STF", y = "STIDF"), 
-	function(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
-			overDFGenericST(x,y,returnList,fn,timeInterval=timeInterval,...))
-setMethod("over", signature(x = "STS", y = "STIDF"), 
-	function(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
-			overDFGenericST(x,y,returnList,fn,timeInterval=timeInterval,...))
-setMethod("over", signature(x = "STI", y = "STIDF"), 
-	function(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
-			overDFGenericST(x,y,returnList,fn,timeInterval=timeInterval,...))
+setMethod("over", signature(x = "STF", y = "STIDF"), overDFGenericST)
+setMethod("over", signature(x = "STS", y = "STIDF"), overDFGenericST)
+setMethod("over", signature(x = "STI", y = "STIDF"), overDFGenericST)
 
 aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 	stopifnot("data" %in% slotNames(x))
@@ -272,6 +304,6 @@ setMethod("aggregateBy", signature(x = "ST", by = "ST"),
 )
 
 setMethod("aggregate", signature(x = "ST"),
-	function(x, by, FUN = mean, ..., simplify = TRUE)
+	function(x, by, FUN = mean, ..., simplify = TRUE) # dispatch on "by" as well:
 		aggregateBy(x, by, FUN = FUN, simplify = simplify, ...)
 )
