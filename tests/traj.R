@@ -7,12 +7,9 @@ library(maptools)
 ###################################################
 library("diveMove")
 library("trip")
-locs = readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
-	package="diveMove")), idCol=1, dateCol=2,
-	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
-	lonCol=4, latCol=5, sep=";")
-
-ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+data(sealLocs, package="diveMove")
+sealLocs$time = as.POSIXct(sealLocs$time)
+ringy = subset(sealLocs, id == "ringy" & !is.na(lon) & !is.na(lat))
 coordinates(ringy) = ringy[c("lon", "lat")]
 tr = trip(ringy, c("time", "id"))
 

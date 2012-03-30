@@ -30,8 +30,9 @@
 
 \Shorttitle{Spatio-Temporal Data in \proglang{R}}
 
-\author{ \includegraphics[width=5cm]{ifgi-logo_int}\\
-Edzer Pebesma \\ Institute for Geoinformatics \\ University of M\"{u}nster
+\author{
+Edzer Pebesma \\
+\includegraphics[width=5cm]{ifgi-logo_int}
 }
 %\date{\small \today }
 \Address{
@@ -47,28 +48,25 @@ This document describes classes and methods designed to deal with
 different types of spatio-temporal data in \proglang{R} implemented
 in the \proglang{R} package \pkg{spacetime}, and provides examples
 for analyzing them. It builds upon the classes and methods for
-spatial data taken from package \pkg{sp}, and all temporal classes
-supported by package \pkg{xts}. The goal is to cover a number of
-useful representations for spatio-temporal sensor data, and results
-from predicting (spatial and/or temporal interpolation or smoothing),
-aggregating, or subsetting them.  The goals of this package are
-to explore how spatio-temporal data can be sensibly represented in
-classes, and to find out which analysis and visualisation methods are
-useful and feasible for the classes implemented. It reuses existing
-classes, methods, and functions present in packages for spatial
-data (\pkg{sp}) and time series data (\pkg{zoo} and \pkg{xts}).
-Coercion to the appropriate reduced spatial and temporal classes
-is provided, as well as to \code{data.frame} objects in the long,
-time-wide and space-wide formats.  We discuss when it is appropriate
-to store temporal data as just a start time or as a time interval.
-This document is the main reference for the \proglang{R} package
-\code{spacetime}, and is available (in updated form) as a vignette
-in this package. }
+spatial data from package \pkg{sp}, and for time series data
+from package \pkg{xts}.  The goal is to cover a number of useful
+representations for spatio-temporal sensor data, and results from
+predicting (spatial and/or temporal interpolation or smoothing),
+aggregating, or subsetting them, and to represent trajectories.
+The goals of this paper is to explore how spatio-temporal data can
+be sensibly represented in classes, and to find out which analysis
+and visualisation methods are useful and feasible.  We discuss
+the convention of representing time intervals by the starting time
+instance.  This document is the main reference for the \proglang{R}
+package \code{spacetime}, and is available (in updated form) as a
+vignette in this package.
+
+}
 
 \Keywords{Time series analysis, spatial data, spatio-temporal statistics, GIS}
 
 \begin{document}
-% \VignetteIndexEntry{spacetime: classes and methods for spatio-temporal data}
+% \VignetteIndexEntry{ spacetime: Spatio-Temporal Data in R }
 % jss options, see http://www.jstatsoft.org/style
 <<eval=TRUE,echo=FALSE>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
@@ -222,26 +220,7 @@ and one that is most efficient when all spatial feature have data
 values at each time point. Two others reflect irregular layouts,
 one of them specializes to trajectories.
 
-\subsection{Spatio-temporal full grids}
-
-A full space-time grid of observations for spatial features (points,
-lines, polygons, grid cells)\footnote{note that neither spatial
-features nor time points need to follow a regular layout} $s_i, i =
-1,...,n$ and observation time $t_j, j = 1,...,m$ is obtained when
-the full set of $n \times m$ set of observations $z_k$ is stored,
-with $k=1,...,nm$. We choose to cycle spatial features first,
-so observation $k$ corresponds to feature $s_i$, $i=((k-1)\ \%\
-n) + 1$ and with time moment $t_j$, $j=((k-1) / n)+ 1$, with $/$
-integer division and \% integer division remainder (modulo). The
-$t_j$ are assumed to be in time order.
-
-In this data class (top left in figure \ref{fig:st}), for each spatial
-feature, the same temporal sequence of data is sampled. Alternatively
-one could say that for each moment in time, the same set of spatial
-entities is sampled.  Unsampled combinations of (space, time)
-are stored in this class, but are assigned a missing value \code{NA}.
-
-\begin{figure}
+\begin{figure} %[htb]
 \begin{center}
 <<fig=TRUE,echo=FALSE,height=6,width=6>>=
 opar = par()
@@ -293,7 +272,6 @@ axis(1, at = sort(unique(t)), labels = c("1st", "2nd", "3rd", "4th", "5th"))
 axis(2, at = sort(unique(s)), labels = c("1st,4th", "2nd", "3rd", "5th"))
 text(g, labels = 1:5, pos=4)
 title("STI: irregular layout")
-
 # 4: traj
 ns = 400
 nt = 100
@@ -328,9 +306,41 @@ irregular (\code{STI}) layout: each observation has its spatial
 feature and time stamp stored, in this example, spatial feature 1
 is stored twice -- the fact that observations 1 and 4 have the same
 feature is not registered; (iv) bottom right: simple trajectories
-(\code{STT}), plotted against a common time axis}
+(\code{STT}), plotted against a common time axis. It should be noted
+that in both {\em gridded} layouts the grid is in space-time, meaning
+that spatial features {\em can} be gridded, but can also be any other
+non-gridded type (lines, points, polygons). }
 \label{fig:st}
 \end{figure}
+
+\subsection{Spatio-temporal full grids}
+
+A full space-time grid of observations for spatial features (points,
+lines, polygons, grid cells)\footnote{note that neither spatial
+features nor time points need to follow a regular layout} $s_i, i =
+1,...,n$ and observation time $t_j, j = 1,...,m$ is obtained when
+the full set of $n \times m$ set of observations $z_k$ is stored,
+with $k=1,...,nm$. We choose to cycle spatial features first,
+so observation $k$ corresponds to feature $s_i$, $i=((k-1)\ \%\
+n) + 1$ and with time moment $t_j$, $j=((k-1) / n)+ 1$, with $/$
+integer division and \% integer division remainder (modulo). The
+$t_j$ are assumed to be in time order.
+
+In this data class (top left in figure \ref{fig:st}), for each spatial
+feature, the same temporal sequence of data is sampled. Alternatively
+one could say that for each moment in time, the same set of spatial
+entities is sampled.  Unsampled combinations of (space, time)
+are stored in this class, but are assigned a missing value \code{NA}.
+
+It should be stressed that for this class (and the next) the word
+{\em grid} in {\em spatio-temporal grid} refers to the layout in
+space-time, not in space. Examples of phenomena that could well be
+represented by this class are regular (e.g.  hourly) measurements
+of air quality at a spatially irregular set of points (measurement
+stations), or yearly disease counts for a set of administrative
+regions. An example where space is {\em gridded} as well could be
+a sequence of rainfall images (e.g. monthly sums), interpolated to
+a spatially regular grid.
 
 \subsection{Spatio-temporal sparse grids}
 A sparse grid has the same general layout, with measurements laid
@@ -338,12 +348,19 @@ out on a space time grid (top right in figure \ref{fig:st}), but instead of
 storing the full grid, only non-missing valued observations $z_{k}$
 are stored. For each $k$, an index $[i,j]$ is stored that refers
 which spatial feature $i$ and time point $j$ the value belongs to.
-Storing data this way may be efficient if full space-time lattices
-have many missing values, or if a limited set of spatial features
-each have different time instances (times of crime cases for a set
-of administrative regions), or if for a set of times the set of
-spatial features varies (locations of crimes registered per year,
-or spatially misaligned remote sensing images).
+
+Storing data this way may be efficient 
+\begin{itemize}
+\item if full space-time lattices have many missing or trivial values 
+(e.g. when one want to store features or grid cells where fires were
+registered, discarding those that did not), or
+\item if a limited set of spatial features each have different 
+time instances (e.g. to record the times of crime cases for a set
+of administrative regions), or 
+\item if for a limited set of times the set of spatial features varies 
+(e.g. locations of crimes registered per year, or spatially 
+misaligned remote sensing images).
+\end{itemize}
 
 \subsection{Spatio-temporal irregular data}
 
@@ -356,13 +373,36 @@ these objects, $n=m$ equals the number of records.  Spatial features
 and time points need not be unique, but are replicated in case they
 are not.
 
+Any of the gridded types can be represented by this layout,
+in principle, but this would have the disadvantages that
+\begin{itemize}
+\item spatial features and time points need to be stored for each data value,
+and would be redundant
+\item the regular layout is lost, and needs be retrieved indirectly
+\item if time reflects time intervals, the interval is not obvious anymore
+\item spatial and temporal selection would be inefficient, as the grid
+structure works effectively as an index.
+\end{itemize}
+
+Examples of phenomena that are best served by this layout could
+be spatio-temporal point processes, such as crime or disease cases
+or forest fires. Other phenomena could be measurements from mobile
+sensors (when the trajectory sequence is not of importance).
+
 \subsection{Spatio-temporal trajectories}
 
 Trajectories cover the case where sets of (irregular) space-time
-points are grouped, and form a trajectory. The grouping may be simple
-(e.g. the trajectories of two persons on a single day), nested (for
-several objects, a set of trajectories representing different trips)
-or complex (e.g. with objects that split, merge, or disappear).
+points form sequences, and depict a trajectory. The grouping may
+be simple (e.g. the trajectories of two persons on different days),
+nested (for several objects, a set of trajectories representing
+different trips) or complex (e.g. with objects that split, merge,
+or disappear). 
+
+Examples of trajectories can be human trajectories, mobile sensor
+measurements (where the sequence is kept, e.g. to derive the speed
+and direction of the sensor), or trajectories of tornados where the
+tornado extent of each time stamp can be reflected by a different
+polygon.
 
 \section{Classes and methods for spatio-temporal data}
 
@@ -381,10 +421,11 @@ information), the second order derived classes augment each of
 these with actual data, in the form of a \code{data.frame}.
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[width=.6\columnwidth]{cls}
+\includegraphics[width=.4\columnwidth]{cls}
 \end{center}
-\caption{classes for spatio-temporal data in package \pkg{spacetime}. Arrows
-denote inheritance, lower side of boxes list slot name and type }
+\caption{Classes for spatio-temporal data in package \pkg{spacetime}. Arrows
+denote inheritance, lower side of boxes list slot name and type, green lines
+indicate possible coercions (both ways). }
 \label{cls}
 \end{figure}
 % is.regular. or not.
@@ -407,7 +448,9 @@ deriving this from package \code{zoo} \citep{zeileis}.
 \end{itemize}
 An overview of the different time classes in \proglang{R} is found
 in \cite{ripleyhornik}. Further advice on which classes to use is
-found in \cite{grothendieck}.
+found in \cite{grothendieck}, or in the
+\href{http://cran.r-project.org/web/views/TimeSeries.html}{ CRAN
+task view on time series analysis }.
 
 For spatial interpolation, we used the classes deriving from \code{Spatial}
 in package \pkg{sp} \citep{pebesma,bivand} because
@@ -431,25 +474,27 @@ two-dimensional for lines and polygons, but may be higher (three-)
 dimensional for spatial points, pixels and grids.
 
 \subsection{Methods}
-The main methods for spatio-temporal data implemented in packages \pkg{spacetime}
-are listed in table \ref{methods}.
+The main methods for spatio-temporal data implemented in packages
+\pkg{spacetime} are listed in table \ref{methods}. Their usage is
+illustrated in examples that follow.
+
 \begin{table}
 \begin{center}
 \begin{tabular}{|lp{10cm}|} \hline
 method & what it does \\ \hline
 \code{stConstruct} & Creates STFDF or STIDF objects from single or multiple tables \\
-\code{[[}, \code{\$}, \code{\$<-} & Selects or replaces data values \\
+\code{[[}, \code{\$}, \code{\$<-} & Select or replace data values \\
 \code{[}, \code{[[}, \code{\$} & Select spatial and/or temporal sections \\
-\code{as} & coerces to other spatio-temporal objects, \code{xts}, \code{Spatial},
+\code{as} & coerce to other spatio-temporal objects, \code{xts}, \code{Spatial},
 \code{matrix}, or \code{data.frame} \\
-\code{stplot} & creates spatio-temporal plots, see section \ref{plots}  \\
-\code{over} & overlay: retrieves index or data values of one object at the locations/times
+\code{stplot} & create spatio-temporal plots, see section \ref{plots}  \\
+\code{over} & overlay: retrieve index or data values of one object at the locations and times
 of another \\
-\code{aggregate} & aggregates data values over particular spatial, temporal,
+\code{aggregate} & aggregate data values over particular spatial, temporal,
 or spatio-temporal domains \\ \hline
 \end{tabular}
 \end{center}
-\caption{methods for spatio-temporal data in package \pkg{spacetime}}
+\caption{Methods for spatio-temporal data in package \pkg{spacetime}}
 \label{methods}
 \end{table}
 
@@ -466,42 +511,48 @@ row.names(sp) = paste("point", 1:nrow(sp), sep="")
 library(sp)
 sp = SpatialPoints(sp)
 @
-Then, the time points are defined:
+Then, the time points are defined as four time stamps, one
+hour apart, starting Aug 5 2010, 10:00 GMT.
 <<>>=
 time = as.POSIXct("2010-08-05", tz = "GMT")+3600*(10:13)
 @
-next, a data.frame with the data values is created:
+Next, a data.frame with the data values is created:
 <<>>=
 m = c(10,20,30) # means for each of the 3 point locations
 values = rnorm(length(sp)*length(time), mean = rep(m, 4))
 IDs = paste("ID",1:length(values), sep = "_")
 mydata = data.frame(values = signif(values, 3), ID=IDs)
 @
-and finally, the \code{STFDF} object is created:
+And finally, the \code{STFDF} object is created:
 <<>>=
 library(spacetime)
 stfdf = STFDF(sp, time, mydata)
 @
+When given a long table, \code{stConstruct} creates by default
+an object of class \code{STIDF}, which can then be coerced to
+\code{STSDF} or \code{STFDF} when relevant.
 
 \subsection{Overlay and aggregation}
 
-Aggregation of data values to a more coarse spatial or temporal form
+Aggregation of data values to a coarser spatial or temporal form
 (e.g., to a coarser grid, aggregating points over administrative
 regions, aggregating daily data to monthly data, or aggregation
 along an irregular set of space-time points) can be done using
 the method \code{aggregate}.  To obtain the required aggregation
 predicate, i.e. the grouping of observations in space-time,
 the method \code{over} is implemented for objects deriving from
-\code{ST}. Grouping can be done based on spatial, temporal,
-or spatio-temporal predicates. This effectively provides an
-spatio-temporal equivalent to what is known in geographic information
-science as the {\em spatial overlay}.
+\code{ST}.  Grouping can be done based on spatial, temporal, or
+spatio-temporal predicates.  It allows flexibility to whether
+time reflects time instances or time intervals (see section
+\ref{intervals}).  These methods effectively provide
+a spatio-temporal equivalent to what is known in geographic
+information science as the {\em spatial overlay}.
 
 \subsection[Space and time selection]{Space and time selection with \code{[}}
 
 The idea behind the \code{[} method for classes in \code{sp} was
-that objects would behave as much as possible similar to a matrix
-or \code{data.frame}.  For a \code{data.frame}, a construct like
+that objects would behave as much as possible similar to {\em matrix}
+and \code{data.frame}.  For a \code{data.frame}, a construct like
 \code{a[i,j]} selects row(s) \code{i} and column(s) \code{j}. For
 objects deriving from \code{Spatial}, rows were taken as the spatial
 features (points, lines, polygons, pixels) and columns as the
@@ -524,11 +575,18 @@ objects in \pkg{xts}, space and time indices can be defined by index
 or boolean vectors, but also by higher-level expressions such as
 spatial areas and time periods. For instance, the selection
 <<eval=FALSE>>=
+air_quality[2:3, 1:10, "PM10"]
+@
+yields air quality data for the second and third spatial features,
+and the first 10 time instances. Higher-level spatial and temporal
+expressions can be used, and
+<<eval=FALSE>>=
 air_quality[Germany, "2008::2009", "PM10"]
 @
-would select the \code{PM10} measurements for the years 2008-9,
-lying in \code{Germany}, when \code{Germany} is a \code{Spatial}
-object (polygons, or a grid) that defines Germany.
+selects the \code{PM10} measurements for the years 2008-9, lying
+in \code{Germany}, when \code{Germany} is a \code{Spatial} object
+(e.g. \code{SpatialPolygons}, or a \code{SpatialGrid}) that defines
+Germany.
 
 \subsection[Coercion to long and wide tables]{Coercion to long
 and wide tables}
@@ -569,18 +627,26 @@ and $y$-axis, no space needs to be lost by separating white space,
 and a common legend is used. Three types are implemented for STFDF data:
 \begin{itemize}
 \item $x$ and $y$ axis denote space, an example for gridded data is
-shown in figure \ref{fig:wind}. The \code{stplot} is a wrapper around
+shown in figure \ref{fig:wind}, for polygon data in figure \ref{fig:produc}. 
+The \code{stplot} is a wrapper around
 \code{spplot} in package \code{sp}, and inherits most of its options.
 \item $x$ and $y$ denote time and value; one panel for each spatial
-feature, colors may indicate different variables (\code{mode="tp"})
+feature, colors may indicate different variables (\code{mode="tp"});
+see figure \ref{fig:tpts} (left)
 \item $x$ and $y$ denote time and value; one panel for each variable,
-colors may denote different stations (\code{mode="ts"})
+colors may denote different features (\code{mode="ts"});
+see figure \ref{fig:tpts} (right)
 \end{itemize}
 \item[space-time plots] space-time plots show data in a space-time
 cross-section, with e.g., space on the $x$-axis and time on the
 $y$-axis. (See also figure \ref{fig:st}.)
 
-Hovm\"{o}ller plots \citep{hov} are an example of these for full space-time lattices,
+%R> pdf("ts.pdf")
+%R> stplot(Produc.st[1:4,,c("pcap", "hwy", "water", "util")],mode="ts")
+%R> pdf("tp.pdf")
+%R> stplot(Produc.st[1:4,,c("pcap", "hwy", "water", "util")],mode="tp")
+
+Hovm\"{o}ller diagrams \citep{hov} are an example of these for full space-time lattices,
 i.e. objects of class \code{STFDF}.  To obtain such a plot, the
 arguments \code{mode} and \code{scaleX} should be considered; some
 special care is needed when only the x- or y-axis needs to be plotted 
@@ -601,7 +667,7 @@ subsequent plots).
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[scale=.75]{wind}
+\includegraphics[scale=.6]{wind}
 \end{center}
 \caption{Space-time interpolations of wind (square root transformed,
 detrended) over Ireland using a separable product covariance model,
@@ -612,22 +678,33 @@ daily data was considered (April, 1961).}
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics[scale=.6]{hov}
+\includegraphics[width=.4\columnwidth]{tp}
+\includegraphics[width=.4\columnwidth]{ts}
+\end{center}
+\caption{ Time series for four variables and four features plotted with \code{stplot},
+with \code{mode="tp"} (left) and \code{mode="ts"} (right); see also section \ref{panel}. }
+\label{fig:tpts}
+\end{figure}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[scale=.5]{hov}
 \end{center}
 \caption{Space-time (Hovm\"{o}ller) plot of wind station data.}
 \label{fig:hov}
 \end{figure}
 
-\item{Time series plots}
-
+\item[Time series plots]
 Time series plots are a fairly common type of plot in \proglang{R}. 
 Package \code{xts} has a plot method that 
 allows univariate time series to be plotted. Many (if not most) plot
 routines in \proglang{R} support time to be along the x- or y-axis.  
 The plot in figure \ref{fig:windts} was generated by using package
 \pkg{lattice} \citep{sarkar}, and uses a colour palette from package
-\pkg{RColorBrewer} \citep{neuwirth}:
-<<eval=FALSE,keep.source=TRUE>>=
+\pkg{RColorBrewer} \citep{neuwirth}.
+
+<<echo=FALSE,eval=FALSE,keep.source=TRUE>>=
+# code to create figure 5.
 library("lattice")
 library("RColorBrewer")
 b = brewer.pal(12, "Set3")
@@ -641,7 +718,7 @@ stplot(w, mode = "ts",  auto.key=list(space="right"),
 
 \begin{figure}[htb]
 \begin{center}
-\includegraphics{windts}
+\includegraphics[scale=.8]{windts}
 \end{center}
 \caption{Time series plot of daily wind speed at 12 stations, used
 for interpolation in figure \ref{fig:wind}.}
@@ -653,6 +730,7 @@ for interpolation in figure \ref{fig:wind}.}
 \section{Spatial footprint or support, time intervals}
 
 \subsection{Time periods or time instances}
+\label{intervals}
 
 Data structures for time series data in \proglang{R} have, explicitly
 or implicitly, for each record a time stamp, not a time interval.
@@ -667,9 +745,10 @@ time instances, whereas ``high'' and ``low'' are aggregated values
 opening and closing times.
 
 Package \code{lubridate} \citep{grolemund} allows one to explicitly
-define and compute with time intervals (e.g., \cite{allen}). It does
-not provide structures to attach these intervals to time series data,
-or else to use them in \code{xts} objects.
+define and compute with time intervals (e.g., \cite{allen}). It
+does not provide structures to attach these intervals to time
+series data. As \pkg{xts} does not support these times as index,
+\pkg{spacetime} does also not support it. 
 
 According to \href{http://en.wikipedia.org/wiki/ISO_8601}{ISO 8601:2004},
 a time stamp like "2010-05" refers to {\em the full} month of May,
@@ -690,21 +769,26 @@ When matching two sequences of time (figure \ref{fig:ti}) in order
 to overlay or aggregate, it matters whether each of the sequences
 reflect instances, one of them reflects time intervals and the
 other instances, or both reflect time intervals. All of the three
-cases are accomodated for in package \pkg{spacetime}. By default,
-objects deriving from \code{STF} or \code{STS} are considered
-to reflect interval time, and objects deriving from \code{STI}
-or \code{STT} instance time. As only start times of time intervals
-are given, the package makes the assumption that the last interval
-(for which no end time instance is present) has the same length as
-the one-but-last interval.
+cases are accomodated for in package \pkg{spacetime}. 
 
-\begin{figure}
+Objects in \pkg{spacetime} do not explicitly register whether time
+reflects to instances or intervals.  For matching (\code{over})
+or aggregation, by default, objects with gridded space-time layout
+(figure \ref{fig:st}) deriving from \code{STF} or \code{STS}
+default to interval time, and other objects to instance time,
+but this default can be overriden in calls to \code{over} and
+\code{aggregate}. As only start times of time intervals are given,
+the package makes the assumption that the last interval (for
+which no end time instance is present) has the same length as the
+one-but-last interval.
+
+\begin{figure}[htb]
 \begin{center}
 \includegraphics[scale=1.1]{ti}
 \end{center}
 \caption{Matching two time sequences, assuming \code{x} reflects
-time intervals, and \code{y} reflects time instances.  Note the
-interval extended beyond the last point of \code{x}.  }
+time intervals, and \code{y} reflects time instances.  Note that the
+last interval extends the last time instance of \code{x}.  }
 \label{fig:ti}
 \end{figure}
 
@@ -769,6 +853,7 @@ nct = STFDF(sp = as(nc, "SpatialPolygons"), time = time, data = data)
 @
 
 \subsection{Panel data}
+\label{panel}
 The panel data discussed in Section \ref{sec:longwide} are imported
 as a full spatio-temporal \code{data.frame} (\code{STFDF}), and
 linked to the proper state polygons of maps.
@@ -802,7 +887,7 @@ Produc.st = STFDF(states[-8], time, Produc[order(Produc[2], Produc[1]),])
 library(RColorBrewer)
 stplot(Produc.st[,,"unemp"], yrs, col.regions = brewer.pal(9, "YlOrRd"),cuts=9)
 @
-the plot of which is shown in Figure \ref{fig:produc}.
+produces the plot shown in Figure \ref{fig:produc}.
 
 \begin{figure}[htb]
 \begin{center}
@@ -903,7 +988,7 @@ pts = coordinates(wind.loc[match(names(wind[4:15]), wind.loc$Code),])
 rownames(pts) = wind.loc$Station
 pts = SpatialPoints(pts, CRS("+proj=longlat +datum=WGS84"))
 @
-then, we project
+Then, we project
 the longitude/latitude coordinates and country boundary to 
 UTM zone 29, using \code{spTransform} in package
 \pkg{rgdal} \citep{rgdal} for coordinate transformation:
@@ -912,7 +997,7 @@ library("rgdal")
 utm29 = CRS("+proj=utm +zone=29 +datum=WGS84")
 pts = spTransform(pts, utm29)
 @
-And now we can construct the spatio-temporal object from the from space-wide table
+And now we can construct the spatio-temporal object from the space-wide table
 with velocities:
 <<>>=
 w = stConstruct(velocities, space = list(values = 1:ncol(velocities)), 
@@ -944,7 +1029,7 @@ tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
 pred.grd = STF(grd, tgrd)
 @
 We will interpolate with a
-separable exponential covariance model, with ranges 750 km and 1.5 day:
+separable exponential covariance model, with ranges 750 km and 1.5 days:
 <<>>=
 v = list(space = vgm(0.6, "Exp", 750000), time = vgm(1, "Exp", 1.5 * 3600 * 24))
 pred = krigeST(values ~ 1, w, pred.grd, v)
@@ -1003,13 +1088,12 @@ or in temporal form by:
 <<eval=FALSE>>=
 eof.xts = EOF(wind.ST, "temporal")
 @
-the resulting object is of the appropriate \code{Spatial} subclass
-(\code{SpatialGridDataFrame}, \code{SpatialPolygonsDataFrame} etc.) in the spatial
-form, or of class \code{xts} in the temporal form. Figure
-\ref{fig:eof} shows the 10 spatial EOFs obtained from the interpolated
-wind data of figure \ref{fig:wind}.
+the resulting object is of the appropriate subclass of \code{Spatial}
+in the spatial form, or of class \code{xts} in the temporal
+form. Figure \ref{fig:eof} shows the 10 spatial EOFs obtained from
+the interpolated wind data of figure \ref{fig:wind}.
 
-\begin{figure}
+\begin{figure}[htb]
 \begin{center}
 <<echo=FALSE,fig=TRUE,height=3.5,width=5>>=
 print(spplot(EOF(wind.ST), col.regions=bpy.colors(),
@@ -1039,12 +1123,9 @@ We first prepare the trip object:
 <<>>=
 library("diveMove")
 library("trip")
-locs = readLocs(gzfile(system.file(file.path("data", "sealLocs.csv.gz"),
-	package="diveMove")), idCol=1, dateCol=2,
-	dtformat="%Y-%m-%d %H:%M:%S", classCol=3,
-	lonCol=4, latCol=5, sep=";")
-
-ringy = subset(locs, id == "ringy" & !is.na(lon) & !is.na(lat))
+data(sealLocs, package="diveMove")
+sealLocs$time = as.POSIXct(sealLocs$time)
+ringy = subset(sealLocs, id == "ringy" & !is.na(lon) & !is.na(lat))
 coordinates(ringy) = ringy[c("lon", "lat")]
 tr = trip(ringy, c("time", "id"))
 @
@@ -1074,7 +1155,9 @@ the resulting plot is shown in figure \ref{fig:trip}.
 plot(m, axes=TRUE, cex.axis =.7)
 plot(x, add=TRUE, col = "red")
 @
-\caption{Single trajectory of a seal}
+\caption{ Trajectory, formed by satellite locations of a ringed
+seal caught and released in New York. }
+
 \label{fig:trip}
 \end{figure}
 
@@ -1105,7 +1188,7 @@ stplot(sttdf, by="time*id")
 @
 which is shown in figure \ref{fig:stptr}. 
 
-\begin{figure}
+\begin{figure}[htb]
 \begin{center}
 <<echo=FALSE,fig=TRUE,height=5.5,width=5.5>>=
 sttdf = as(l2, "STTDF")
@@ -1160,6 +1243,20 @@ the merge. No data before 1955-5-5 is available.
 
 \section{Further material}
 
+Searching past email discussion threads on the
+\href{https://stat.ethz.ch/mailman/listinfo/r-sig-geo}{\code{r-sig-geo}}
+(R Special Interest Group on using GEOgraphical data and Mapping)
+email list may be a good way to look for further material, before
+one considers posting questions. Search strings, e.g. on the google
+search engine may look like:
+
+\code{spacetime site:stat.ethz.ch}
+
+where the search keywords should be made more precise.
+
+The following subsections indicate further material that forms part
+of the \pkg{spacetime} package.
+
 \subsection{Statistics for spatio-temporal data}
 
 The data sets that are provided by \cite{cressie}, as well as a number of plots 
@@ -1200,6 +1297,7 @@ in memory (R), but can be analyzed part by part. Selection in the
 data base uses indexes on the spatial and temporal references.
 
 \subsection{Overlay and aggregation}
+\label{overlay}
 Examples of overlay and aggregation methods for spatio-temporal data
 are further detailed in a separate vignette, obtained by
 <<eval=FALSE>>=

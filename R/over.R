@@ -31,6 +31,7 @@ timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
 			return(lapply(x, function(X) which(X == y)))
 		if (ti.x == TRUE && ti.y == FALSE) {
 			x1 = augment.with.one(x) 
+			# DOUBLE LOOP:
 			lst = lapply(y, function(Y) which(!(Y >= x1[-1] | Y < x)))
 			return(sp:::.invert(lst, length(lst), length(x)))
 		}
@@ -38,12 +39,14 @@ timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
 			# when more than one time step is available
 			# add a time stamp to close the last (open) interval
 			y1 = augment.with.one(y) 
+			# DOUBLE LOOP:
 			return(lapply(x, function(X) which(!(X >= y1[-1] | X < y))))
 		}
 		if (ti.x == TRUE && ti.y == TRUE) {
 			x1 = augment.with.one(x) 
 			y1 = augment.with.one(y) 
 			ret = vector("list", length(x))
+			# DOUBLE LOOP:
 			for (i in 1:length(x))
 				ret[[i]] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))
 			return(ret)
@@ -71,6 +74,7 @@ timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
 			x1 = augment.with.one(x) 
 			y1 = augment.with.one(y) 
 			ret = rep(as.integer(NA), length(x))
+			# DOUBLE LOOP:
 			for (i in 1:length(x))
 				ret[i] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))[1]
 			return(ret)

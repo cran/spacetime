@@ -15,6 +15,13 @@ rbind.STIDF = function(..., deparse.level = 1) {
 	STIDF(sp, time, df)
 }
 
+rbind.STTDF = function(...) {
+    dots = list(...)
+    names(dots) <- NULL # bugfix Clement Calenge 100417
+    df = do.call("rbind", lapply(dots, function(x) as(x, "STIDF")))
+	as(df, "STTDF")
+}
+
 rbind.STFDF = function(..., deparse.level = 1) {
 	args = list(...)
 	n = names(args[[1]]@data)
