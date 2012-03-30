@@ -47,8 +47,8 @@ Objects of this class carry sparse (irregular) space/time data }
 \note{ The \code{data.frame} needs to have a column called
 \code{burst} which is a factor (or character) and contains the
 grouping of observations that come from a continuous sequence of
-observations. Optionally, a column \code{id} can be used to identify
-individual items }
+observations. In addition, a column \code{id} is used to identify
+individual items. }
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 

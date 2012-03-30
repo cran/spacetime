@@ -76,12 +76,11 @@ of given layer is defined.  Options: and, or, not, xor. }
 
 \section{Overlay with method {\tt over}}
 
-Being loosely defined, we characterize {\em map overlay} 
-by
+We loosely define {\em map overlay} as
 \begin{itemize}
-\item involving at least two maps
-\item being asymmetric -- {\em overlay} is not {\em underlay}
-\item being either a {\em visual} or a {\em numerical} activity.
+\item an operation involving at least two maps
+\item asymmetric -- {\em over}lay is different from {\em under}lay
+\item either a {\em visual} or a {\em numerical} activity.
 \end{itemize}
 
 The method {\tt over}, as defined in package {\tt sp}, provides
@@ -89,11 +88,11 @@ a way to numerically combine two maps. In particular,
 <<eval=FALSE>>=
 over(x, geometry(y))
 @
-retrieves an array of {\tt length(x)} with {\tt x[i]} the index of
-{\tt y}, spatially corresponding to {\tt x[i]}, so {\tt x[i]=j} means
-that {\tt x[i]} and {\tt y[j]} match (have the same location, touch,
-or overlap/intersect etc.), or {\tt x[i]=NA} if there is no match.
-If {\tt y} has attributes, then
+returns an integer vector of length {\tt length(x)} with {\tt x[i]}
+the index of {\tt y}, spatially corresponding to {\tt x[i]}, so
+{\tt x[i]=j} means that {\tt x[i]} and {\tt y[j]} match (have the
+same location, touch, or overlap/intersect etc.), or {\tt x[i]=NA}
+if there is no match.  If {\tt y} has data values (attributes), then
 <<eval=FALSE>>=
 over(x, y)
 @
@@ -106,10 +105,10 @@ If the relationship is more complex, e.g. a polygon or grid cell
 <<eval=FALSE>>=
 over(x, y, returnList = TRUE)
 @
-returns a list of length {\tt length(x)}, with each list element a
-numeric vector with all indices (if {\tt y} is geometry only) or a
-data frame with all attribute table rows of {\tt y} that spatially
-matches {\tt x[i]}.
+returns a list of length {\tt length(x)}, with each list element
+a numeric vector with all indices if {\tt y} is geometry only,
+or else a data frame with all attribute table rows of {\tt y}
+that spatially matches {\tt x[i]}.
 
 \section{Spatio-temporal overlay with method {\tt over}}
 
