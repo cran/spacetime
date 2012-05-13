@@ -69,6 +69,7 @@ as.STSDF.STIDF = function(from) {
 	# time -- use the fact that xts objects are in time order:
 	ix = index(from@time)
 	time = unique(ix)
+	timeIsInterval(time) = timeIsInterval(from@time)
 	ir = rle(as.numeric(ix))$lengths
 	index[,2] = rep(1:length(ir), ir)
 	# check:
@@ -82,6 +83,33 @@ as.STFDF.STIDF = function(from) {
 	as(as(from, "STSDF"), "STFDF")
 }
 setAs("STIDF", "STFDF", as.STFDF.STIDF)
+
+setAs("STT", "STI", 
+	function(from) {
+		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
+		time = do.call(c, lapply(from@traj, index))
+		o = order(time)
+		to = time[o,]
+		timeIsInterval(to) = timeIsInterval(from)
+		new("STI", ST(sp[o,,drop=FALSE], to)) # reorders!
+	}
+)
+setAs("STTDF", "STIDF", 
+	function(from) {
+		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
+		time = do.call(c, lapply(from@traj, index))
+		timeIsInterval(time) = timeIsInterval(from)
+		STIDF(sp, time, from@data)
+	}
+)
+setAs("STIDF", "STTDF", 
+	function(from) {
+		traj = lapply(split(from, from$burst), function(x) as(x, "STI"))
+		STIbox = STI(SpatialPoints(cbind(range(from$x), range(from$y)), 
+				from@sp@proj4string), range(from$date))
+		new("STTDF", new("STT", STIbox, traj = traj), data = from@data)
+	}
+)
 
 as.STFDF.Spatial = function(from) {
 	#from@data$time = index(from@time)

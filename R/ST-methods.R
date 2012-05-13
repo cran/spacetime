@@ -4,7 +4,9 @@ ST = function(sp, time) {
 			c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")))
 		t = 1:length(time)
 		stopifnot(order(time, t) == t)
-		time = xts(1:length(time), time)
+		tm = xts(1:length(time), time)
+		timeIsInterval(tm) = timeIsInterval(time)
+		time = tm
 	}
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")

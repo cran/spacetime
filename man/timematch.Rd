@@ -4,16 +4,13 @@
 \description{ match two (time) sequences, where each can
 be intervals or instances. }
 \usage{ 
-timeMatch(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE))
+timeMatch(x, y, returnList = FALSE)
 }
 \arguments{
 \item{x}{ ordered sequence, e.g. of time stamps }
 \item{y}{ ordered sequence, e.g. of time stamps }
-\item{returnList }{ boolean; should a list be returned with all matches? }
-\item{timeInterval}{ boolean, length 2: should \code{x} be treated
-as intervals (timeInterval[1])? should \code{y} be treated as
-intervals? (timeInterval[2])?
-}
+\item{returnList }{ boolean; should a list be returned with all matches (TRUE),
+or a vector with single matches (FALSE)? }
 }
 \value{
 if \code{returnList = FALSE}: integer vector of length
@@ -26,6 +23,9 @@ with each list element an integer vector with all the indexes
 of \code{y} matching to that element of \code{x}.
 }
 \details{
+\code{timeIsInterval(x)} and \code{timeIsInterval(y)} both need
+to be non-missing valued (i.e., TRUE or FALSE).
+
 Matching in case of no intervals is done on equality of values.
 
 If \code{x} represents intervals, then the first interval is
@@ -40,13 +40,18 @@ x = t0 +c(0.5+c(2,2.1,4),5)*3600
 y = t0 + 1:5 * 3600
 x
 y
-timeMatch(x,y, returnList = FALSE, timeInterval = c(FALSE,FALSE))
-timeMatch(x,y, returnList = FALSE, timeInterval = c(FALSE,TRUE))
-timeMatch(x,y, returnList = FALSE, timeInterval = c(TRUE,FALSE))
-timeMatch(x,y, returnList = FALSE, timeInterval = c(TRUE,TRUE))
-timeMatch(x,y, returnList = TRUE, timeInterval = c(FALSE,FALSE))
-timeMatch(x,y, returnList = TRUE, timeInterval = c(FALSE,TRUE))
-timeMatch(x,y, returnList = TRUE, timeInterval = c(TRUE,FALSE))
-timeMatch(x,y, returnList = TRUE, timeInterval = c(TRUE,TRUE))
+timeIsInterval(x) = FALSE
+timeIsInterval(y) = FALSE
+timeMatch(x,y, returnList = FALSE)
+timeMatch(x,y, returnList = TRUE)
+timeIsInterval(y) = TRUE
+timeMatch(x,y, returnList = FALSE)
+timeMatch(x,y, returnList = TRUE)
+timeIsInterval(x) = TRUE
+timeMatch(x,y, returnList = FALSE)
+timeMatch(x,y, returnList = TRUE)
+timeIsInterval(y) = FALSE
+timeMatch(x,y, returnList = FALSE)
+timeMatch(x,y, returnList = TRUE)
 }
 \keyword{manip}

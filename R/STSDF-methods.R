@@ -1,5 +1,9 @@
 STS = function(sp, time, index) {
-	new("STS", ST(sp = sp, time = time), index = index)
+	if (is.na(timeIsInterval(time))) {
+		warning("STS(): setting missing timeIsInterval to default value TRUE\n")
+		timeIsInterval(time) = TRUE
+	}
+	new("STS", ST(sp, time), index = index)
 }
 
 STSDF = function(sp, time, data, index) {

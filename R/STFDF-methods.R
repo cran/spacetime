@@ -1,4 +1,8 @@
 STF = function(sp, time) {
+	if (is.na(timeIsInterval(time))) {
+		warning("STF(): setting timeIsInterval to default value TRUE\n")
+		timeIsInterval(time) = TRUE
+	}
 	new("STF", ST(sp, time))
 }
 

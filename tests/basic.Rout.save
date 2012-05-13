@@ -1,5 +1,5 @@
 
-R version 2.14.2 (2012-02-29)
+R version 2.15.0 (2012-03-30)
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -41,6 +41,9 @@ Loading required package: xts
 > IDs = paste("ID", 1:length(mydata), sep = "_")
 > mydata = data.frame(values = signif(mydata,3), ID=IDs)
 > stfdf = STFDF(sp, time, mydata)
+Warning message:
+In STF(sp, time) : STF(): setting timeIsInterval to default value TRUE
+
 > 
 > 
 > ###################################################
@@ -308,6 +311,9 @@ Class "ST", by class "STI", distance 2
 > IDs = paste("ID",1:length(mydata))
 > mydata = data.frame(values = signif(mydata,3),ID=IDs)
 > stidf = STIDF(sp, time, mydata)
+Warning message:
+In STI(sp, time) : STI(): setting timeIsInterval to default value FALSE
+
 > stidf
 An object of class "STIDF"
 Slot "data":
@@ -950,3 +956,6 @@ Slot "time":
 11 0 1 point2 2010-08-05 13:00:00        4  20.70 OldIDs11  0.82826  NewIDs2
 12 1 1 point3 2010-08-05 13:00:00        4  30.50 OldIDs12 -0.75862  NewIDs1
 > 
+> proc.time()
+   user  system elapsed 
+  0.824   0.080   0.890 

@@ -65,7 +65,10 @@ data, just like Spatial in the sp package.
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 
 \examples{
-ST(SpatialPoints(cbind(c(0,1),c(0,1))), as.Date('2008-01-01')+1:2)
+time = as.Date('2008-01-01')+1:2
+timeIsInterval(time) = TRUE
+sp = SpatialPoints(cbind(c(0,1),c(0,1)))
+ST(sp, time)
 }
 
 \keyword{classes}

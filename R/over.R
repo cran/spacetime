@@ -19,37 +19,78 @@ augment.with.one = function(x) {
 	c(x, last + dt)
 }
 
-timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
-	timeInterval = rep(timeInterval, length = 2)
-	ti.x = timeInterval[1]
-	ti.y = timeInterval[2]
+timeMatch = function(x, y, returnList = FALSE) {
+	ti.x = timeIsInterval(x)
+	ti.y = timeIsInterval(y)
+	stopifnot(!(is.na(ti.x) || is.na(ti.y)))
+	if (is(x, "xts"))
+		x = index(x)
+	if (is(y, "xts"))
+		y = index(y)
 	if (!identical(class(x), class(y)))
-		warning(".timeMatch: time indices of x and y are of different class")
+		warning("timeMatch: time indices of x and y are of different class")
 	# now go through T/F for { returnList, ti.x, ti.y }:
 	if (returnList) { # get all matches:
 		if (ti.x == FALSE && ti.y == FALSE)
+			# DOUBLE LOOP:
 			return(lapply(x, function(X) which(X == y)))
 		if (ti.x == TRUE && ti.y == FALSE) {
 			x1 = augment.with.one(x) 
 			# DOUBLE LOOP:
-			lst = lapply(y, function(Y) which(!(Y >= x1[-1] | Y < x)))
-			return(sp:::.invert(lst, length(lst), length(x)))
+			#lst = lapply(y, function(Y) which(!(Y >= x1[-1] | Y < x)))
+			#return(sp:::.invert(lst, length(lst), length(x)))
+			FI1 = function(n, i) { 
+				ret = lapply(1:n, function(x) integer(0))
+				for (j in 1:length(i)) {
+					ix = i[j]
+					if (ix > 0 && ix <= n)
+						ret[[ ix ]] = c(ret[[ix]], j)
+				}
+				ret
+			}
+			return(FI1(length(x), findInterval(y, x1)))
 		}
 		if (ti.x == FALSE && ti.y == TRUE) {
 			# when more than one time step is available
 			# add a time stamp to close the last (open) interval
 			y1 = augment.with.one(y) 
 			# DOUBLE LOOP:
-			return(lapply(x, function(X) which(!(X >= y1[-1] | X < y))))
+			#return(lapply(x, function(X) which(!(X >= y1[-1] | X < y))))
+			FI2 = function(n, i) {
+				lapply(i, function(x) { 
+					if (x == 0 || x > n) 
+						numeric(0)
+					else
+						x # as x is NOT interval, there can only be one y element matching
+				})
+			}
+			return(FI2(length(y), findInterval(x, y1)))
 		}
 		if (ti.x == TRUE && ti.y == TRUE) {
 			x1 = augment.with.one(x) 
 			y1 = augment.with.one(y) 
-			ret = vector("list", length(x))
+			####
 			# DOUBLE LOOP:
+			ret = vector("list", length(x))
 			for (i in 1:length(x))
-				ret[[i]] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))
+				ret[[i]] = which(x1[i] < y1[-1] & y < x1[i+1])
+				#ret[[i]] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))
 			return(ret)
+			#FI3 = function(n, i) {
+			#	ret = lapply(1:n, function(x) integer(0))
+    		#	#for (j in (length(i)-1):1) {
+    		#	for (j in 1:(length(i)-1)) {
+			#		i1 = i[j]
+			#		i2 = i[j+1]
+			#		if (i2 > 0 && i1 <= n) {
+			#			r = max(1, i1) : min(n, i2)
+			#			for (k in r)
+			#				ret[[ k ]] = c(ret[[ k ]], j)
+			#		}
+			#	}
+			#	ret
+			#}
+			#return(FI3(length(x), findInterval(y1, x1, rightmost.closed = FALSE)))
 		}
 	} else { # get first match:
 		if (ti.x == FALSE && ti.y == FALSE)
@@ -75,40 +116,43 @@ timeMatch = function(x, y, returnList = FALSE, timeInterval = c(FALSE,TRUE)) {
 			y1 = augment.with.one(y) 
 			ret = rep(as.integer(NA), length(x))
 			# DOUBLE LOOP:
+			#for (i in 1:length(x))
+			#	ret[i] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))[1]
 			for (i in 1:length(x))
-				ret[i] = which(!(x1[i] >= y1[-1] | x1[i+1] <= y))[1]
+				ret[i] = which(x1[i] < y1[-1] & y < x1[i+1])[1]
 			return(ret)
 		}
 		stop("impossible to reach this point")
 	}
 }
 
-over.xts = function(x, y, returnList = FALSE, fn = NULL, ..., 
-		timeInterval = c(FALSE, TRUE)) {
+over.xts = function(x, y, returnList = FALSE, fn = NULL, ...) {
+	ix = index(x)
+	iy = index(y)
+	timeIsInterval(ix) = timeIsInterval(x)
+	timeIsInterval(iy) = timeIsInterval(y)
 	if (returnList) { # get all matches:
-		tm = timeMatch(index(x), index(y), returnList = TRUE, timeInterval)
+		tm = timeMatch(ix, iy, returnList = TRUE)
 		stopifnot(is.null(fn))
 		lapply(tm, function(P) { y[P, drop=FALSE] })
 	} else { 
-		tm = timeMatch(index(x), index(y), returnList = FALSE, timeInterval)
+		tm = timeMatch(ix, iy, returnList = FALSE)
 		if (is.null(fn)) # get first match:
 			y[tm,]
 		else {
 			l = lapply(tm, function(P) { apply(y[P, drop=FALSE], 2, fn, ...) })
 			ret = do.call(rbind, l)
-			xts(ret, index(x))
+			xts(ret, ix)
 		}
 	}
 }
 setMethod("over", signature(x = "xts", y = "xts"), over.xts)
 
 # y = STF:
-over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = TRUE) {
+over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) {
     	space.index = over(x@sp, y@sp, returnList = TRUE)
-		time.index = timeMatch(index(x@time), index(y@time), returnList = TRUE,
-			timeInterval = timeInterval) 
+		time.index = timeMatch(x@time, y@time, returnList = TRUE) 
 		n = length(y@sp)
 		lst = vector("list", length(space.index) * length(time.index))
 		k = 1
@@ -127,32 +171,27 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 		lst
 	} else {
     	space.index = over(x@sp, y@sp)
-		time.index = rep(timeMatch(index(x@time), index(y@time),
-			timeInterval = timeInterval), each = length(space.index))
+		time.index = rep(timeMatch(x@time, y@time), each = length(space.index))
 		# compute the index of x in y as y is STF:
     	(time.index - 1) * length(y@sp) + space.index # space.index gets recycled
 	}
 }
 setMethod("over", signature(x = "STF", y = "STF"), over.STF.STF)
 
-over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = TRUE) {
+over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) warning("returnList not supported yet")
     space.index = over(x@sp, y@sp)[x@index[,1]]
-	time.index = timeMatch(index(x@time), index(y@time), 
-		timeInterval = timeInterval)[x@index[,2]]
+	time.index = timeMatch(x@time, y@time)[x@index[,2]]
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
 	.index2list(idx, returnList)
 }
 setMethod("over", signature(x = "STS", y = "STF"), over.STS.STF)
 
-over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(FALSE, TRUE)) {
+over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	#if (returnList) warning("returnList not supported yet")
     space.index = over(x@sp, y@sp)
-	time.index = timeMatch(index(x@time), index(y@time), 
-		returnList, timeInterval)
+	time.index = timeMatch(x@time, y@time, returnList)
 	# compute the index of x in y as y is STF:
     idx = (unlist(time.index) - 1) * length(y@sp) + unlist(space.index)
 	.index2list(idx, returnList)
@@ -160,23 +199,17 @@ over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...,
 setMethod("over", signature(x = "STI", y = "STF"), over.STI.STF)
 
 # y = STI:
-over.STF.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(TRUE, FALSE))
-	over(as(x, "STS"), y, returnList = returnList, fn=fn,
-		timeInterval = timeInterval, ...)
+over.STF.STI = function(x, y, returnList = FALSE, fn = NULL, ...)
+	over(as(x, "STS"), y, returnList = returnList, fn=fn, ...)
 setMethod("over", signature(x = "STF", y = "STI"), over.STF.STI)
 
-over.STS.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(TRUE, FALSE))
-	over(as(x, "STI"), y, returnList = returnList, fn=fn,
-		timeInterval = timeInterval, ...)
+over.STS.STI = function(x, y, returnList = FALSE, fn = NULL, ...)
+	over(as(x, "STI"), y, returnList = returnList, fn=fn, ...)
 setMethod("over", signature(x = "STS", y = "STI"), over.STS.STI)
 
-over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(FALSE, FALSE)) {
+over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) warning("returnList not fully supported yet")
-	time.index = timeMatch(index(x@time), index(y@time), 
-		returnList = TRUE, timeInterval = timeInterval)
+	time.index = timeMatch(x@time, y@time, returnList = TRUE)
 	ret = lapply(1:length(time.index), function(i) {
 		ti = time.index[[i]] # the x[i] matching y entry indices
 		if (length(ti) > 0)
@@ -191,13 +224,10 @@ over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...,
 }
 setMethod("over", signature(x = "STI", y = "STI"), over.STI.STI)
 
-STisFS = function(x) { is(x, "STF") || is(x, "STS") }
 # y = STS:
-over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(STisFS(x), TRUE)) {
+over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) warning("returnList not fully supported yet")
-	ret = over(x, STF(y@sp, y@time), returnList = returnList, fn = fn,
-		timeInterval = timeInterval)
+	ret = over(x, STF(y@sp, y@time), returnList = returnList, fn = fn)
 	ix.sts = (y@index[,2] - 1) * length(y@sp) + y@index[,1]
 	ix.stf = rep(as.integer(NA), nrow(y@time) * length(y@sp))
 	ix.stf[ix.sts] = 1:nrow(y@index)
@@ -205,14 +235,13 @@ over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...,
 }
 setMethod("over", signature(x = "ST", y = "STS"), over.ST.STS)
 
-overDFGenericST = function(x, y, returnList = FALSE, fn = NULL, ...,
-		timeInterval = c(STisFS(x), STisFS(y))) {
+overDFGenericST = function(x, y, returnList = FALSE, fn = NULL, ...) {
     stopifnot(identical(proj4string(x),proj4string(y)))
-	if (is.null(fn) && returnList == FALSE) {
-    	r = over(x, geometry(y), returnList = FALSE, timeInterval = timeInterval)
+	if (is.null(fn) && !returnList) {
+    	r = over(x, geometry(y), returnList = FALSE)
 		ret = y@data[r,,drop=FALSE]
 	} else {
-    	r = over(x, geometry(y), returnList = TRUE, timeInterval = timeInterval)
+    	r = over(x, geometry(y), returnList = TRUE)
     	ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
 	}
     if (!returnList)

@@ -1,5 +1,5 @@
 
-R version 2.14.2 (2012-02-29)
+R version 2.15.0 (2012-03-30)
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -76,6 +76,13 @@ Type 'help(spatstat)' for an overview of spatstat
 + 	}
 + )
 > x = as(tr, "STTDF")
+Warning messages:
+1: In STI(SpatialPoints(t(bbox(from))), range(time)) :
+  STI(): setting timeIsInterval to default value FALSE
+
+2: In STI(geometry(from), time) :
+  STI(): setting timeIsInterval to default value FALSE
+
 > m = map2SpatialLines(map("world", 
 + 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
 > proj4string(m) = "+proj=longlat +datum=WGS84"
@@ -147,3 +154,6 @@ The following object(s) are masked from 'package:zoo':
 > sttdf = as(l2, "STTDF")
 > print(stplot(sttdf, by="time*id"))
 > 
+> proc.time()
+   user  system elapsed 
+  3.772   0.116   3.891 

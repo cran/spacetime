@@ -1,15 +1,16 @@
 require(spacetime)
-t = xts(1:10, as.POSIXct(Sys.time()+60*1:10))
+t = xts(1:10, as.POSIXct("2010-05-01")+3600*1:10)
+timeIsInterval(t) = TRUE
 xy = SpatialPixels(SpatialPoints(expand.grid(1:10,1:10)))
 y = STFDF(xy, t, data.frame(a = 1:1000))
 stplot(y)
 x = y
-over(x, y)
+all(over(x, y) == 1:1000)
 
-require(spacetime)
 t0 = xts(1:4, c(index(t)[1]-1,index(t)[c(2,4,10)]))
+timeIsInterval(t0) = FALSE
 x = c(4,5,6,8)
-xy = SpatialPixels(SpatialPoints(expand.grid(x,x)))
+xy = SpatialPixels(SpatialPoints(expand.grid(x,rep(1,4))))
 x = STFDF(xy, t0, data.frame(a = 1:64))
 over(x, y)
 

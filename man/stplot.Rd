@@ -22,7 +22,7 @@
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
 	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0,
-	auto.key = TRUE, key.space = "right")
+	auto.key = TRUE, key.space = "right", type = "l")
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
     c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
     NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp,

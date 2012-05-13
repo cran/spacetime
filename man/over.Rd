@@ -27,8 +27,8 @@ objects, as well as their *DF counterpart:
 retrieves the indexes or attributes from one geometry at the spatio-temporal
 points of another }
 \usage{
-\S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = FALSE)
-\S4method{over}{xts,xts}(x, y, returnList = FALSE, fn = NULL, ..., timeInterval = TRUE)
+\S4method{over}{STF,STF}(x, y, returnList = FALSE, fn = NULL, ...)
+\S4method{over}{xts,xts}(x, y, returnList = FALSE, fn = NULL, ...)
 \S4method{aggregate}{ST}(x, by, FUN = mean, \dots, simplify = TRUE)
 }
 \arguments{
@@ -36,8 +36,6 @@ points of another }
 \item{y}{layer from which the geometries or attributes are queried}
 \item{returnList}{ logical; determines whether a list is returned, 
 or an index vector }
-\item{timeInterval}{logical; if TRUE, time will considered as interval, otherwise
-as instance; but read note below }
 \item{fn}{(optional) a function; see value }
 \item{by}{ geometry over which attributes in \code{x} are aggregated
 (this can be a \code{Spatial*} geometry, or a \code{ST*} geometry), or
@@ -67,7 +65,7 @@ aggregation function FUN.
 \item{x = "STF", y = "STF"}{ }
 \item{x = "xts", y = "xts"}{ finds the row index of the instance
 or interval of time instances of \code{x} matching to \code{y}. Only if
-\code{timeInterval = TRUE}, intervals are sought. In that case,
+\code{timeIsInterval(x) == TRUE}, intervals are sought. In that case,
 time intervals start at the time instance of a record, and end at
 the next. The last time interval length is set to the interval length
 of the one-but-last (non-zero) interval. In case of a single time
@@ -77,10 +75,6 @@ instance for \code{y}, its interval is right-open.  }
 }
 
 \note{
-Argument \code{timeInterval} needs to be \code{FALSE} when \code{y}
-is of class \code{STI}, as a straightforward implementation when
-time is interval was not found for these objects.
-
 See also \link[sp]{over}; methods intersecting SpatialLines with
 anything else, or SpatialPolygons with SpatialPolygons, need rgeos
 to be loaded first.
