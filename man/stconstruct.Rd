@@ -3,7 +3,7 @@
 \title{ create ST* objects from long or wide tables }
 \description{ create ST* objects from long or wide tables }
 \usage{ 
-stConstruct(x, space, time, SpatialObj = NULL, TimeObj = NULL, crs = CRS(as.character(NA)))
+stConstruct(x, space, time, SpatialObj = NULL, TimeObj = NULL, crs = CRS(as.character(NA)), interval)
 }
 \arguments{
 \item{x}{ object of class \code{matrix} or \code{data.frame},
@@ -24,6 +24,9 @@ of the columns in a list element of \code{space}
 }
 \item{crs}{ object of class \link{CRS-class}; only used when coordinates
 are in \code{x} and no CRS can be taken from \code{SpatialObj}}
+\item{interval}{ logical; specifies whether time should reflect time
+instance (FALSE) or time intervals (TRUE). If omitted, defaults values
+depend on the class }
 }
 \details{
 For examples, see below.
@@ -58,6 +61,7 @@ data(Produc)
 
 yrs = 1970:1986
 t = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
+timeIsInterval(t) = TRUE
 # deselect District of Columbia, polygon 8, which is not present in Produc:
 Produc.st = STFDF(states[-8], t, Produc[(order(Produc[,2], Produc[,1])),])
 
@@ -69,7 +73,7 @@ xy = coordinates(states[-8])
 Produc$x = xy[,1]
 Produc$y = xy[,2]
 #using stConstruct, use polygon centroids for location:
-x = stConstruct(Produc, c("x", "y"), "time")
+x = stConstruct(Produc, c("x", "y"), "time", interval = TRUE)
 class(x)
 stplot(x[,,"unemp"], yrs)
 
@@ -91,7 +95,7 @@ timesList = list(
 )
 t = as.Date(c("1974-01-01","1979-01-01"))
 nc.st = stConstruct(as(nc, "data.frame"), geometry(nc), timesList,
-	TimeObj = t)
+	TimeObj = t, interval = TRUE)
 
 # stConstruct multivariable, space-wide
 if (require(gstat)) {
@@ -114,7 +118,7 @@ wind$time = ISOdate(wind$year+1900, wind$month, wind$day, 0)
 w = STFDF(wind.loc, wind$time, 
 	data.frame(values = as.vector(t(wind[stations]))))
 space = list(values = names(wind)[stations])
-wind.st = stConstruct(wind[stations], space, wind$time, SpatialObj = wind.loc)
+wind.st = stConstruct(wind[stations], space, wind$time, SpatialObj = wind.loc, interval = TRUE)
 all.equal(w, wind.st)
 class(wind.st)
 }

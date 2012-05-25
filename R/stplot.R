@@ -5,7 +5,7 @@ if (!isGeneric("stplot"))
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		..., as.table = TRUE, at, cuts = 15, 
 		animate = 0, mode = "xy", scaleX = 0, 
-		auto.key = TRUE, key.space = "right") {
+		auto.key = TRUE, key.space = "right", type = 'l') {
 	ind = sp.ID = NULL # keep R CMD check happy in R 2.13 
     z = names(obj@data)[1]
 	if (missing(at))
@@ -14,15 +14,15 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 	if (mode == "ts") { # multiple time series
 		if (length(names(obj@data)) > 1) # , stack, add | which.var
 			xyplot(values ~ time | ind, stack(obj), groups = sp.ID, 
-				type = 'l',auto.key = auto.key, as.table = as.table, ...)
+				type = type,auto.key = auto.key, as.table = as.table, ...)
 		else
 			xyplot(as.formula(paste(z, "~", "time")), 
 				as.data.frame(obj), groups = sp.ID, 
-				type = 'l',auto.key = auto.key, as.table = as.table, ...)
+				type = type, auto.key = auto.key, as.table = as.table, ...)
 	} else if (mode == "tp") { # time series in multiple panels
     	if (ncol(obj@data) == 1)
 			xyplot(as.formula(paste(z, "~ time | sp.ID")), 
-				as.data.frame(obj), type = 'l', auto.key = auto.key, 
+				as.data.frame(obj), type = type, auto.key = auto.key, 
 				key.space = key.space, as.table = as.table, ...)
 		else {
 			n = names(obj@data)
@@ -31,7 +31,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			st$time = df$time
 			st$sp.ID = df$sp.ID
 			xyplot(as.formula(paste("values ~ time | sp.ID")), 
-				st, type = 'l', groups = ind,
+				st, type = type, groups = ind,
 				key.space = key.space, auto.key = auto.key, 
 				as.table = as.table, ...)
 		}

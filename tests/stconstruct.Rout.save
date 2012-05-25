@@ -1,5 +1,5 @@
 
-R version 2.14.2 (2012-02-29)
+R version 2.15.0 (2012-03-30)
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -59,6 +59,9 @@ Loading required package: sandwich
 > time = xts(1:17, as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT"))
 > # deselect District of Columbia, polygon 8, which is not present in Produc:
 > Produc.st = STFDF(states[-8], time, Produc[(order(Produc[2], Produc[1])),])
+Warning message:
+In STF(sp, time) : STF(): setting timeIsInterval to default value TRUE
+
 > #stplot(Produc.st[,,"unemp"], yrs)
 > 
 > # example 1: st from long table, with states as Spatial object:
@@ -69,6 +72,9 @@ Loading required package: sandwich
 > Produc$y = xy[,2]
 > #using stConstruct, use polygon centroids for location:
 > x = stConstruct(Produc, c("x", "y"), "time")
+Warning message:
+In STI(sp, time) : STI(): setting timeIsInterval to default value FALSE
+
 > class(x)
 [1] "STIDF"
 attr(,"package")
@@ -79,6 +85,9 @@ attr(,"package")
 > Produc$state = gsub("TENNESSE", "TENNESSEE", Produc$state)
 > Produc$State = gsub("_", " ", tolower(Produc$state))
 > x = stConstruct(Produc, "State", "time", states[-8])
+Warning message:
+In STF(sp, time) : STF(): setting timeIsInterval to default value TRUE
+
 > class(x)
 [1] "STFDF"
 attr(,"package")
@@ -96,4 +105,10 @@ attr(,"package")
 > t = xts(1:2, as.Date(c("1974-01-01","1979-01-01")))
 > nc.st = stConstruct(as(nc, "data.frame"), geometry(nc), timesList,
 + 	TimeObj = t)
+Warning message:
+In STF(sp, time) : STF(): setting timeIsInterval to default value TRUE
+
 > 
+> proc.time()
+   user  system elapsed 
+  1.644   0.064   1.700 

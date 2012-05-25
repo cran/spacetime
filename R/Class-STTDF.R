@@ -5,6 +5,7 @@ setClass("STT",  # space-time trajectory/ies without data values
 	stopifnot(length(object@sp) == 2)
 	stopifnot(length(object@time) == 2)
 	stopifnot(all(sapply(object@traj, class) == "STI"))
+	stopifnot(!isTRUE(timeIsInterval(object)))
     return(TRUE)
   }
 )

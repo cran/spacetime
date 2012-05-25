@@ -9,12 +9,16 @@ setAs("ltraj", "STTDF",
 		d$burst = factor(rep(burst, ns))
 		d$id = factor(rep(id, ns))
 		toSTI = function(x) {
-			ret = STI(SpatialPoints(x[c("x", "y")]), x[["date"]])
+			time = x[["date"]]
+			timeIsInterval(time) = FALSE
+			ret = STI(SpatialPoints(x[c("x", "y")]), time)
 			attr(ret, "burst") = attr(x, "burst")
 			attr(ret, "id") = attr(x, "id")
 			ret
 		}
-		STIbox = STI(SpatialPoints(cbind(range(d$x), range(d$y))), range(d$date))
+		rt = range(d$date)
+		timeIsInterval(rt) = FALSE
+		STIbox = STI(SpatialPoints(cbind(range(d$x), range(d$y))), rt)
 		new("STTDF", new("STT", STIbox, traj = lapply(from, toSTI)), data = d)
 	}
 )
@@ -28,29 +32,6 @@ setAs("STTDF", "ltraj",
 )
 setMethod("coordinates", "STT", function(obj) {
 		do.call(rbind, lapply(obj@traj, coordinates))
-	}
-)
-setAs("STT", "STI", 
-	function(from) {
-		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
-		time = do.call(c, lapply(from@traj, index))
-		o = order(time)
-		new("STI", (ST(sp[o,,drop=FALSE],time[o,]))) # reorders!
-	}
-)
-setAs("STTDF", "STIDF", 
-	function(from) {
-		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
-		time = do.call(c, lapply(from@traj, index))
-		STIDF(sp, time, from@data)
-	}
-)
-setAs("STIDF", "STTDF", 
-	function(from) {
-		traj = lapply(split(from, from$burst), function(x) as(x, "STI"))
-		STIbox = STI(SpatialPoints(cbind(range(from$x), range(from$y)), 
-				from@sp@proj4string), range(from$date))
-		new("STTDF", new("STT", STIbox, traj = traj), data = from@data)
 	}
 )
 

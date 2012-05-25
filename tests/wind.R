@@ -45,6 +45,7 @@ proj4string(pts) = "+proj=longlat +datum=WGS84"
 if (require(rgdal)) {
 pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
 t = xts(1:nrow(wind), wind$time)
+timeIsInterval(t) = TRUE
 stations = 4:15
 # note the t() in:
 w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
@@ -76,6 +77,7 @@ covfn = function(x,y) {
 
 n = 10
 tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
+timeIsInterval(tgrd) = TRUE
 if (FALSE) {
 pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
 wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))

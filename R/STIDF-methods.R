@@ -1,10 +1,16 @@
 STI = function(sp, time) {
+	if (is.na(timeIsInterval(time))) {
+		warning("STI(): setting timeIsInterval to default value FALSE\n")
+		timeIsInterval(time) = FALSE
+	}
 	new("STI", ST(sp, time))
 }
 
 STIDF = function(sp, time, data) {
 	if (!is(time, "xts")) {
+		time0 = time
         time = xts(1:length(time), time)
+		timeIsInterval(time) = timeIsInterval(time0)
 		# rearrange sp and data in new time order:
         o = as.vector(time[,1])
 		sp = sp[o,]

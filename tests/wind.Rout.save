@@ -1,5 +1,5 @@
 
-R version 2.14.2 (2012-02-29)
+R version 2.15.0 (2012-03-30)
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -73,6 +73,7 @@ Loading required package: xts
 + if (require(rgdal)) {
 + pts = spTransform(pts, CRS("+proj=utm +zone=29 +datum=WGS84"))
 + t = xts(1:nrow(wind), wind$time)
++ timeIsInterval(t) = TRUE
 + stations = 4:15
 + # note the t() in:
 + w = STFDF(pts, t, data.frame(values = as.vector(t(wind[stations]))))
@@ -104,6 +105,7 @@ Loading required package: xts
 + 
 + n = 10
 + tgrd = xts(1:n, seq(min(index(w)), max(index(w)), length=n))
++ timeIsInterval(tgrd) = TRUE
 + if (FALSE) {
 + pred = krige0(sqrt(values)~1, w, STF(grd, tgrd), covfn)
 + wind.pr = STFDF(grd, tgrd, data.frame(pred = pred))
@@ -124,11 +126,14 @@ Loading required package: gstat
 Loading required package: maps
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.0, released 2011/01/12
-Path to GDAL shared files: /usr/share/gdal/1.8
+Loaded GDAL runtime: GDAL 1.9.0, released 2011/12/29
+Path to GDAL shared files: /usr/local/share/gdal
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
 Path to PROJ.4 shared files: (autodetected)
 Loading required package: foreign
 Loading required package: lattice
 Checking rgeos availability: TRUE
 > 
+> proc.time()
+   user  system elapsed 
+  1.764   0.144   1.898 

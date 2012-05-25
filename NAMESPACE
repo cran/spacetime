@@ -37,7 +37,7 @@ export(ST,
 	timeMatch)
 
 #exportMethods(proj4string, "proj4string<-", is.projected)
-exportMethods(aggregate)
+exportMethods(aggregate, timeIsInterval, "timeIsInterval<-")
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)

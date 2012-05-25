@@ -137,18 +137,45 @@ and when their temporal properties match. For temporal properties,
 it is crucial whether time is considered to be a time interval,
 or a time instance.  Matching time instance is always considered.
 
-The {\tt over} methods in package {\tt spacetime} have a boolean
-argument {\tt timeInterval} which is by default {\tt TRUE} for
-the cases where {\tt y} derives from class {\tt STF} or {\tt STS},
-and {\tt FALSE} otherwise. When {\tt TRUE}, the times of {\tt y} are
-considered as time intervals, meaning that the times of {\tt x[i,j]}
-and {\tt y[k,l]} match if the time instant of {\tt x[i,j]} is larger
-than or equal to the time instant of {\tt y[k,l]}, but less than
-the next time instant.  The time interval length of the last time
-step is taken to be identical to the last time interval of an object.
+Suppose we have two time sequences, $T: t_1,t_2,...,t_n$ and $U:
+u_1, u_2, ..., u_m$. Both are ordered: $t_i \le t_{i+1}$.
 
-Spatio-temporal objects with only one time step cannot be used to
-determine time intervals.
+Both $T$ and $U$ can reflect time {\em instances} or time
+{\em intervals}. In case they reflect time {\em instances}, an
+observation at $t_i$ takes place at the time instance $t_i$, and
+has an unregistered (possibly ignorable) duration. In case they
+reflect time {\em intervals}, an observation ``at'' $t_i$ takes
+place during, or is representatitive for, the time interval
+$t_{i} \le t < t_{i+1}$. (The last time interval $t_n$ is obtained
+by adopting the one-but-last time interval duration: $t_n \le t <
+t_n + (t_n - t_{n-1})$).
+
+We define the time (instance or interval) pair $\{t_i,u_j\}$ to match if
+\begin{description}
+\item[for $T$ instance, $U$ instance:]
+$$t_i = u_j$$
+\item[for $T$ interval, $U$ instance]
+$$t_i \le u_j < t_{i+1}$$
+\item[for $T$ instance, $U$ interval]
+$$u_j \le t_i < u_{j+1}$$
+\item[for $T$ interval, $U$ interval]
+$$\exists t : t_i \le t < t_{i+1} \wedge u_j \le t < u_{j+1} $$
+which can be rephrased as the negation of
+$t_{i+1} \le u_j \vee t_i \ge u_{j+1}$ (where $\vee$ denotes `or'), 
+or alternatively expressed as
+$$t_{i+1} > u_j \wedge t_i < u_{j+1}$$
+where $\wedge$ denotes `and'.
+\end{description}
+All these conditions fail for intervals having zero width, i.e. the
+case where $T$ is interval and for some $i$, $t_{i+1}-t_i=0$ or the
+case where $U$ is interval and for some $j$, $u_{j+1}-u_j=0$.
+For that reason, specifying objects with 
+<<eval=FALSE>>=
+timeIsInterval(x) = TRUE
+@
+results in a warning if some time intervals have zero width.
+
+\end{document}
 
 \section{Aggregating spatio-temporal data}
 

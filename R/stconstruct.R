@@ -1,5 +1,5 @@
 stConstruct = function(x, space, time, SpatialObj = NULL, 
-		TimeObj = NULL, crs = CRS(as.character(NA))) {
+		TimeObj = NULL, crs = CRS(as.character(NA)), interval) {
 	if (is(x, "xts")) {
 		stopifnot(ncol(x) == length(space))
 		return(STFDF(space, index(x), data.frame(x = as.vector(t(x)))))
@@ -22,6 +22,8 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 		else
 			ti = time
 		time = xts(1:nrow(x), x[[ti]])
+		if (!missing(interval))
+			timeIsInterval(time) = interval
 		x = x[-c(si, ti)]
 		return(STIDF(sp, time, x))
 	} else if (length(space) == 1 && length(time) == 1) {
@@ -31,12 +33,17 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 		if (any(table(x[,space], x[,time]) != 1)) { # NOT a full grid:
 			# stop("space/time combinations not complete")
 			# why not try Irregular?
-			return(STIDF(SpatialObj, xts(1:nrow(x), x[,time]), x))
+			time = xts(1:nrow(x), x[,time])
+			if (!missing(interval))
+				timeIsInterval(time) = interval
+			return(STIDF(SpatialObj, time, x))
 		} else {
 			sut = sort(unique(x[,time]))
-			t = xts(1:length(sut), sut)
+			tm = xts(1:length(sut), sut)
+			if (!missing(interval))
+				timeIsInterval(tm) = interval
 			sp = as.character(sort(unique(x[,space])))
-			return(STFDF(SpatialObj[sp], t, 
+			return(STFDF(SpatialObj[sp], tm, 
 				x[order(x[,time],as.character(x[,space])),]))
 		}
 	} else if (is.list(time)) {  
@@ -46,11 +53,15 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 			SpatialObj = SpatialPoints(x[,space], CRS)
 		else if (missing(SpatialObj))
 			SpatialObj = space
+		if (! missing(interval))
+			timeIsInterval(TimeObj) = interval
 		xx = data.frame(lapply(time, function(g) stack(x[g])$values))
 		return(STFDF(SpatialObj, TimeObj, xx))
 	} else if (is.list(space)) { 
 		# space-wide table:
 		xx = data.frame(lapply(space, function(g) as.vector(t(x[g]))))
+		if (!missing(interval))
+			timeIsInterval(time) = interval
 		return(STFDF(SpatialObj, time, 
 			data.frame(values = as.vector(t(xx)))))
 	} 
