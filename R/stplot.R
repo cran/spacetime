@@ -5,7 +5,7 @@ if (!isGeneric("stplot"))
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		..., as.table = TRUE, at, cuts = 15, 
 		animate = 0, mode = "xy", scaleX = 0, 
-		auto.key = TRUE, key.space = "right", type = 'l') {
+		auto.key = TRUE, key.space = "right", type = 'l', do.repeat = TRUE) {
 	ind = sp.ID = NULL # keep R CMD check happy in R 2.13 
     z = names(obj@data)[1]
 	if (missing(at))
@@ -65,15 +65,15 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		## x = as(obj, "Spatial")
 		## x@data = data.frame(x@data) # cripples column names
 		if (animate > 0) {
+			names.attr = rep(names.attr, length = ncol(df))
 			i = 0
-			while (TRUE) {
-				i = i + 1
-				if (i > ncol(df)) 
-					i = 1
-				print(spplot(x[,i], main = names.attr[i], at = at, 
-					as.table = as.table, auto.key = auto.key, 
+			while (do.repeat || i < ncol(df)) {
+				timeStep = (i %% ncol(df)) + 1
+				print(spplot(x[,timeStep], main = names.attr[timeStep], at = at, 
+					cuts = cuts, as.table = as.table, auto.key = auto.key, 
 					key.space = key.space, ...))
 				Sys.sleep(animate)
+				i = i + 1
 			}
 		} else
 			spplot(x, names.attr = names.attr, as.table = as.table, at = at,
@@ -93,12 +93,15 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 		as.table = TRUE, by = c("time", "burst", "id"), 
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = 'p', number = 6, overlap = 0, asp,
-		col = 1, panel = panel.stpointsplot, sp.layout = NULL) {
+		col = 1, panel = panel.stpointsplot, sp.layout = NULL,
+		xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,]
+		) {
 	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
 	by = by[1]
 	f = paste(f, "|", by)
 	if (missing(asp))
 		asp = mapasp(obj@sp)
+	scales = sp:::longlat.scales(obj@sp, scales, xlim, ylim)
 	obj = as.data.frame(obj)
 	if (is.numeric(number) && number > 1)
 		obj$time = equal.count(obj$time, number = number, overlap = overlap)
@@ -107,17 +110,53 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 		panel = panel, sp.layout = sp.layout, ...)
 }
 
+panel.sttrajplot = function(x, y, col, sp.layout, ..., GRP, lwd) {
+    sp:::sp.panel.layout(sp.layout, panel.number())
+	if (length(GRP) == 1 && length(lwd) == 1 && length(col) == 1)
+		llines(x, y, lwd = lwd, col = col)
+	else {
+		lwd = rep(lwd, length.out = length(x)-1)
+		col = rep(col, length.out = length(x)-1)
+		if (length(x) > 1)
+			for (i in 1:(length(x)-1))
+				if (GRP[i] == GRP[i+1])
+					llines(x[i:(i+1)], y[i:(i+1)], lwd = lwd[i], col = col[i])
+	}
+}
+
+stplot.STTDF = function(obj, names.attr = NULL, ..., 
+		as.table = TRUE, by = c("none", "burst", "id", "time"), 
+		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
+		type = 'l', number = 6, overlap = 0, asp,
+		col = 1, lwd = 1, panel = panel.sttrajplot, sp.layout = NULL,
+		xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,]
+		) {
+
+	if (missing(asp))
+		asp = mapasp(obj@sp)
+	scales = sp:::longlat.scales(obj@sp, scales, xlim, ylim)
+	GRP = rep(1:length(obj@traj), times = lapply(obj@traj, length))
+
+	obj = as(obj, "STIDF")
+	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
+	by = by[1]
+	if (by != "none")
+		f = paste(f, "|", by)
+
+	obj = as.data.frame(obj)
+	if (is.numeric(number) && number > 1)
+		obj$time = equal.count(obj$time, number = number, overlap = overlap)
+	xyplot(as.formula(f), obj, asp = asp, type = type,
+		as.table = as.table, scales = scales, xlab = xlab, ylab = ylab, 
+		panel = panel, sp.layout = sp.layout, col = col, lwd = lwd, ..., 
+		GRP = GRP)
+}
+
+setMethod("stplot", signature("STTDF"), stplot.STTDF)
 
 setMethod("stplot", signature("STFDF"),  stplot.STFDF)
-
 setMethod("stplot", signature("STSDF"), stplot.STIDF)
-
 setMethod("stplot", signature("STIDF"), stplot.STIDF)
-
-setMethod("stplot", signature("STTDF"),
-	function(obj, ..., names.attr = NULL, by = "burst", type = 'l')
-		stplot.STIDF(as(obj, "STIDF"), names.attr = names.attr, by = by, type = type, ...)
-)
 
 stackST = function(x, select, ...) {
 	nc = ncol(x@data)

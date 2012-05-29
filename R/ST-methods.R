@@ -76,6 +76,10 @@ if (!isGeneric("is.projected"))
 	setGeneric("is.projected", function(obj)
 		standardGeneric("is.projected"))
 setMethod("is.projected", "ST", function(obj) is.projected(obj@sp))
+if (!isGeneric("plot"))
+	setGeneric("plot", function(x, y, ...)
+		standardGeneric("plot"))
+
 
 if (!isGeneric("spTransform"))
 	setGeneric("spTransform", function(x, CRSobj, ...)

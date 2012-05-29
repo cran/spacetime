@@ -2,10 +2,12 @@
 \docType{class}
 \alias{STT-class}
 \alias{STTDF-class}
+\alias{STT}
+\alias{STTDF}
 \alias{ltraj-class}
 \alias{coerce,STTDF,ltraj-method} 
 \alias{coerce,ltraj,STTDF-method}
-\alias{stplot,STTDF-method}
+\alias{plot,STT,missing-method}
 \title{Class "STTDF"}
 \description{ A class for spatio-temporal trajectory data }
 \section{Objects from the Class}{

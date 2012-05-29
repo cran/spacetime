@@ -1,5 +1,5 @@
 
-R version 2.15.0 (2012-03-30)
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -44,14 +44,19 @@ Loading required package: RColorBrewer
 > library("trip")
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-13. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-18. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
-deldir 0.0-16
+deldir 0.0-19
 
-     Please note: The process for determining duplicated points
+     PLEASE NOTE:  The components "delsgs" and "summary" of the 
+     object returned by deldir() are now DATA FRAMES rather than 
+     matrices (as they were prior to release 0.0-18). 
+     See help("deldir").
+ 
+     PLEASE NOTE: The process for determining duplicated points
      has changed from that used in version 0.0-9 (and previously).
 
-spatstat 1.25-4 
+spatstat 1.28-1 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
@@ -87,14 +92,14 @@ Warning messages:
 + 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
 > proj4string(m) = "+proj=longlat +datum=WGS84"
 > plot(m, axes=TRUE, cex.axis =.7)
-> plot(x, add=TRUE, col = "red")
+> lines(x, col = "red")
 > 
 > 
 > ###################################################
 > ### code chunk number 50: spacetime.Rnw:1073-1075
 > ###################################################
 > plot(m, axes=TRUE, cex.axis =.7)
-> plot(x, add=TRUE, col = "red")
+> lines(x, col = "red")
 > 
 > 
 > ###################################################
@@ -156,4 +161,4 @@ The following object(s) are masked from 'package:zoo':
 > 
 > proc.time()
    user  system elapsed 
-  3.772   0.116   3.891 
+  8.636   0.344   8.989 
