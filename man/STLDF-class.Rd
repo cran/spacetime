@@ -1,32 +1,34 @@
-\name{STIDF-class}
+\name{STLDF-class}
 \docType{class}
-\alias{STIDF-class}
-\alias{STI-class}
-\alias{STIDF}
-\alias{STI}
-\alias{as.data.frame.STIDF}
-\alias{as.data.frame.STI}
-\alias{[,STIDF-method} 
-\alias{coerce,STIDF,STSDF-method}
-\alias{plot,STI,missing-method}
-\alias{rbind.STIDF}
+\alias{STLDF-class}
+\alias{STL-class}
+\alias{STLDF}
+\alias{STL}
+\alias{as.data.frame.STLDF}
+\alias{as.data.frame.STL}
+\alias{[,STLDF-method} 
+\alias{coerce,STLDF,STIDF-method}
+\alias{plot,STL,missing-method}
+\alias{rbind.STLDF}
 
-\title{Class "STIDF"}
-\description{ A class for unstructured spatio-temporal data; for
-n spatial locations and times, n observations are available }
+\title{Class "STLDF"}
+\description{ A class for spatio-temporal data that do not move
+but have a certain time period of existence; for
+n spatial locations and corresponding begin- and end-times, n observations are available }
 \section{Objects from the Class}{
 Objects of this class carry full space/time grid data }
 \section{Slots}{
   \describe{
     \item{\code{sp}:}{Object of class \code{"Spatial"}}
-    \item{\code{time}:}{Object holding time information, see \link{ST-class}}
+    \item{\code{time}:}{Object of class \code{xts} holding time information, see \link{ST-class}}
+    \item{\code{endTime}:}{Object of class \code{POSIXt} holding end time}
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
 	the measured values }
   }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "STIDF")}: selects spatial-temporal entities, and attributes } 
+    \item{[}{\code{signature(x = "STLDF")}: selects spatial-temporal entities, and attributes } 
 
     % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
 	% for spatial objects; does nothing but setting up a plotting region choosing
@@ -36,19 +38,21 @@ Objects of this class carry full space/time grid data }
 }
 
 \usage{
-  STI(sp, time)
-  STIDF(sp, time, data)
-  \S4method{[}{STIDF}(x, i, j, ..., drop = FALSE)
-  \S4method{coerce}{STIDF,STSDF}(from, to, strict=TRUE)
+  STL(sp, time, endTime)
+  STLDF(sp, time, endTime, data)
+  \S4method{[}{STLDF}(x, i, j, ..., drop = FALSE)
+  \S4method{coerce}{STLDF,STIDF}(from, to, strict=TRUE)
 }
 
 \arguments{
 \item{sp}{object of class \link{Spatial}}
-\item{time}{object holding time information; when STIDF is called,
+\item{time}{object holding time information; when STLDF is called,
 a non-ordered vector with times, e.g. \link{POSIXct} will also work,
 and rearrange the \code{sp} and \code{data} slots
 according to the ordering of time; for this to work no
 ties should exist. }
+\item{endTime}{see \code{time}; end of the time interval for a 
+particular observation}
 \item{data}{data frame with appropriate number of rows}
 \item{x}{an object of class STFDF}
 \item{i}{selection of record index (spatial/temporal entities),
@@ -65,8 +69,8 @@ if FALSE, no coercion to reduced classes takes place}
 \item{strict}{ignored}
 }
 
-\note{ arguments \code{sp}, \code{time} and \code{data} need 
-to have the same number of records,
+\note{ arguments \code{sp}, \code{time}, \code{endTime} and 
+\code{data} need to have the same number of records,
 and regardless of the class of time (xts or POSIXct) have to be
 in correspoinding order: the triple \code{sp[i]}, \code{time[i]}
 and \code{data[i,]} refer to the same observation }

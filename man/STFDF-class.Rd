@@ -8,6 +8,7 @@
 \alias{[,STFDF-method} 
 \alias{coerce,STFDF,xts-method}
 \alias{coerce,STFDF,Spatial-method}
+\alias{plot,STF,missing-method}
 \alias{na.omit.STFDF}
 \alias{rbind.STFDF}
 

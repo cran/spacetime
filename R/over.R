@@ -13,7 +13,7 @@ augment.with.one = function(x) {
 	ux = unique(x)
 	l = length(ux)
 	if (l <= 1)
-		stop("cannot derivable time interval from length 1 or constant sequence")
+		stop("cannot derive time interval from length 1 or constant sequence")
 	last = ux[l]
 	dt = last - ux[l-1]
 	c(x, last + dt)

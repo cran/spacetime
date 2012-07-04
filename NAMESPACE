@@ -1,16 +1,18 @@
-# import(sp)
+import(sp)
 import(zoo)
 import(xts)
 import(lattice)
 # import(methods)
 importFrom(stats, aggregate)
 importFrom(utils, stack)
+#importFrom(graphics, plot)
 
 exportClasses(
 	xts, 
 	ST, STF, STFDF, 
 	STS, STSDF, 
 	STI, STIDF, 
+	STL, STLDF, 
 	STT, STTDF, 
 	ltraj)
 
@@ -18,12 +20,15 @@ export(ST,
 	STF, STFDF,
 	STS, STSDF,
 	STI, STIDF,
+	STL, STLDF,
+	STT, STTDF,
 	as.data.frame.STF,
 	as.data.frame.STS,
 	as.data.frame.STI,
 	as.data.frame.STFDF,
 	as.data.frame.STSDF,
 	as.data.frame.STIDF,
+	as.data.frame.STLDF,
 	unstack.STFDF,
 	stplot,
 	stConstruct,
@@ -37,12 +42,13 @@ export(ST,
 	timeMatch)
 
 #exportMethods(proj4string, "proj4string<-", is.projected)
-exportMethods(aggregate, timeIsInterval, "timeIsInterval<-")
+exportMethods(aggregate, timeIsInterval, "timeIsInterval<-", plot)
 
 S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
 S3method(as.data.frame, STSDF)
 S3method(as.data.frame, STIDF)
+S3method(as.data.frame, STLDF)
 S3method(as.xts, STIDF)
 S3method(dim, ST)
 S3method(dim, STF)
@@ -54,15 +60,18 @@ S3method(dim, STIDF)
 S3method(index, STF)
 S3method(index, STS)
 S3method(index, STI)
+S3method(index, STL)
 S3method(index, STFDF)
 S3method(index, STSDF)
 S3method(index, STIDF)
+S3method(index, STLDF)
 S3method(length, STF)
 S3method(length, STS)
 S3method(length, STI)
 S3method(length, STFDF)
 S3method(length, STSDF)
 S3method(length, STIDF)
+S3method(lines, STTDF)
 #S3method(unstack, STFDF)
 S3method(print, summary.ST)
 #S3method(rbind, STIDFtraj)

@@ -32,14 +32,14 @@ m = map2SpatialLines(map("world",
 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
 proj4string(m) = "+proj=longlat +datum=WGS84"
 plot(m, axes=TRUE, cex.axis =.7)
-plot(x, add=TRUE, col = "red")
+lines(x, col = "red")
 
 
 ###################################################
 ### code chunk number 50: spacetime.Rnw:1073-1075
 ###################################################
 plot(m, axes=TRUE, cex.axis =.7)
-plot(x, add=TRUE, col = "red")
+lines(x, col = "red")
 
 
 ###################################################

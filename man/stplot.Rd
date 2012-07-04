@@ -5,7 +5,7 @@
 \alias{stplot,STFDF-method} 
 \alias{stplot,STSDF-method} 
 \alias{stplot,STIDF-method} 
-\alias{stplot,STIDFtraj-method} 
+\alias{stplot,STTDF-method} 
 \alias{stack.STFDF} 
 \alias{stack.STSDF} 
 \alias{stack.STIDF} 
@@ -22,11 +22,14 @@
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
 	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0,
-	auto.key = TRUE, key.space = "right", type = "l")
+	auto.key = TRUE, key.space = "right", type = "l", do.repeat = TRUE)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
-    c("time", "burst", "id"), scales = list(draw = FALSE), xlab =
-    NULL, ylab = NULL, type = 'p', number = 6, overlap = 0, asp,
-	col = 1, panel = panel.stpointsplot, sp.layout = NULL)
+	c("time", "burst", "id"), scales = list(draw = FALSE),
+	xlab = NULL, ylab = NULL, type = "p", number = 6,
+	overlap = 0, asp, col = 1, panel = panel.stpointsplot,
+	sp.layout = NULL, xlim = bbox(obj@sp)[1, ], ylim =
+	bbox(obj@sp)[2, ])
+
 }
 \arguments{
 \item{obj}{ object of a class deriving from \code{ST}}
@@ -56,6 +59,7 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{ylab}{ y-axis label }
 \item{type}{ character; use 'l' for lines, 'p' for symbols,
 'b' for both lines and symbols }
+\item{do.repeat}{ logical; repeat the animation in an infinite loop? }
 \item{number}{ see argument \code{by}}
 \item{overlap}{ see argument \code{by} }
 \item{asp}{ aspect ratio of plot }
@@ -64,6 +68,8 @@ variable, it will be classified using \link{equal.count}, using parameters
 \item{sp.layout}{list or NULL; see \link[sp]{spplot}}
 \item{...}{ arguments passed on to \link[sp]{spplot} in case of stplot.STFDF,
 or to \link[lattice]{xyplot} in case of stplot.STIDF}
+\item{xlim}{numeric, x range}
+\item{ylim}{numeric, y range}
 }
 \value{ In non-animation and "xy" mode, \code{stplot} is a wrapper
 around \link[sp]{spplot}, that automically plots each time stamp in
