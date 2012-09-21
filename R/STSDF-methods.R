@@ -1,13 +1,9 @@
-STS = function(sp, time, index) {
-	if (is.na(timeIsInterval(time))) {
-		warning("STS(): setting missing timeIsInterval to default value TRUE\n")
-		timeIsInterval(time) = TRUE
-	}
-	new("STS", ST(sp, time), index = index)
+STS = function(sp, time, index, endTime = delta(time)) {
+	new("STS", ST(sp, time, endTime), index = index)
 }
 
-STSDF = function(sp, time, data, index) {
-	new("STSDF", STS(sp, time, index), data = data)
+STSDF = function(sp, time, data, index, endTime = delta(time)) {
+	new("STSDF", STS(sp, time, index, endTime), data = data)
 }
 
 setMethod("coordinates", "STS", function(obj) {
@@ -27,6 +23,7 @@ as.data.frame.STS = function(x, row.names = NULL, ...) {
   	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = row.names(x@sp)[x@index[,1]],
 		time = index(x),
+		endTime = x@endTime,
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp))
@@ -111,6 +108,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	u2 = unique(x@index[,2])
 	x@sp = x@sp[u1,]
 	x@time = x@time[u2,]
+	x@endTime = x@endTime[u2]
 	x@index[,1] <- match(x@index[,1], u1)
 	x@index[,2] <- match(x@index[,2], u2)
 

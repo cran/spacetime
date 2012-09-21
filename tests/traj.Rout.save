@@ -44,7 +44,7 @@ Loading required package: RColorBrewer
 > library("trip")
 Loading required package: spatstat
 Loading required package: mgcv
-This is mgcv 1.7-18. For overview type 'help("mgcv-package")'.
+This is mgcv 1.7-20. For overview type 'help("mgcv-package")'.
 Loading required package: deldir
 deldir 0.0-19
 
@@ -56,7 +56,7 @@ deldir 0.0-19
      PLEASE NOTE: The process for determining duplicated points
      has changed from that used in version 0.0-9 (and previously).
 
-spatstat 1.28-1 
+spatstat 1.28-2 
 Type 'help(spatstat)' for an overview of spatstat 
      'latest.news()' for news on latest version 
      'licence.polygons()' for licence information on polygon calculations
@@ -81,13 +81,6 @@ Type 'help(spatstat)' for an overview of spatstat
 + 	}
 + )
 > x = as(tr, "STTDF")
-Warning messages:
-1: In STI(SpatialPoints(t(bbox(from))), range(time)) :
-  STI(): setting timeIsInterval to default value FALSE
-
-2: In STI(geometry(from), time) :
-  STI(): setting timeIsInterval to default value FALSE
-
 > m = map2SpatialLines(map("world", 
 + 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
 > proj4string(m) = "+proj=longlat +datum=WGS84"
@@ -161,4 +154,4 @@ The following object(s) are masked from 'package:zoo':
 > 
 > proc.time()
    user  system elapsed 
-  8.636   0.344   8.989 
+  3.936   0.140   4.067 

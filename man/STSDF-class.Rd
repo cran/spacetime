@@ -41,8 +41,8 @@ Objects of this class carry sparse space/time grid data }
 }
 
 \usage{
-  STS(sp, time, index)
-  STSDF(sp, time, data, index)
+  STS(sp, time, index, endTime = delta(time))
+  STSDF(sp, time, data, index, endTime = delta(time))
   \S4method{[}{STSDF}(x, i, j, ..., drop = TRUE)
   \S4method{coerce}{STSDF,STFDF}(from, to, strict=TRUE)
   \S4method{coerce}{STSDF,STIDF}(from, to, strict=TRUE)
@@ -56,6 +56,8 @@ Objects of this class carry sparse space/time grid data }
 \item{index}{two-column matrix: rows corresponding to the nodes for
 which observations are available, first column giving spatial index,
 second column giving temporal index} 
+\item{endTime}{ vector of class \code{POSIXct} with end points of time
+intervals for the observations }
 \item{x}{an object of class STFDF}
 \item{i}{selection of spatial entities}
 \item{j}{selection of temporal entities (see syntax in package xts) }
@@ -73,6 +75,7 @@ if FALSE, no coercion to reduced classes takes place}
 %many observations are available
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
+\seealso{ \link{delta} }
 
 \examples{
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
@@ -85,21 +88,21 @@ IDs = paste("ID",1:length(mydata))
 mydata = data.frame(values = signif(mydata,3), ID=IDs)
 stfdf = STFDF(sp, time, mydata)
 stfdf
-stpdf = as(stfdf, "STSDF")
-stpdf[1:2,]
-stpdf[,1:2]
-stpdf[,,2]
-stpdf[,,"values"]
-stpdf[1,]
-stpdf[,2]
+stsdf = as(stfdf, "STSDF")
+stsdf[1:2,]
+stsdf[,1:2]
+stsdf[,,2]
+stsdf[,,"values"]
+stsdf[1,]
+stsdf[,2]
 # examples for [[, [[<-, $ and $<- 
-stpdf[[1]]
-stpdf[["values"]]
-stpdf[["newVal"]] <- rnorm(12)
-stpdf$ID
-stpdf$ID = paste("OldIDs", 1:12, sep="")
-stpdf$NewID = paste("NewIDs", 12:1, sep="")
-stpdf
+stsdf[[1]]
+stsdf[["values"]]
+stsdf[["newVal"]] <- rnorm(12)
+stsdf$ID
+stsdf$ID = paste("OldIDs", 1:12, sep="")
+stsdf$NewID = paste("NewIDs", 12:1, sep="")
+stsdf
 }
 
 \keyword{classes}

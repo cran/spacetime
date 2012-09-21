@@ -1,18 +1,19 @@
-ST = function(sp, time) {
+.supportedTime = c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")
+
+ST = function(sp, time, endTime) {
+	stopifnot(is(endTime, "POSIXct"))
 	if (!is(time, "xts")) {
-		stopifnot(is(time, 
-			c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")))
+		stopifnot(is(time, .supportedTime))
 		t = 1:length(time)
 		stopifnot(order(time, t) == t)
 		tm = xts(1:length(time), time)
-		timeIsInterval(tm) = timeIsInterval(time)
 		time = tm
 	}
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")
 		warning("converted SpatialGrid to SpatialPixels")
 	}
-	new("ST", sp = sp, time = time)
+	new("ST", sp = sp, time = time, endTime = endTime)
 }
 
 setMethod("[[", c("ST", "ANY", "missing"), 
@@ -25,14 +26,15 @@ setMethod("[[", c("ST", "ANY", "missing"),
 setReplaceMethod("[[", c("ST", "ANY", "missing", "ANY"), 
 	function(x, i, j, value) {
 		if (!("data" %in% slotNames(x)))
-			stop("no [[ method for object without attributes")
+			stop("no [[<- method for object without attributes")
 		if (is.character(i)) {
 			if (any(!is.na(match(i, dimnames(coordinates(x@sp))[[2]]))))
 				stop(paste(i, "is already present as a coordinate name!"))
 			if (i == "time")
-				stop("cannot set time")
+				stop("cannot set name to time")
 		}
 		x@data[[i]] <- value
+    	.checkAttrIsUnique(x@sp, x@time, x@data)
 		x
 	}
 )
@@ -50,6 +52,7 @@ setReplaceMethod("$", "ST",
 		if (!("data" %in% slotNames(x)))
 			stop("no $<- method for object without attributes")
 		x@data[[name]] = value 
+    	.checkAttrIsUnique(x@sp, x@time, x@data)
 		x 
 	}
 )
@@ -57,11 +60,11 @@ setReplaceMethod("$", "ST",
 dim.ST = function(x) {
 	c(length(x@sp), nrow(x@time))
 }
-dim.STDF = function(x) {
+dim.STxDF = function(x) {
 	c(length(x@sp), nrow(x@time), ncol(x@data))
 }
 dim.STF = dim.STS = dim.STI = dim.ST
-dim.STFDF = dim.STSDF = dim.STIDF = dim.STDF
+dim.STFDF = dim.STSDF = dim.STIDF = dim.STxDF
 
 if (!isGeneric("proj4string"))
 	setGeneric("proj4string", function(obj)

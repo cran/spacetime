@@ -1,6 +1,56 @@
 require(spacetime)
+
+# go through time matching first:
+x = as.POSIXct("2000-01-01") + (0:9) * 3600
+y = x + 1
+y[1] = y[2]
+x
+y
+end.x = delta(x)
+end.y = delta(y)
+TI = function(x, ti) { 
+	#timeIsInterval(x) = ti
+	x 
+}
+timeMatch(TI(y,FALSE),TI(y,FALSE))
+timeMatch(TI(y,TRUE), TI(y,TRUE), end.x = end.y, end.y = end.y)
+
+timeMatch(TI(x,FALSE),TI(y,FALSE))
+timeMatch(TI(x,FALSE),TI(y,TRUE), end.y = end.y)
+timeMatch(TI(x,TRUE), TI(y,FALSE), end.x = end.x)
+timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+
+timeMatch(TI(x,FALSE),TI(y,FALSE), returnList = TRUE)
+timeMatch(TI(x,FALSE),TI(y,TRUE), returnList = TRUE, end.y = end.y)
+timeMatch(TI(x,TRUE), TI(y,FALSE), returnList = TRUE, end.x = end.x)
+timeMatch(TI(x,TRUE), TI(y,TRUE), returnList = TRUE, end.x = end.x, end.y = end.y)
+
+end.x = delta(x)
+y = x + 1 # don't replicate the first
+end.y = delta(y)
+
+a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+library(intervals)
+b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+detach()
+all.equal(a, b)
+
+a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.y = end.y)
+library(intervals)
+b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.y = end.y)
+detach()
+all.equal(a, b)
+
+a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x)
+library(intervals)
+b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x)
+detach()
+all.equal(a, b)
+
+# with end points:
+
+# next, try ST?DF objects:
 t = xts(1:10, as.POSIXct("2010-05-01")+3600*1:10)
-timeIsInterval(t) = TRUE
 xy = SpatialPixels(SpatialPoints(expand.grid(1:10,1:10)))
 y = STFDF(xy, t, data.frame(a = 1:1000))
 stplot(y)
@@ -8,7 +58,6 @@ x = y
 all(over(x, y) == 1:1000)
 
 t0 = xts(1:4, c(index(t)[1]-1,index(t)[c(2,4,10)]))
-timeIsInterval(t0) = FALSE
 x = c(4,5,6,8)
 xy = SpatialPixels(SpatialPoints(expand.grid(x,rep(1,4))))
 x = STFDF(xy, t0, data.frame(a = 1:64))

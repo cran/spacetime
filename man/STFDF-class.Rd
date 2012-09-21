@@ -41,8 +41,8 @@ Objects of this class represent full space/time data with a full grid
 }
 
 \usage{
-  STF(sp, time)
-  STFDF(sp, time, data)
+  STF(sp, time, endTime = delta(time))
+  STFDF(sp, time, data, endTime = delta(time))
   \S4method{[}{STFDF}(x, i, j, ..., drop = TRUE)
   \S4method{coerce}{STFDF,xts}(from, to, strict=TRUE)
   \S4method{coerce}{STFDF,Spatial}(from, to)
@@ -52,6 +52,9 @@ Objects of this class represent full space/time data with a full grid
 \item{sp}{object of class \link{Spatial}, having \code{n} elements}
 \item{time}{object holding time information, of length \code{m};
 see \link{ST} for details}
+\item{endTime}{ vector of class \code{POSIXct}, holding end points
+of time intervals; by default, time intervals equal the time step
+width, see \link{delta} }
 \item{data}{data frame with \code{n*m} rows corresponding to the
 observations (spatial index moving fastest)}
 \item{x}{an object of class STFDF}

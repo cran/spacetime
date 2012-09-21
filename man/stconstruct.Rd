@@ -3,7 +3,7 @@
 \title{ create ST* objects from long or wide tables }
 \description{ create ST* objects from long or wide tables }
 \usage{ 
-stConstruct(x, space, time, SpatialObj = NULL, TimeObj = NULL, crs = CRS(as.character(NA)), interval)
+stConstruct(x, space, time, SpatialObj = NULL, TimeObj = NULL, crs = CRS(as.character(NA)), interval, endTime)
 }
 \arguments{
 \item{x}{ object of class \code{matrix} or \code{data.frame},
@@ -27,6 +27,8 @@ are in \code{x} and no CRS can be taken from \code{SpatialObj}}
 \item{interval}{ logical; specifies whether time should reflect time
 instance (FALSE) or time intervals (TRUE). If omitted, defaults values
 depend on the class }
+\item{endTime}{ vector of \code{POSIXct}, specifying (if present) the end
+points of observation time intervals }
 }
 \details{
 For examples, see below.
@@ -61,7 +63,6 @@ data(Produc)
 
 yrs = 1970:1986
 t = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
-timeIsInterval(t) = TRUE
 # deselect District of Columbia, polygon 8, which is not present in Produc:
 Produc.st = STFDF(states[-8], t, Produc[(order(Produc[,2], Produc[,1])),])
 

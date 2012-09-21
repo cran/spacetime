@@ -1,3 +1,96 @@
+2012-09-12 14:28  EdzerPebesma
+
+	* R/raster.R: removed the "x" before .tif
+
+2012-09-12 14:12  EdzerPebesma
+
+	* NAMESPACE, R/raster.R: updated {read,write}.tgrass functions
+
+2012-09-11 17:07  EdzerPebesma
+
+	* R/raster.R: typo
+
+2012-09-07 09:22  EdzerPebesma
+
+	* DESCRIPTION, R/Class-ST.R, R/Class-STFDF.R, R/Class-STIDF.R,
+	  R/Class-STLDF.R, R/Class-STSDF.R, R/Class-STTDF.R,
+	  R/ST-methods.R, R/STLDF-methods.R, R/raster.R, tests/basic.R,
+	  tests/basic.Rout.save: class validity now checks that attribute
+	  names in attributes, space or time are not duplicated.
+
+2012-08-29 06:26  EdzerPebesma
+
+	* R/stconstruct.R: patch from Ben Graeler, dealing with univariate
+	  time-wide data
+
+2012-08-27 07:10  EdzerPebesma
+
+	* DESCRIPTION, R/aggregate.R, R/over.R, R/timematch.R,
+	  man/interval.Rd, man/over.Rd, man/timematch.Rd,
+	  tests/traj.Rout.save: split over.R; added links to manual pages;
+	  updated Suggests: packages.
+
+2012-08-26 21:07  EdzerPebesma
+
+	* R/over.R, man/interval.Rd, man/timematch.Rd, tests/over.R,
+	  tests/over.Rout.save: added timeMatch for STL objects - irregular
+	  time intervals
+
+2012-08-13 15:53  EdzerPebesma
+
+	* R/over.R: simplified (hopefully) the time over function
+
+2012-08-10 11:41  EdzerPebesma
+
+	* DESCRIPTION, R/raster.R, man/stplot.Rd, tests/raster.R,
+	  tests/raster.Rout.save, tests/traj.Rout.save: added raster
+	  conversion functions
+
+2012-07-25 13:40  EdzerPebesma
+
+	* inst/doc/jss816.Rnw, inst/doc/jss816.bib, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.bib: name change of vignette.
+
+2012-07-04 16:37  EdzerPebesma
+
+	* inst/doc/spacetime.Rnw, tests/traj.R, tests/traj.Rout.save,
+	  tests/wind.Rout.save: submission of 0.7-1 to CRAN
+
+2012-07-02 07:58  EdzerPebesma
+
+	* NAMESPACE, R/plot.R, R/stplot.R, inst/doc/move.fig,
+	  inst/doc/move.pdf, inst/doc/spacetime.Rnw: new submission to JSS
+
+2012-07-01 22:40  EdzerPebesma
+
+	* man/STLDF-class.Rd: man page for STLDF
+
+2012-07-01 22:40  EdzerPebesma
+
+	* inst/doc/move.fig, inst/doc/move.pdf, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.bib, man/STFDF-class.Rd, man/STIDF-class.Rd,
+	  man/STSDF-class.Rd, man/STTDF-class.Rd, man/stplot.Rd: class
+	  work; comments from second JSS review
+
+2012-06-19 07:49  EdzerPebesma
+
+	* R/Class-STLDF.R, R/STLDF-methods.R, R/plot.R, inst/doc/cls.fig,
+	  inst/doc/cls.pdf, inst/doc/spacetime.Rnw, man/STIDF-class.Rd:
+	  more edits to class diagram
+
+2012-06-19 07:08  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-STLDF.R, R/ST-methods.R,
+	  R/STLDF-methods.R, R/STTDF-methods.R, R/plot.R, R/stplot.R,
+	  inst/doc/cls.fig, inst/doc/cls.pdf, inst/doc/spacetime.Rnw,
+	  inst/doc/spacetime.bib, man/stplot.Rd, tests/traj.R: added
+	  STL/STLDF class, and methods; added plot methods
+
+2012-05-31 13:33  EdzerPebesma
+
+	* man/stplot.Rd, tests/traj.Rout.save: dependent package versions
+	  in test; do.repeat argument in docs
+
 2012-05-31 12:56  EdzerPebesma
 
 	* R/over.R, R/stplot.R: added do.repeat argument to stplot.R

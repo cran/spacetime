@@ -1,22 +1,32 @@
-STI = function(sp, time) {
-	if (is.na(timeIsInterval(time))) {
-		warning("STI(): setting timeIsInterval to default value FALSE\n")
-		timeIsInterval(time) = FALSE
+STI = function(sp, time, endTime) {
+	if (missing(endTime)) {
+		if (is(time, "xts"))
+			endTime = index(time)
+		else 
+			endTime = time
 	}
-	new("STI", ST(sp, time))
+	endTime = as.POSIXct(endTime)
+	new("STI", ST(sp, time, endTime))
 }
 
-STIDF = function(sp, time, data) {
+STIDF = function(sp, time, data, endTime) {
+	if (missing(endTime)) {
+		if (is(time, "xts"))
+			endTime = index(time)
+		else 
+			endTime = time
+	}
+	endTime = as.POSIXct(endTime)
 	if (!is(time, "xts")) {
 		time0 = time
         time = xts(1:length(time), time)
-		timeIsInterval(time) = timeIsInterval(time0)
 		# rearrange sp and data in new time order:
         o = as.vector(time[,1])
 		sp = sp[o,]
+		endTime = endTime[o]
 		data = data[o,,drop=FALSE]
 	}
-	new("STIDF", STI(sp, time), data = data)
+	new("STIDF", STI(sp, time, endTime), data = data)
 }
 
 setMethod("coordinates", "STI", function(obj) {
@@ -35,6 +45,7 @@ as.data.frame.STI = function(x, row.names = NULL, ...) {
   	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = row.names(x@sp),
 		time = index(x),
+		endTime = x@endTime,
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp))
@@ -96,7 +107,8 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	i = i & j
 
 	x@sp = x@sp[i,]
-	x@time = x@time[i]
+	x@time = x@time[i,]
+	x@endTime = x@endTime[i]
 	x@data = x@data[i, k, drop = FALSE]
 	if (drop && length(unique(index(x@time))) == 1)
 		x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)

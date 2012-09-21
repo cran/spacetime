@@ -6,6 +6,7 @@
 \alias{stplot,STSDF-method} 
 \alias{stplot,STIDF-method} 
 \alias{stplot,STTDF-method} 
+\alias{stplot,RasterStackBrick-method} 
 \alias{stack.STFDF} 
 \alias{stack.STSDF} 
 \alias{stack.STIDF} 

@@ -25,22 +25,22 @@ plot.STI = function(x, y, ...) {
 }
 setMethod("plot", signature(x = "STI", y = "missing"), plot.STI)
 
-plot.STL = function(x, y, ..., type = 'l', labels = FALSE) {
-	y = 1:length(x@sp)
-	x1 = index(x@time)
-	x2 = x@endTime
-	space = rep(as.numeric(NA), 3*length(y))
-	space[(1:length(y))*3-2] = y
-	space[(1:length(y))*3-1] = y
-	time = rep(x1[1], 3*length(y))
-	time[(1:length(y))*3-2] = x1
-	time[(1:length(y))*3-1] = x2
-	time[(1:length(y))*3] = NA
-	plot(x = time, y = space, type = type, ...)
-	if (labels)
-		text(x2, y, pos = 4, row.names(x@sp))
-}
-setMethod("plot", signature(x = "STL", y = "missing"), plot.STL)
+#plot.STL = function(x, y, ..., type = 'l', labels = FALSE) {
+#	y = 1:length(x@sp)
+#	x1 = index(x@time)
+#	x2 = x@endTime
+#	space = rep(as.numeric(NA), 3*length(y))
+#	space[(1:length(y))*3-2] = y
+#	space[(1:length(y))*3-1] = y
+#	time = rep(x1[1], 3*length(y))
+#	time[(1:length(y))*3-2] = x1
+#	time[(1:length(y))*3-1] = x2
+#	time[(1:length(y))*3] = NA
+#	plot(x = time, y = space, type = type, ...)
+#	if (labels)
+#		text(x2, y, pos = 4, row.names(x@sp))
+#}
+#setMethod("plot", signature(x = "STL", y = "missing"), plot.STL)
 
 plot.STT = function(x, y, ..., type = 'l', col = 1:length(x@traj), labels = FALSE) {
 	nt = sapply(x@traj, function(x) dim(x)[1])

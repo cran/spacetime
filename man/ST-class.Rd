@@ -40,7 +40,7 @@ classes can be meaningful }
 }
 
 \usage{
-ST(sp, time)
+ST(sp, time, endTime)
 }
 
 \arguments{
@@ -49,6 +49,8 @@ a \link[sp]{SpatialPoints} or \link[sp]{SpatialPolygons}}
 \item{time}{an object of class xts, or a time vector
 (currently: Date, POSIXct, timeDate, yearmon and yearqtr; are supported;
 see \link[xts]{xts}); in the latter case, it should be in time order }
+\item{endTime}{ vector of class \code{POSIXct} holding end points of
+time intervals }
 }
 \note{
 argument (and object slot) sp can be pure geometry, or geometry
@@ -56,19 +58,20 @@ with attributes. In the latter case, the geometries are kept with
 the sp slot, and only replicated (when needed) on coercion to the
 long format, with as.data.frame.
 
-slot time needs to be of class xts; if a time or date vector is 
+Slot time needs to be of class xts; if a time or date vector is 
 passed as argument to SP, it will be converted into an xts object.
 
+When \code{endTime} is missing, an error is thrown.
+
 ST is meant as a super-class, and is not to be used for representing
-data, just like Spatial in the sp package.
+data, similar to Spatial in the sp package.
 }
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
 
 \examples{
 time = as.Date('2008-01-01')+1:2
-timeIsInterval(time) = TRUE
 sp = SpatialPoints(cbind(c(0,1),c(0,1)))
-ST(sp, time)
+ST(sp, time, delta(time))
 }
 
 \keyword{classes}

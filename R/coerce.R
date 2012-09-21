@@ -1,3 +1,4 @@
+# STSDF -> STFDF
 as.STFDF.STSDF = function(from) {
 	# fill the partial grid with NAs
 	# mainly taken from as.SPixDF.SGDF in sp:
@@ -15,10 +16,11 @@ as.STFDF.STSDF = function(from) {
    	}
    	data = data.frame(data, stringsAsFactors = FALSE)
    	names(data) = names(from@data)
-	STFDF(from@sp, from@time, data)
+	STFDF(from@sp, from@time, data, from@endTime)
 }
 setAs("STSDF", "STFDF", as.STFDF.STSDF)
 
+# STFDF -> STSDF
 as.STSDF.STFDF = function(from) {
 	# take out the NA cells and fill the index
 	# NOTE: does not (yet) take out empty space/time entities 
@@ -29,16 +31,21 @@ as.STSDF.STFDF = function(from) {
 	# copied from sp:
 	sel = apply(sapply(from@data, is.na), 1, function(x) !all(x))
 	index = index[sel,,drop=FALSE]
-	STSDF(from@sp, from@time, from@data[sel,,drop=FALSE], index)
+	STSDF(from@sp, from@time, from@data[sel,,drop=FALSE], index, from@endTime)
 }
 setAs("STFDF", "STSDF", as.STSDF.STFDF)
 
+# STSDF -> STIDF
 as.STIDF.STSDF = function(from) {
 	# replicate the sp and time columns; keeps time always ordered?
-	STIDF(from@sp[from@index[,1],], from@time[from@index[,2]], from@data)
+	STIDF(from@sp[from@index[,1],], 
+			from@time[from@index[,2]], 
+			from@data,
+			from@endTime[from@index[,2]])
 }
 setAs("STSDF", "STIDF", as.STIDF.STSDF)
 
+# STFDF -> STIDF
 as.STIDF.STFDF = function(from) {
 	as(as(from, "STSDF"), "STIDF")
 }
@@ -69,7 +76,8 @@ as.STSDF.STIDF = function(from) {
 	# time -- use the fact that xts objects are in time order:
 	ix = index(from@time)
 	time = unique(ix)
-	timeIsInterval(time) = timeIsInterval(from@time)
+	#timeIsInterval(time) = timeIsInterval(from@time)
+	# not that simple -- TODO: glue together & check endTime...
 	ir = rle(as.numeric(ix))$lengths
 	index[,2] = rep(1:length(ir), ir)
 	# check:
@@ -90,7 +98,8 @@ setAs("STT", "STI",
 		time = do.call(c, lapply(from@traj, index))
 		o = order(time)
 		to = time[o,]
-		timeIsInterval(to) = timeIsInterval(from)
+		#timeIsInterval(to) = timeIsInterval(from)
+		# TODO: take care of endTime??
 		new("STI", ST(sp[o,,drop=FALSE], to)) # reorders!
 	}
 )
@@ -98,7 +107,8 @@ setAs("STTDF", "STIDF",
 	function(from) {
 		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
 		time = do.call(c, lapply(from@traj, index))
-		timeIsInterval(time) = timeIsInterval(from)
+		#timeIsInterval(time) = timeIsInterval(from)
+		# TODO: take care of endTIme?
 		STIDF(sp, time, from@data)
 	}
 )

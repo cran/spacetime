@@ -12,7 +12,6 @@ exportClasses(
 	ST, STF, STFDF, 
 	STS, STSDF, 
 	STI, STIDF, 
-	STL, STLDF, 
 	STT, STTDF, 
 	ltraj)
 
@@ -20,7 +19,6 @@ export(ST,
 	STF, STFDF,
 	STS, STSDF,
 	STI, STIDF,
-	STL, STLDF,
 	STT, STTDF,
 	as.data.frame.STF,
 	as.data.frame.STS,
@@ -28,7 +26,6 @@ export(ST,
 	as.data.frame.STFDF,
 	as.data.frame.STSDF,
 	as.data.frame.STIDF,
-	as.data.frame.STLDF,
 	unstack.STFDF,
 	stplot,
 	stConstruct,
@@ -39,7 +36,8 @@ export(ST,
 	rbind.STIDF,
 	rbind.STSDF,
 	rbind.STFDF,
-	timeMatch)
+	timeMatch, delta,
+	read.tgrass, write.tgrass)
 
 #exportMethods(proj4string, "proj4string<-", is.projected)
 exportMethods(aggregate, timeIsInterval, "timeIsInterval<-", plot)
@@ -48,7 +46,6 @@ S3method(as.data.frame, STF)
 S3method(as.data.frame, STFDF)
 S3method(as.data.frame, STSDF)
 S3method(as.data.frame, STIDF)
-S3method(as.data.frame, STLDF)
 S3method(as.xts, STIDF)
 S3method(dim, ST)
 S3method(dim, STF)
@@ -60,11 +57,9 @@ S3method(dim, STIDF)
 S3method(index, STF)
 S3method(index, STS)
 S3method(index, STI)
-S3method(index, STL)
 S3method(index, STFDF)
 S3method(index, STSDF)
 S3method(index, STIDF)
-S3method(index, STLDF)
 S3method(length, STF)
 S3method(length, STS)
 S3method(length, STI)

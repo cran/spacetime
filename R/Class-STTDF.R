@@ -14,6 +14,7 @@ setClass("STTDF",  # space-time trajectory/ies with data values
   representation("STT", data = "data.frame"),
   validity = function(object) {
 	stopifnot(sum(sapply(object@traj, length)) == nrow(object@data))
+    .checkAttrIsUnique(object@sp, object@time, object@data)
     return(TRUE)
   }
 )
