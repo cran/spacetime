@@ -1,5 +1,5 @@
 
-R version 2.15.0 (2012-03-30)
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -28,8 +28,197 @@ The following object(s) are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: xts
+> 
+> # go through time matching first:
+> x = as.POSIXct("2000-01-01") + (0:9) * 3600
+> y = x + 1
+> y[1] = y[2]
+> x
+ [1] "2000-01-01 00:00:00 CET" "2000-01-01 01:00:00 CET"
+ [3] "2000-01-01 02:00:00 CET" "2000-01-01 03:00:00 CET"
+ [5] "2000-01-01 04:00:00 CET" "2000-01-01 05:00:00 CET"
+ [7] "2000-01-01 06:00:00 CET" "2000-01-01 07:00:00 CET"
+ [9] "2000-01-01 08:00:00 CET" "2000-01-01 09:00:00 CET"
+> y
+ [1] "2000-01-01 01:00:01 CET" "2000-01-01 01:00:01 CET"
+ [3] "2000-01-01 02:00:01 CET" "2000-01-01 03:00:01 CET"
+ [5] "2000-01-01 04:00:01 CET" "2000-01-01 05:00:01 CET"
+ [7] "2000-01-01 06:00:01 CET" "2000-01-01 07:00:01 CET"
+ [9] "2000-01-01 08:00:01 CET" "2000-01-01 09:00:01 CET"
+> end.x = delta(x)
+> end.y = delta(y)
+> TI = function(x, ti) { 
++ 	#timeIsInterval(x) = ti
++ 	x 
++ }
+> timeMatch(TI(y,FALSE),TI(y,FALSE))
+ [1]  1  1  3  4  5  6  7  8  9 10
+> timeMatch(TI(y,TRUE), TI(y,TRUE), end.x = end.y, end.y = end.y)
+ [1] NA  2  3  4  5  6  7  8  9 10
+> 
+> timeMatch(TI(x,FALSE),TI(y,FALSE))
+ [1] NA NA NA NA NA NA NA NA NA NA
+> timeMatch(TI(x,FALSE),TI(y,TRUE), end.y = end.y)
+ [1] NA NA  2  3  4  5  6  7  8  9
+> timeMatch(TI(x,TRUE), TI(y,FALSE), end.x = end.x)
+ [1] NA  1  3  4  5  6  7  8  9 10
+> timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+ [1] NA  1  2  3  4  5  6  7  8  9
+> 
+> timeMatch(TI(x,FALSE),TI(y,FALSE), returnList = TRUE)
+[[1]]
+integer(0)
+
+[[2]]
+integer(0)
+
+[[3]]
+integer(0)
+
+[[4]]
+integer(0)
+
+[[5]]
+integer(0)
+
+[[6]]
+integer(0)
+
+[[7]]
+integer(0)
+
+[[8]]
+integer(0)
+
+[[9]]
+integer(0)
+
+[[10]]
+integer(0)
+
+> timeMatch(TI(x,FALSE),TI(y,TRUE), returnList = TRUE, end.y = end.y)
+[[1]]
+integer(0)
+
+[[2]]
+integer(0)
+
+[[3]]
+[1] 2
+
+[[4]]
+[1] 3
+
+[[5]]
+[1] 4
+
+[[6]]
+[1] 5
+
+[[7]]
+[1] 6
+
+[[8]]
+[1] 7
+
+[[9]]
+[1] 8
+
+[[10]]
+[1] 9
+
+> timeMatch(TI(x,TRUE), TI(y,FALSE), returnList = TRUE, end.x = end.x)
+[[1]]
+integer(0)
+
+[[2]]
+[1] 1 2
+
+[[3]]
+[1] 3
+
+[[4]]
+[1] 4
+
+[[5]]
+[1] 5
+
+[[6]]
+[1] 6
+
+[[7]]
+[1] 7
+
+[[8]]
+[1] 8
+
+[[9]]
+[1] 9
+
+[[10]]
+[1] 10
+
+> timeMatch(TI(x,TRUE), TI(y,TRUE), returnList = TRUE, end.x = end.x, end.y = end.y)
+[[1]]
+integer(0)
+
+[[2]]
+[1] 1 2
+
+[[3]]
+[1] 2 3
+
+[[4]]
+[1] 3 4
+
+[[5]]
+[1] 4 5
+
+[[6]]
+[1] 5 6
+
+[[7]]
+[1] 6 7
+
+[[8]]
+[1] 7 8
+
+[[9]]
+[1] 8 9
+
+[[10]]
+[1]  9 10
+
+> 
+> end.x = delta(x)
+> y = x + 1 # don't replicate the first
+> end.y = delta(y)
+> 
+> a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+> library(intervals)
+> b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x, end.y = end.y)
+> detach()
+> all.equal(a, b)
+[1] TRUE
+> 
+> a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.y = end.y)
+> library(intervals)
+> b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.y = end.y)
+> detach()
+> all.equal(a, b)
+[1] TRUE
+> 
+> a = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x)
+> library(intervals)
+> b = timeMatch(TI(x,TRUE), TI(y,TRUE), end.x = end.x)
+> detach()
+> all.equal(a, b)
+[1] TRUE
+> 
+> # with end points:
+> 
+> # next, try ST?DF objects:
 > t = xts(1:10, as.POSIXct("2010-05-01")+3600*1:10)
-> timeIsInterval(t) = TRUE
 > xy = SpatialPixels(SpatialPoints(expand.grid(1:10,1:10)))
 > y = STFDF(xy, t, data.frame(a = 1:1000))
 > stplot(y)
@@ -38,7 +227,6 @@ Loading required package: xts
 [1] TRUE
 > 
 > t0 = xts(1:4, c(index(t)[1]-1,index(t)[c(2,4,10)]))
-> timeIsInterval(t0) = FALSE
 > x = c(4,5,6,8)
 > xy = SpatialPixels(SpatialPoints(expand.grid(x,rep(1,4))))
 Warning messages:
@@ -193,9 +381,6 @@ Warning messages:
 > 
 > t1 = xts(1:4, c(index(t)[1]-1,index(t)[c(2,2,10)]))
 > x1 = STIDF(xy[c(1,2,2,4)], t1, data.frame(a = 1:4))
-Warning message:
-In STI(sp, time) : STI(): setting timeIsInterval to default value FALSE
-
 > 
 > over(x1, x)
   a
@@ -226,9 +411,6 @@ In STI(sp, time) : STI(): setting timeIsInterval to default value FALSE
   a
 4 4
 
-Warning message:
-In over(x, geometry(y), returnList = TRUE) :
-  returnList not fully supported yet
 > over(x, x1, returnList = TRUE)
 [[1]]
   a
@@ -247,10 +429,7 @@ In over(x, geometry(y), returnList = TRUE) :
   a
 4 4
 
-Warning message:
-In over(x, geometry(y), returnList = TRUE) :
-  returnList not fully supported yet
 > 
 > proc.time()
    user  system elapsed 
-  0.992   0.032   1.020 
+  1.504   0.068   1.561 

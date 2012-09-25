@@ -156,3 +156,23 @@ stidf[1,,"values", drop=FALSE] # stays STIDF:
 stidf[,1, drop=FALSE] #stays STIDF
 as.data.frame(stidf)
 as(stidf, "data.frame")
+
+sp = cbind(x = c(0,0,1), y = c(0,1,1))
+row.names(sp) = paste("point", 1:nrow(sp), sep="")
+sp = SpatialPoints(sp)
+time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
+mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
+IDs = paste("ID", 1:length(mydata), sep = "_")
+mydata = data.frame(values = signif(mydata,3), ID=IDs)
+spx = SpatialPointsDataFrame(sp, data.frame(values = c("a", "b", "c")))
+try(stfdf <- STFDF(spx, time, mydata))
+timex = time
+names(timex) = "values"
+try(stfdf <- STFDF(sp, timex, mydata))
+mydatax = mydata
+names(mydatax) = "x"
+try(stfdf <- STFDF(spx, timex, mydatax))
+stfdf = STFDF(sp, timex, mydatax)
+try(stfdf[["values"]] <- 1:12)
+stfdf = STFDF(spx, time, mydatax)
+try(stfdf[["values"]] <- 1:12)

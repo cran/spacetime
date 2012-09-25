@@ -1,13 +1,9 @@
-STF = function(sp, time) {
-	if (is.na(timeIsInterval(time))) {
-		warning("STF(): setting timeIsInterval to default value TRUE\n")
-		timeIsInterval(time) = TRUE
-	}
-	new("STF", ST(sp, time))
+STF = function(sp, time, endTime = delta(time)) {
+	new("STF", ST(sp, time, endTime))
 }
 
-STFDF = function(sp, time, data) {
-	new("STFDF", STF(sp, time), data = data)
+STFDF = function(sp, time, data, endTime = delta(time)) {
+	new("STFDF", STF(sp, time, endTime), data = data)
 }
 
 myCoordinates = function(x) {
@@ -38,6 +34,7 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 		sp.ID = rep(factor(row.names(x@sp), levels = row.names(x@sp)),
 			nrow(x@time)),
 		time = index(x),
+		endTime = x@endTime,
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp)) {
@@ -117,6 +114,7 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 		# get back the corresponding index vector t, to use for @data:
 		t = as.vector(x@time[, nct+1])
 		x@time = x@time[,-(nct+1)]
+		x@endTime = x@endTime[t] 
 	}
 	#x@data = x@data[ssel & tsel, k, drop = FALSE]
 	x@data = data.frame(

@@ -59,6 +59,10 @@ Function aggregate.ST aggregates the attribute values of \code{x}
 over the geometry (space, time, or space-time) of \code{by}, using
 aggregation function FUN.
 
+For the matching of time intervals, see \link{timeMatch}.
+
+For setting, or retrieving whether time represents intervals, see
+\link{timeIsInterval}.
 } 
 \section{Methods}{
 \describe{
@@ -81,5 +85,7 @@ to be loaded first.
 }
 \author{Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de}}
 
-\seealso{\link[sp]{over}; \code{vignette('sto')}, \code{vignette('over')}}
+\seealso{\link[sp]{over}; \code{vignette('sto')}, \code{vignette('over')}, 
+\link{timeMatch}, \link{timeIsInterval}}
+
 \keyword{methods}

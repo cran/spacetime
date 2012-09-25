@@ -12,6 +12,7 @@ setClass("STIDF", # space-time irregular data frame
     n = nrow(object@data)
     stopifnot(n == length(object@sp))
 	stopifnot(n == nrow(object@time))
+    .checkAttrIsUnique(object@sp, object@time, object@data)
     return(TRUE)
   }
 )

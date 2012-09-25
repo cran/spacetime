@@ -34,9 +34,9 @@
 
 \author{
 {\bf Edzer Pebesma} \\
-%Institute for Geoinformatics\\
-%University of M\"{u}nster, Germany
-\includegraphics[width=5cm]{ifgi-logo_int}
+Institute for Geoinformatics\\
+University of M\"{u}nster, Germany
+%\includegraphics[width=5cm]{ifgi-logo_int}
 }
 %\date{\small \today }
 \Address{
@@ -61,20 +61,20 @@ predicting (spatial and/or temporal interpolation or smoothing),
 aggregating, or subsetting them, and to represent trajectories.
 The goals of this paper is to explore how spatio-temporal data can
 be sensibly represented in classes, and to find out which analysis
-and visualisation methods are useful and feasible.  We discuss
-the convention of representing time intervals by the starting time
-instance.  This document is the main reference for the \proglang{R}
+and visualisation methods are useful and feasible. We discuss
+the time series convention of representing time intervals by their 
+starting time only. This document is the main reference for the \proglang{R}
 package \code{spacetime} , and is available (in updated form)
 as a vignette in this package.  }
 
-\Keywords{Time series analysis, spatial data, spatio-temporal statistics, GIS}
+\Keywords{Time series analysis, spatial data, spatio-temporal statistics, Geographic Information Systems}
 
 \begin{document}
 % \VignetteIndexEntry{ spacetime: Spatio-Temporal Data in R }
 % jss options, see http://www.jstatsoft.org/style
 <<eval=TRUE,echo=FALSE>>=
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
-library(spacetime)
+set.seed(1331)
 @
 \maketitle
 
@@ -85,7 +85,7 @@ library(spacetime)
 Spatio-temporal data are abundant, and easily obtained. Examples are
 satellite images of parts of the earth, temperature readings for a
 number of nearby stations, election results for voting districts
-and a number of consecutive elections, GPS tracks for people or
+and a number of consecutive elections, trajectories for people or
 animals possibly with additional sensor readings, disease outbreaks
 or volcano eruptions.
 
@@ -177,7 +177,7 @@ read.dbf(system.file("shapes/sids.dbf", package="maptools"))[1:5,c(5,9:14)]
 @
 where {\bf columns} refer to a particular {\bf time}: \code{SID74}
 contains to the infant death syndrome cases for each county at a
-particular time period (1974-1978).
+particular time period (1974-1984).
 
 \subsection{Space-wide format}
 The Irish wind data \citep{haslett} available from package \pkg{gstat}
@@ -391,9 +391,8 @@ in principle, but this would have the disadvantages that
 \item Spatial features and time points need to be stored for each data value,
 and would be redundant,
 \item The regular layout is lost, and needs be retrieved indirectly,
-\item If time reflects time intervals, the interval may not be obvious anymore,
 \item Spatial and temporal selection would be inefficient, as the grid
-structure works effectively as an index.
+structure forms an index.
 \end{itemize}
 
 Examples of phenomena that are best served by this layout could
@@ -438,8 +437,8 @@ of its boundaries.
 \caption{Time instant (top left), object movement (top right),
 time interval with consecutive (bottom left) or arbitrary (bottom right)
 intervals. $s_1$ refers to the first feature/location, $t_1$ to the first time instance
-or interval, thick lines indicate time intervals, arrows indicate movement. Green
-codes refer to classes refered to in Section~\ref{classes}.
+or interval, thick lines indicate time intervals, arrows indicate movement. Filled
+circles denote start time, empty circles end times, intervals are right-closed.
 }
 \label{fig:move}
 \end{figure}
@@ -555,8 +554,6 @@ method & what it does \\ \hline
 at the locations and times of another \\
 \code{aggregate} & aggregate data values over particular spatial, temporal,
 or spatio-temporal domains \\ 
-\code{timeIsInterval} & retrieve or set the flag indicating whether time reflects intervals 
-(\code{TRUE}) or instances (\code{FALSE}) \\
 \hline
 \end{tabular}
 \end{center}
@@ -590,27 +587,21 @@ IDs = paste("ID",1:length(values), sep = "_")
 mydata = data.frame(values = signif(values, 3), ID=IDs)
 @
 And finally, the \code{STFDF} object can be created by:
+<<echo=FALSE>>=
+library(spacetime)
+@
 <<eval=FALSE>>=
 library(spacetime)
-stfdf = STFDF(sp, time, mydata)
+stfdf = STFDF(sp, time, data = mydata)
 @
-but this will create a warning:
-\begin{Schunk}
-\begin{Sinput}
-Warning message: 
-In STF(sp, time) : STF(): setting timeIsInterval to default value TRUE
-\end{Sinput}
-\end{Schunk}
-This warning comes from the fact that during creation,
-it is not clear whether the time instances reflect true instances,
-or time intervals (Section~\ref{intervals}). 
-The warning can be prevented by setting the
-\code{timeIsInterval} attribute of the time component 
-prior to creating an \code{ST} object:
+In this case, as no \code{endTime} is specified, 
+it is assumed that time reflects time instances.
+Altnatively, one could specify \code{endTime}, as in
 <<>>=
-timeIsInterval(time) = TRUE
-stfdf = STFDF(sp, time, mydata)
+stfdf = STFDF(sp, time, mydata, time+60)
 @
+where the time intervals (Section~\ref{intervals}) are one minute.
+
 When given a long table, \code{stConstruct} creates an \code{STFDF}
 object if all space and time combinations occur only once, or else
 an object of class \code{STIDF}, which might be coerced into other
@@ -669,8 +660,7 @@ air_quality[Germany, "2008::2009", "PM10"]
 @
 selects the \code{PM10} measurements for the years 2008-9, lying
 in \code{Germany}, when \code{Germany} is a \code{Spatial} object
-(e.g., \code{SpatialPolygons}, or a \code{SpatialGrid}) that defines
-Germany.
+(e.g., a \code{SpatialPolygons}) that defines Germany.
 
 \subsection[Coercion to long and wide tables]{Coercion to long
 and wide tables}
@@ -859,20 +849,17 @@ reflect instances, one of them reflects time intervals and the other
 instances, or both reflect time intervals. All of these cases are
 accommodated for.
 
-Objects in \pkg{spacetime} register whether time reflects to
-instances or intervals. Not specifying this during creation creates
-a warning, mentioning the default that was assumed.  As a default,
-objects with gridded space-time layout (Figure~\ref{fig:st}) deriving
-from \code{STF} or \code{STS} assume interval time, where \code{STI}
-and \code{STT} objects assume instance time.
+Objects in \pkg{spacetime} register both (start) time and
+end time.  By default, objects with gridded space-time layout
+(Figure~\ref{fig:st}) of class or deriving from \code{STF} or
+\code{STS} assume interval time, and \code{STI} and \code{STT}
+objects assume instance time.
 
-As only start times of time intervals are given for all objects
-except \code{STL}, the assumption is that when objects have
-interval time, time intervals are consecutive (Figure~\ref{fig:move}),
-and the last interval (for which no end time is present) has a
-length identical to the second last interval.  Objects of class
-\code{STL} specify end time explicitly, to allow representation of
-arbitrary-length time intervals (Figure~\ref{fig:move}).
+When no end times are supplied by creation and time intervals are
+assumed, the assumption is that time intervals are consecutive
+(Figure~\ref{fig:move}), and the last interval (for which no end
+time is present) has a length identical to the second last interval
+(Figures~\ref{fig:move} and \ref{fig:ti}).
 
 \begin{figure}[htb]
 \begin{center}
@@ -931,11 +918,12 @@ nc = readShapePoly(fname, proj4string=CRS("+proj=longlat +datum=NAD27"))
 @
 then, we construct the time sequence:
 <<>>=
-time = as.POSIXct(strptime(c("1974-01-01", "1979-01-01"), "%Y-%m-%d"), 
+time = as.POSIXct(strptime(c("1974-07-01", "1979-07-01"), "%Y-%m-%d"), 
 	tz = "GMT")
-timeIsInterval(time) = TRUE
+endTime = as.POSIXct(strptime(c("1978-06-30", "1984-06-30"), "%Y-%m-%d"), 
+	tz = "GMT")
 @
-and finally we construct the data values table (in long form):
+and we construct the data values table, in long form, by
 <<>>=
 data = data.frame(
 	BIR = c(nc$BIR74, nc$BIR79),
@@ -944,7 +932,7 @@ data = data.frame(
 @
 These three components are put together by function \code{STFDF}:
 <<>>=
-nct = STFDF(sp = as(nc, "SpatialPolygons"), time = time, data = data)
+nct = STFDF(sp = as(nc, "SpatialPolygons"), time, data, endTime)
 @
 
 \subsection{Panel data}
@@ -964,7 +952,6 @@ we obtain the time points by:
 <<>>=
 yrs = 1970:1986
 time = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
-timeIsInterval(time) = TRUE
 @
 We obtain the data table (already in long format) by
 <<>>=
@@ -1123,7 +1110,6 @@ to form the spatio-temporal prediction grid:
 <<>>=
 n = 10
 tgrd = xts(1:n, seq(min(index(wind.data)), max(index(wind.data)), length=n))
-timeIsInterval(tgrd) = TRUE
 pred.grd = STF(grd, tgrd)
 @
 We will interpolate with a
@@ -1239,7 +1225,8 @@ setAs("trip", "STTDF",
 		from$burst = from[[from@TOR.columns[2]]]
 		time = from[[from@TOR.columns[1]]]
 		rt = range(time)
-		timeIsInterval(rt) = timeIsInterval(time) = FALSE
+		#timeIsInterval(rt) = timeIsInterval(time) = FALSE
+		# TODO: take care of endTime?
 		#from = from[order(time),]
 		STIbox = STI(SpatialPoints(t(bbox(from))), rt)
 		STT = new("STT", STIbox, traj = list(STI(geometry(from), time)))
@@ -1332,7 +1319,7 @@ end = as.POSIXct(strptime(paste(cs$COWEYEAR,
 @
 and the spatio-temporal object:
 <<>>=
-st = STLDF(geometry(cs), begin, end, as.data.frame(cs))
+st = STIDF(geometry(cs), begin, as.data.frame(cs), end)
 @
 A possible query would be which countries are found at 7\textdegree East
 and 52\textdegree North,
@@ -1508,7 +1495,7 @@ the workshop {\em Handling and analyzing spatio-temporal data
 in \proglang{R}}, held in M\"{u}nster on Mar 21-22, 2011, are
 gratefully acknowledged.
 
-\bibliography{spacetime}
+\bibliography{jss816}
 
 \end{document}
 

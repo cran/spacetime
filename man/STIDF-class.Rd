@@ -36,8 +36,8 @@ Objects of this class carry full space/time grid data }
 }
 
 \usage{
-  STI(sp, time)
-  STIDF(sp, time, data)
+  STI(sp, time, endTime)
+  STIDF(sp, time, data, endTime)
   \S4method{[}{STIDF}(x, i, j, ..., drop = FALSE)
   \S4method{coerce}{STIDF,STSDF}(from, to, strict=TRUE)
 }
@@ -49,6 +49,10 @@ a non-ordered vector with times, e.g. \link{POSIXct} will also work,
 and rearrange the \code{sp} and \code{data} slots
 according to the ordering of time; for this to work no
 ties should exist. }
+\item{endTime}{ vector of class \code{POSIXct}, indicating the end
+points of time intervals for the observations. By default, for \code{STI}
+objects \code{time} is taken, indicating that time intervals have zero width 
+(time instances) }
 \item{data}{data frame with appropriate number of rows}
 \item{x}{an object of class STFDF}
 \item{i}{selection of record index (spatial/temporal entities),

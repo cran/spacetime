@@ -20,7 +20,12 @@ timeIsInterval(x) <- value
 }
 \value{ logical; this function sets or retrieves the
 attribute \code{timeIsInterval} of \code{x}, UNLESS \code{x}
-is of class \code{ST}, in which case it set/retrieves
-\code{timeIsInterval(x@time)}}
+is of class \code{ST}, in which case it sets or retrieves
+this attribute for the \code{time} slot of the object, i.e.
+\code{timeIsInterval(x@time) <- value}
+}
+\note{ From spacetime 0.8-0 on, timeIsInterval is dropped in favour of
+a more generic time intervals by specifying \code{endTime} of each observation}
+\seealso{\link{over}, \link{timeIsInterval}}
 
 \keyword{dplot}

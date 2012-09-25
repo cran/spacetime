@@ -21,7 +21,7 @@ Objects of this class carry full space/time grid data }
   \describe{
     \item{\code{sp}:}{Object of class \code{"Spatial"}}
     \item{\code{time}:}{Object of class \code{xts} holding time information, see \link{ST-class}}
-    \item{\code{endTime}:}{Object of class \code{POSIXt} holding end time}
+    \item{\code{endTime}:}{Object of class \code{POSIXct} holding end time}
 	\item{\code{data}:}{Object of class \code{data.frame}, which holds
 	the measured values }
   }

@@ -6,7 +6,6 @@ STT = function(STbox = NULL, trajLst) {
     	coordnames(sp) = coordnames(trajLst[[1]]@sp)
 		tm = do.call(c, lapply(trajLst, index))
 		rt = range(tm)
-		timeIsInterval(rt) = FALSE
 		STbox = STI(sp, rt)
 	}
 	new("STT", STbox, traj = trajLst)
@@ -28,16 +27,14 @@ setAs("ltraj", "STTDF",
 		d$id = factor(rep(id, ns))
 		toSTI = function(x) {
 			time = x[["date"]]
-			timeIsInterval(time) = FALSE
 			ret = STI(SpatialPoints(x[c("x", "y")]), time)
 			attr(ret, "burst") = attr(x, "burst")
 			attr(ret, "id") = attr(x, "id")
 			ret
 		}
 		rt = range(d$date)
-		timeIsInterval(rt) = FALSE
 		STIbox = STI(SpatialPoints(cbind(range(d$x), range(d$y))), rt)
-		STTDF(STT(STIbox, traj = lapply(from, toSTI)), data = d)
+		STTDF(STT(STIbox, trajLst = lapply(from, toSTI)), data = d)
 	}
 )
 setAs("STTDF", "ltraj", 
