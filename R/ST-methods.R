@@ -6,7 +6,8 @@ ST = function(sp, time, endTime) {
 		stopifnot(is(time, .supportedTime))
 		t = 1:length(time)
 		stopifnot(order(time, t) == t)
-		tm = xts(1:length(time), time)
+		tm = xts(matrix(1:length(time), dimnames=list(NULL, "timeIndex")),
+			time)
 		time = tm
 	}
 	if (is(sp, "SpatialGrid")) {
@@ -58,13 +59,27 @@ setReplaceMethod("$", "ST",
 )
 
 dim.ST = function(x) {
-	c(length(x@sp), nrow(x@time))
+	x = c(length(x@sp), nrow(x@time))
+	names(x) = c("space", "time")
+	x
 }
 dim.STxDF = function(x) {
-	c(length(x@sp), nrow(x@time), ncol(x@data))
+	x = c(length(x@sp), nrow(x@time), ncol(x@data))
+	names(x) = c("space", "time", "variables")
+	x
 }
 dim.STF = dim.STS = dim.STI = dim.ST
 dim.STFDF = dim.STSDF = dim.STIDF = dim.STxDF
+dim.STTDF = function(x) {
+	x = c(length(x@traj), sum(sapply(x@traj, length)), ncol(x@data))
+	names(x) = c("trajectories", "points", "variables")
+	x
+}
+dim.STT = function(x) {
+	x = c(length(x@traj), sum(sapply(x@traj, length)))
+	names(x) = c("trajectories", "points")
+	x
+}
 
 if (!isGeneric("proj4string"))
 	setGeneric("proj4string", function(obj)
@@ -93,7 +108,7 @@ spTransform.ST = function(x, CRSobj, ...) {
 }
 setMethod("spTransform", signature("ST", "CRS"), spTransform.ST)
 
-# setMethod("geometry", "ST", function(obj) geometry(obj@sp))
+setMethod("geometry", "ST", function(obj) obj)
 
 summary.ST = function(object, ...) {
     obj = list()

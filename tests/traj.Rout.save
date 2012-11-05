@@ -1,5 +1,5 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -27,73 +27,7 @@ The following object(s) are masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: xts
-> library(maps)
-> library(mapdata)
-> library(maptools)
-Loading required package: foreign
-Loading required package: lattice
-Checking rgeos availability: TRUE
-> ###################################################
-> ### code chunk number 48: spacetime.Rnw:1039-1049
-> ###################################################
-> library("diveMove")
-Loading required package: stats4
-Loading required package: caTools
-Loading required package: bitops
-Loading required package: RColorBrewer
-> library("trip")
-Loading required package: spatstat
-Loading required package: mgcv
-This is mgcv 1.7-20. For overview type 'help("mgcv-package")'.
-Loading required package: deldir
-deldir 0.0-19
-
-     PLEASE NOTE:  The components "delsgs" and "summary" of the 
-     object returned by deldir() are now DATA FRAMES rather than 
-     matrices (as they were prior to release 0.0-18). 
-     See help("deldir").
- 
-     PLEASE NOTE: The process for determining duplicated points
-     has changed from that used in version 0.0-9 (and previously).
-
-spatstat 1.28-2 
-Type 'help(spatstat)' for an overview of spatstat 
-     'latest.news()' for news on latest version 
-     'licence.polygons()' for licence information on polygon calculations
-> data(sealLocs, package="diveMove")
-> sealLocs$time = as.POSIXct(sealLocs$time)
-> ringy = subset(sealLocs, id == "ringy" & !is.na(lon) & !is.na(lat))
-> coordinates(ringy) = ringy[c("lon", "lat")]
-> tr = trip(ringy, c("time", "id"))
-> 
-> 
-> ###################################################
-> ### code chunk number 49: spacetime.Rnw:1052-1068
-> ###################################################
-> setAs("trip", "STTDF",
-+ 	function(from) {
-+ 		from$burst = from[[from@TOR.columns[2]]]
-+ 		time = from[[from@TOR.columns[1]]]
-+ 		#from = from[order(time),]
-+         STIbox = STI(SpatialPoints(t(bbox(from))), range(time))
-+ 		STT = new("STT", STIbox, traj = list(STI(geometry(from), time)))
-+ 		new("STTDF", STT, data = from@data)
-+ 	}
-+ )
-> x = as(tr, "STTDF")
-> m = map2SpatialLines(map("world", 
-+ 	xlim = c(-100,-50), ylim = c(40,77), plot=F))
-> proj4string(m) = "+proj=longlat +datum=WGS84"
-> plot(m, axes=TRUE, cex.axis =.7)
-> lines(x, col = "red")
-> 
-> 
-> ###################################################
-> ### code chunk number 50: spacetime.Rnw:1073-1075
-> ###################################################
-> plot(m, axes=TRUE, cex.axis =.7)
-> lines(x, col = "red")
-> 
+> options(xts_check_TZ=FALSE)
 > 
 > ###################################################
 > ### code chunk number 51: spacetime.Rnw:1089-1098
@@ -103,10 +37,6 @@ Loading required package: ade4
 
 Attaching package: 'ade4'
 
-The following object(s) are masked from 'package:spatstat':
-
-    disc
-
 The following object(s) are masked from 'package:base':
 
     within
@@ -115,21 +45,6 @@ Loading required package: adehabitatMA
 Loading required package: CircStats
 Loading required package: MASS
 Loading required package: boot
-
-Attaching package: 'boot'
-
-The following object(s) are masked from 'package:spatstat':
-
-    envelope
-
-The following object(s) are masked from 'package:diveMove':
-
-    logit
-
-The following object(s) are masked from 'package:lattice':
-
-    melanoma
-
 
 Attaching package: 'adehabitatLT'
 
@@ -141,7 +56,7 @@ The following object(s) are masked from 'package:zoo':
 > locs = puechabonsp$relocs
 > xy = coordinates(locs)
 > da = as.character(locs$Date)
-> da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d"), tz = "GMT") 
+> da = as.POSIXct(strptime(as.character(locs$Date),"%y%m%d", tz = "GMT"))
 > ltr = as.ltraj(xy, da, id = locs$Name)
 > foo = function(dt) dt > 100*3600*24
 > l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
@@ -154,4 +69,4 @@ The following object(s) are masked from 'package:zoo':
 > 
 > proc.time()
    user  system elapsed 
-  3.936   0.140   4.067 
+  1.620   0.084   1.690 

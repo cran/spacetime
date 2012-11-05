@@ -1,6 +1,3 @@
-if (!isClass("RasterStackBrick"))
-	setClass("RasterStackBrick")
-
 # provided by (c) Robert J. Hijmans:
 setAs('RasterStackBrick', 'STFDF',
     function(from) {
@@ -33,5 +30,3 @@ setMethod('stplot', 'RasterStackBrick',
         stplot(ob, ...)
     }
 )
-
-# moved tgrass code to tgrass.R

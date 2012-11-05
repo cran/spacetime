@@ -23,7 +23,7 @@ as.data.frame.STS = function(x, row.names = NULL, ...) {
   	ret = data.frame(as.data.frame(coordinates(x)), 
 		sp.ID = row.names(x@sp)[x@index[,1]],
 		time = index(x),
-		endTime = x@endTime,
+		endTime = x@endTime[x@index[,2]],
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp))
@@ -80,7 +80,8 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	else {
 		if (is.logical(j))
 			j = which(j)
-		.time = xts(1:nrow(x@time), index(x@time))
+		.time = xts(matrix(1:nrow(x@time), dimnames=list(NULL, "timeIndex")),
+			index(x@time))
 		# the following uses [.xts, deals with character/iso8601,
 		# and takes care of negative indices:
 		.time = .time[j] 

@@ -23,7 +23,7 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 			ti = which(n %in% time)
 		else
 			ti = time
-		time = xts(1:nrow(x), x[[ti]])
+		time = xts(matrix(1:nrow(x), dimnames=list(NULL, "timeIndex")), x[[ti]])
 		if (!missing(interval) && isTRUE(interval))
 			endTime = delta(time)
 		else
@@ -37,7 +37,8 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 		if (any(table(x[,space], x[,time]) != 1)) { # NOT a full grid:
 			# stop("space/time combinations not complete")
 			# why not try Irregular?
-			time = xts(1:nrow(x), x[,time])
+			time = xts(matrix(1:nrow(x), dimnames=list(NULL, "timeIndex")), 
+				x[,time])
 			if (missing(endTime)) {
 				endTime = index(time)
 				if (!missing(interval) && interval)
@@ -46,7 +47,8 @@ stConstruct = function(x, space, time, SpatialObj = NULL,
 			return(STIDF(SpatialObj, time, x, endTime))
 		} else {
 			sut = sort(unique(x[,time]))
-			tm = xts(1:length(sut), sut)
+			tm = xts(matrix(1:length(sut), dimnames=list(NULL, "timeIndex")),
+				sut)
 			if (missing(endTime)) {
 				endTime = delta(tm)
 				if (!missing(interval) && !interval)

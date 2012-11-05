@@ -35,16 +35,15 @@ time, or space-time.
 
 \section{Introduction}
 
-The so-called {\em map overlay} is a key GIS operation
-that does not seem to have a very sharp definition. The
-\href{http://cran.r-project.org/web/packages/sp/vignettes/over.pdf}{over
-vignette} in package {\tt sp} comments on what paper (visual)
+The so-called {\em map overlay} is a key GIS operation that does not
+seem to have a very sharp definition. The \code{over} vignette in
+package {\tt sp} (Pebesma, 2012) comments on what paper (visual)
 overlays are, and discusses the {\tt over} and {\tt aggregate}
 methods for spatial data.
 
 In the
-\href{http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Overlay_analysis}{ESRI
-ArcGIS} tutorial, it can be read that
+ESRI
+ArcGIS tutorial (ESRI, 2012), it can be read that
 \begin{quotation}
 {\em An overlay operation is much more than a simple merging of linework;
 all the attributes of the features taking part in the overlay are
@@ -134,8 +133,10 @@ over(x, y)
 A space-time feature matches another space-time feature when their
 spatial locations match (coincide, touch, intersect or overlap),
 and when their temporal properties match. For temporal properties,
-it is crucial whether time is considered to be a time interval,
-or a time instance.  Matching time instance is always considered.
+it is crucial whether time is a time interval, or a time instance.
+When all \code{endTime} values are equal to the \code{time} times,
+time is considered instance. When one or more \code{endTime} values
+are larger than \code{time}, time is considered to reflect intervals.
 
 Suppose we have two time sequences, $T: t_1,t_2,...,t_n$ and $U:
 u_1, u_2, ..., u_m$. Both are ordered: $t_i \le t_{i+1}$.
@@ -166,14 +167,10 @@ or alternatively expressed as
 $$t_{i+1} > u_j \wedge t_i < u_{j+1}$$
 where $\wedge$ denotes `and'.
 \end{description}
-All these conditions fail for intervals having zero width, i.e. the
-case where $T$ is interval and for some $i$, $t_{i+1}-t_i=0$ or the
-case where $U$ is interval and for some $j$, $u_{j+1}-u_j=0$.
-For that reason, specifying objects with 
-<<eval=FALSE>>=
-timeIsInterval(x) = TRUE
-@
-results in a warning if some time intervals have zero width.
+All these conditions fail for intervals having zero width (empty
+intervals), i.e. the case where $T$ is interval and for some $i$,
+$t_{i+1}-t_i=0$ or the case where $U$ is interval and for some $j$,
+$u_{j+1}-u_j=0$.
 
 \end{document}
 
@@ -329,10 +326,17 @@ aggregate(rural[,"2008::2009"], DE.years, mean, na.rm=TRUE)
 
 \subsection{Time intervals}
 
-Spatial, temporal and spatio-temporal aggregation is all based
-on the {\tt over} methods. Whether time is considered to be time
-intervals (for establising whether a space-time point falls,
-time-wise, inside an interval or coincides with the time point),
-depends on the defaults for the {\tt over} methods.
+If all data concern time instances (endTime equals time), then time
+instances are being matched, else overlapping time intervals are
+being matched. In case intervals are being matched, empty intervals
+are never matched.
+
+\subsection*{References}
+\begin{itemize}
+\item ESRI (2012) ESRI ArcGIS Tutorial. \url{http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Overlay_analysis}
+\item Pebesma, 2012. Map overlay and
+spatial aggregation in sp. Vignette in package sp,
+\url{http://cran.r-project.org/web/packages/sp/vignettes/over.pdf}
+\end{itemize}
 
 \end{document}
