@@ -34,7 +34,7 @@ as.data.frame.STF = function(x, row.names = NULL, ...) {
 		sp.ID = rep(factor(row.names(x@sp), levels = row.names(x@sp)),
 			nrow(x@time)),
 		time = index(x),
-		endTime = x@endTime,
+		endTime = rep(x@endTime, each= length(x@sp)),
 		timedata,
 		row.names = row.names, ...)
 	if ("data" %in% slotNames(x@sp)) {

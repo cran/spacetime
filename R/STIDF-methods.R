@@ -19,7 +19,8 @@ STIDF = function(sp, time, data, endTime) {
 	endTime = as.POSIXct(endTime)
 	if (!is(time, "xts")) {
 		time0 = time
-        time = xts(1:length(time), time)
+        time = xts(matrix(1:length(time), dimnames=list(NULL, "timeIndex")),
+			time)
 		# rearrange sp and data in new time order:
         o = as.vector(time[,1])
 		sp = sp[o,]
@@ -95,7 +96,8 @@ subs.STIDF <- function(x, i, j, ... , drop = FALSE) {
 	else {
 		if (is.logical(j))
 			j = which(j)
-		t = xts(1:nrow(x@time), index(x@time))[j]
+		t = xts(matrix(1:nrow(x@time), dimnames=list(NULL, "timeIndex")), 
+				index(x@time))[j]
 		j = as.vector(t[,1])
 	}
 	

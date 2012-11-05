@@ -28,8 +28,10 @@ aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 		STFDF(x@sp, time(agg), d)
 }
 
-setMethod("aggregateBy", signature(x = "ST", by = "function"), aggregate_ST_temporal)
-setMethod("aggregateBy", signature(x = "ST", by = "character"), aggregate_ST_temporal)
+setMethod("aggregateBy", signature(x = "ST", by = "function"), 
+	aggregate_ST_temporal)
+setMethod("aggregateBy", signature(x = "ST", by = "character"), 
+	aggregate_ST_temporal)
 
 setMethod("aggregateBy", signature(x = "ST", by = "Spatial"),
 	function(x, by, FUN = mean, ..., simplify = TRUE) {
@@ -55,28 +57,29 @@ setMethod("aggregateBy", signature(x = "ST", by = "Spatial"),
 	}
 )
 
-setMethod("aggregateBy", signature(x = "ST", by = "ST"),
-	function(x, by, FUN = mean, ..., simplify = TRUE) {
-		stopifnot("data" %in% slotNames(x))
-    	by0 = by
-    	if (gridded(by@sp))
-       		by@sp = as(by@sp, "SpatialPolygons")
-    	df = over(by, x, fn = FUN, ...)
-		if (simplify && length(by@sp) == 1) # return xts:
-			xts(cbind(df, as.matrix(by@time)), index(by@time))
-		else if (simplify && nrow(by@time) == 1) { # return spatial:
-			if ("data" %in% slotNames(by0@sp))
-				df = data.frame(df, by0@sp@data)
-    		addAttrToGeom(geometry(by0@sp), df, match.ID = FALSE)
-		} else { #  by0 is STX:
-			if ("data" %in% slotNames(by0))
-				df = data.frame(df, by0@data)
-    		addAttrToGeom(by0, df, match.ID = FALSE)
-		}
+aggregateBySTST = function(x, by, FUN = mean, ..., simplify = TRUE) {
+	stopifnot("data" %in% slotNames(x))
+   	by0 = by
+   	if (gridded(by@sp))
+      		by@sp = as(by@sp, "SpatialPolygons")
+   	df = over(by, x, fn = FUN, ...)
+	if (simplify && length(by@sp) == 1) # return xts:
+		xts(cbind(df, as.matrix(by@time)), index(by@time))
+	else if (simplify && nrow(by@time) == 1) { # return spatial:
+		if ("data" %in% slotNames(by0@sp))
+			df = data.frame(df, by0@sp@data)
+   		addAttrToGeom(geometry(by0@sp), df, match.ID = FALSE)
+	} else { #  by0 is STX:
+		if ("data" %in% slotNames(by0))
+			df = data.frame(df, by0@data)
+   		addAttrToGeom(by0, df, match.ID = FALSE)
 	}
-)
+}
+setMethod("aggregateBy", signature(x = "ST", by = "ST"),
+	aggregateBySTST)
 
 setMethod("aggregate", signature(x = "ST"),
-	function(x, by, FUN = mean, ..., simplify = TRUE) # dispatch on "by" as well:
+	function(x, by, FUN = mean, ..., simplify = TRUE) 
+		# dispatches on "by" as well:
 		aggregateBy(x, by, FUN = FUN, simplify = simplify, ...)
 )

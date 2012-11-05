@@ -36,6 +36,8 @@ row.names(wind.loc) = wind.loc$Station
 wind$time = ISOdate(wind$year+1900, wind$month, wind$day, 0)
 space = list(values = names(wind)[stations])
 wind.st = stConstruct(wind[stations], space, wind$time, SpatialObj = wind.loc)
+# select firt 500 time steps, to limit run time:
+wind.st = wind.st[,1:500]
 wind.eof.1 = EOF(wind.st)
 wind.eof.2 = EOF(wind.st, "temporal")
 wind.eof.1.PCs = EOF(wind.st, returnPredictions=FALSE)

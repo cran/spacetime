@@ -22,8 +22,9 @@
 \usage{ 
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
-	as.table = TRUE, at, cuts = 15, animate = 0, mode = "xy", scaleX = 0,
-	auto.key = TRUE, key.space = "right", type = "l", do.repeat = TRUE)
+	as.table = TRUE, at, cuts = 15, scales = list(draw = FALSE), 
+	animate = 0, mode = "xy", scaleX = 0, auto.key = TRUE, 
+	key.space = "right", type = "l", do.repeat = TRUE)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
 	c("time", "burst", "id"), scales = list(draw = FALSE),
 	xlab = NULL, ylab = NULL, type = "p", number = 6,
@@ -92,5 +93,6 @@ in an endless loop, with \code{animate} seconds between each. No
 proper value is returned: the loop needs to be interrupted by
 the user.
 }
+\references{ http://www.jstatsoft.org/v51/i07/ }
 \note{vignette("spacetime") contains several examples}
 \keyword{dplot}

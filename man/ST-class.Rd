@@ -67,7 +67,7 @@ ST is meant as a super-class, and is not to be used for representing
 data, similar to Spatial in the sp package.
 }
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
-
+\references{ http://www.jstatsoft.org/v51/i07/ }
 \examples{
 time = as.Date('2008-01-01')+1:2
 sp = SpatialPoints(cbind(c(0,1),c(0,1)))

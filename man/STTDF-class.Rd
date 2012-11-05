@@ -53,5 +53,6 @@ observations. In addition, a column \code{id} is used to identify
 individual items. }
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
+\references{ http://www.jstatsoft.org/v51/i07/ }
 
 \keyword{classes}

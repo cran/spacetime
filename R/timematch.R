@@ -5,10 +5,21 @@ augment.with.one = function(x) {
 	l = length(ux)
 	if (l <= 1)
 		stop("cannot derive time interval from length 1 or constant sequence")
-	last = ux[l]
-	dt = last - ux[l-1]
-	c(x, last + dt)
+	lx = length(x)
+	x = x[c(1:lx,lx)]
+	stopifnot(x[lx] == ux[l])
+	x[lx+1] = x[lx] + (ux[l] - ux[l-1]) # + dt
+	x
+#	last = ux[l]
+#	dt = ux[l] - ux[l-1]
+#	ret = c(x, last + dt)
+#
+#	tz = attr(x, "tzone")
+#	if (!is.null(tz))
+#		attr(ret, "tzone") = tz
+#	ret
 }
+
 delta = function(x) {
 	if (is(x, "xts"))
 		x = index(x)
@@ -137,9 +148,12 @@ timeMatchIntervals = function(x, y, returnList = FALSE,
 	} else {
 		if (is.null(end.x))
 			end.x = x
+		else
+			stopifnot(all(end.x >= x)) # sanity check
 		if (is.null(end.y))
 			end.y = y
-		stopifnot(all(end.x >= x & end.y >= y)) # sanity check
+		else
+			stopifnot(all(end.y >= y)) # sanity check
 		ret = vector("list", length(x))
 		for (i in seq(along = ret)) # DOUBLE LOOP:
 			ret[[i]] = which(x[i] < end.y & end.x[i] > y)

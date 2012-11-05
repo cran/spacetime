@@ -1,3 +1,35 @@
+# GEOMETRY ONLY:
+# STS -> STF
+as.STF.STS = function(from) {
+	STF(from@sp, from@time, from@endTime)
+}
+setAs("STS", "STF", as.STF.STS)
+
+# STF -> STS
+as.STS.STF = function(from) {
+	n = length(from@sp)
+	m = nrow(from@time)
+	index = cbind(rep(1:n, m), rep(1:m, each=n))
+	STS(from@sp, from@time, index, from@endTime)
+}
+setAs("STF", "STS", as.STS.STF)
+
+# STS -> STI
+as.STI.STS = function(from) {
+	# replicate the sp and time columns; keeps time always ordered?
+	STI(from@sp[from@index[,1],], 
+			from@time[from@index[,2]], 
+			from@endTime[from@index[,2]])
+}
+setAs("STS", "STI", as.STI.STS)
+
+# STF -> STI
+as.STI.STF = function(from) {
+	as(as(from, "STS"), "STI")
+}
+setAs("STF", "STI", as.STI.STF)
+
+# GEOMETRY+ATTRIBUTES, *DF:
 # STSDF -> STFDF
 as.STFDF.STSDF = function(from) {
 	# fill the partial grid with NAs

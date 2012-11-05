@@ -1,11 +1,12 @@
 require(spacetime)
+options(xts_check_TZ=FALSE)
 
 # go through time matching first:
-x = as.POSIXct("2000-01-01") + (0:9) * 3600
+x = as.POSIXct("2000-01-01", tz="GMT") + (0:9) * 3600
 y = x + 1
 y[1] = y[2]
-x
-y
+format(x, tz="GMT")
+format(y, tz="GMT")
 end.x = delta(x)
 end.y = delta(y)
 TI = function(x, ti) { 
@@ -50,7 +51,7 @@ all.equal(a, b)
 # with end points:
 
 # next, try ST?DF objects:
-t = xts(1:10, as.POSIXct("2010-05-01")+3600*1:10)
+t = xts(1:10, as.POSIXct("2010-05-01", tz="GMT")+3600*1:10)
 xy = SpatialPixels(SpatialPoints(expand.grid(1:10,1:10)))
 y = STFDF(xy, t, data.frame(a = 1:1000))
 stplot(y)

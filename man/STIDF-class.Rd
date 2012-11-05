@@ -76,5 +76,6 @@ in correspoinding order: the triple \code{sp[i]}, \code{time[i]}
 and \code{data[i,]} refer to the same observation }
 
 \author{ Edzer Pebesma, \email{edzer.pebesma@uni-muenster.de} }
+\references{ http://www.jstatsoft.org/v51/i07/ }
 
 \keyword{classes}

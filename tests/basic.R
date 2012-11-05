@@ -1,4 +1,5 @@
 options(digits=5)
+options(xts_check_TZ=FALSE)
 ###################################################
 ### chunk number 4: 
 ###################################################
@@ -7,7 +8,7 @@ set.seed(13579) # to make outcome a bit predictable!
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
+time = xts(1:4, as.POSIXct("2010-08-05", tz="GMT")+3600*(10:13))
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
 IDs = paste("ID", 1:length(mydata), sep = "_")
@@ -18,8 +19,8 @@ stfdf = STFDF(sp, time, mydata)
 ###################################################
 ### chunk number 5: 
 ###################################################
-as.data.frame(stfdf, row.names = IDs)
-as(stfdf, "data.frame")[1:4,]
+format(as.data.frame(stfdf, row.names = IDs), tz="GMT")
+format(as(stfdf, "data.frame")[1:4,], tz="GMT")
 
 ###################################################
 ### chunk number 6: 
@@ -67,7 +68,7 @@ showClass("STIDF")
 sp = expand.grid(x = 1:3, y = 1:3)
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:9, as.POSIXct("2010-08-05")+3600*(11:19))
+time = xts(1:9, as.POSIXct("2010-08-05", tz="GMT")+3600*(11:19))
 m = 1:9 * 10 # means for each of the 9 point locations
 mydata = rnorm(length(sp), mean=m)
 IDs = paste("ID",1:length(mydata))
@@ -137,8 +138,8 @@ stsdf[1,,1] # xts
 stsdf[,,"ID"]
 stsdf[1,,"values", drop=FALSE] # stays STIDF:
 stsdf[,1, drop=FALSE] #stays STIDF
-as.data.frame(stsdf)
-as(stsdf, "data.frame")
+format(as.data.frame(stsdf), tz="GMT")
+format(as(stsdf, "data.frame"), tz="GMT")
 
 stidf = as(stfdf, "STIDF")
 stidf[[1]]
@@ -154,13 +155,13 @@ stidf[1,,1] # xts
 stidf[,,"ID"]
 stidf[1,,"values", drop=FALSE] # stays STIDF:
 stidf[,1, drop=FALSE] #stays STIDF
-as.data.frame(stidf)
-as(stidf, "data.frame")
+format(as.data.frame(stidf), tz="GMT")
+format(as(stidf, "data.frame"), tz="GMT")
 
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
-time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
+time = xts(1:4, as.POSIXct("2010-08-05", tz="GMT")+3600*(10:13))
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
 IDs = paste("ID", 1:length(mydata), sep = "_")
 mydata = data.frame(values = signif(mydata,3), ID=IDs)

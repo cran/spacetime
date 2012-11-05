@@ -3,22 +3,27 @@ if (!isGeneric("stplot"))
 		standardGeneric("stplot"))
 
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
-		..., as.table = TRUE, at, cuts = 15, 
+		..., as.table = TRUE, at, cuts = 15, scales = list(draw = FALSE),
 		animate = 0, mode = "xy", scaleX = 0, 
 		auto.key = TRUE, key.space = "right", type = 'l', do.repeat = TRUE) {
+
 	ind = sp.ID = NULL # keep R CMD check happy in R 2.13 
     z = names(obj@data)[1]
 	if (missing(at))
 		at = seq(min(obj[[z]], na.rm = TRUE), max(obj[[z]], na.rm = TRUE), 
 			length.out = cuts + 1)
 	if (mode == "ts") { # multiple time series
+		if (!is.null(scales$draw) && scales$draw == FALSE)
+			scales$draw = TRUE
 		if (length(names(obj@data)) > 1) # , stack, add | which.var
 			xyplot(values ~ time | ind, stack(obj), groups = sp.ID, 
-				type = type,auto.key = auto.key, as.table = as.table, ...)
+				type = type, auto.key = auto.key, as.table = as.table, 
+				scales = scales, ...)
 		else
 			xyplot(as.formula(paste(z, "~", "time")), 
 				as.data.frame(obj), groups = sp.ID, 
-				type = type, auto.key = auto.key, as.table = as.table, ...)
+				type = type, auto.key = auto.key, as.table = as.table, 
+				scales = scales, ...)
 	} else if (mode == "tp") { # time series in multiple panels
     	if (ncol(obj@data) == 1)
 			xyplot(as.formula(paste(z, "~ time | sp.ID")), 
@@ -36,13 +41,11 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 				as.table = as.table, ...)
 		}
 	} else if (mode == "xt") { # space-time cross section == Hovmoeller
-		dots = list(...)
-		scales = dots$scales
-		if (is.null(scales))
+		if (missing(scales))
 			scales = list(draw=TRUE)
 		else
 			scales$draw = TRUE
-		s = sp:::longlat.scales(obj@sp, scales, xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
+		s = sp:::longlat.scales(obj@sp, scales = scales, xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
 		cn = coordnames(obj@sp)
 		if (scaleX == 1) {
 			scales["x"] = s["x"]
@@ -52,6 +55,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			f = as.formula(paste(z, "~", cn[2], "+ time"))
 		} else
 			f = as.formula(paste(z, "~ sp.ID + time"))
+		dots = list(...)
 		dots$scales = scales
 		dots = append(list(f, as.data.frame(obj), at = at,
 			cuts = cuts, as.table = as.table), dots)
@@ -64,6 +68,8 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		## OR:
 		## x = as(obj, "Spatial")
 		## x@data = data.frame(x@data) # cripples column names
+		scales = sp:::longlat.scales(obj@sp, scales = scales, 
+			xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
 		if (animate > 0) {
 			names.attr = rep(names.attr, length = ncol(df))
 			i = 0
@@ -71,13 +77,14 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 				timeStep = (i %% ncol(df)) + 1
 				print(spplot(x[,timeStep], main = names.attr[timeStep], at = at, 
 					cuts = cuts, as.table = as.table, auto.key = auto.key, 
-					key.space = key.space, ...))
+					key.space = key.space, scales = scales, ...))
 				Sys.sleep(animate)
 				i = i + 1
 			}
 		} else
 			spplot(x, names.attr = names.attr, as.table = as.table, at = at,
-				cuts = cuts, auto.key = auto.key, key.space = key.space, ...)
+				cuts = cuts, auto.key = auto.key, key.space = key.space, 
+				scales = scales, ...)
 	}
 }
 
@@ -101,7 +108,7 @@ stplot.STIDF = function(obj, names.attr = NULL, ...,
 	f = paste(f, "|", by)
 	if (missing(asp))
 		asp = mapasp(obj@sp)
-	scales = sp:::longlat.scales(obj@sp, scales, xlim, ylim)
+	scales = sp:::longlat.scales(obj@sp, scales = scales, xlim, ylim)
 	obj = as.data.frame(obj)
 	if (is.numeric(number) && number > 1)
 		obj$time = equal.count(obj$time, number = number, overlap = overlap)
@@ -134,7 +141,7 @@ stplot.STTDF = function(obj, names.attr = NULL, ...,
 
 	if (missing(asp))
 		asp = mapasp(obj@sp)
-	scales = sp:::longlat.scales(obj@sp, scales, xlim, ylim)
+	scales = sp:::longlat.scales(obj@sp, scales = scales, xlim, ylim)
 	GRP = rep(1:length(obj@traj), times = lapply(obj@traj, length))
 
 	obj = as(obj, "STIDF")
