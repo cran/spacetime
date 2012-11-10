@@ -20,6 +20,10 @@
 
 %\documentclass[nogin,a4paper]{article}
 \documentclass[article]{jss}
+\Month{November}
+\Year{2012}
+\Volume{51}
+\Issue{7}
 
 %\usepackage[OT1]{fontenc}
 
@@ -834,6 +838,7 @@ a time stamp like \code{2010-05} refers to {\em the full} month of May,
 2010, and so reflects a time {\em interval}. As a selection criterion, 
 \code{xts} will include everything inside the following interval:
 <<>>=
+library(xts)
 .parseISO8601('2010-05')
 @
 and this syntax lets one define, unambiguously, yearly, monthly,

@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 Patched (2012-11-09 r61094) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-linux-gnu (64-bit)
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -28,18 +28,11 @@ The following object(s) are masked from 'package:base':
 
 Loading required package: xts
 > library(raster)
-raster 2.0-11 (24-August-2012)
-
-Attaching package: 'raster'
-
-The following object(s) are masked from 'package:xts':
-
-    reclass
-
+raster 2.0-31 (9-November-2012)
 > x <- brick(system.file("external/rlogo.grd", package="raster"))
 > x <- setZ(x, as.Date(1:nlayers(x)))
 > stplot(x)
 > 
 > proc.time()
    user  system elapsed 
-  2.104   0.072   2.165 
+  2.068   0.040   2.111 

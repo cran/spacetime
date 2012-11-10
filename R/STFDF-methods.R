@@ -63,7 +63,11 @@ unstack.STFDF = function(x, form, which = 1,...) {
   ret
 }
 
-setAs("STFDF", "xts", function(from) xts(unstack(from),index(from@time)))
+setAs("STFDF", "xts", function(from) {
+		xts(unstack(from), index(from@time), 
+			tzone = attr(from@time, ".indexTZ"))
+	}
+)
 
 subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	nr = dim(x)[1]
@@ -121,10 +125,10 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 		lapply(x@data, function(v) as.vector(matrix(v, nr, nc)[s,t])))
 	if (drop) {
 		if (length(s) == 1 && all(s > 0)) { # space index has only 1 item:
-			if (length(t) == 1)
+			if (length(t) == 1) # drop time as well:
 				x = x@data[1,]
 			else
-				x = xts(x@data, index(x@time))
+				x = xts(x@data, index(x@time), tzone = attr(x@time, ".indexTZ"))
 		} else if (length(t) == 1) # only one time step:
 			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}

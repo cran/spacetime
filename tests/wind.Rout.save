@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 Patched (2012-11-09 r61094) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-linux-gnu (64-bit)
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -124,14 +124,15 @@ Loading required package: gstat
 Loading required package: maps
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
-Path to GDAL shared files: /usr/share/gdal/1.9
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Loaded GDAL runtime: GDAL 1.9.0, released 2011/12/29
+Path to GDAL shared files: /usr/local/share/gdal
+Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
 Path to PROJ.4 shared files: (autodetected)
 Loading required package: foreign
+Loading required package: grid
 Loading required package: lattice
 Checking rgeos availability: TRUE
 > 
 > proc.time()
    user  system elapsed 
-  1.628   0.136   1.752 
+  1.648   0.080   1.717 

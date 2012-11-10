@@ -61,7 +61,9 @@ as.data.frame.STIDF = function(x, row.names = NULL, ...) {
 }
 setAs("STIDF", "data.frame", function(from) as.data.frame.STIDF(from))
 
-as.xts.STIDF = function(x, ...) xts(x@data, index(x@time))
+as.xts.STIDF = function(x, ...) {
+	xts(x@data, index(x@time), tzone = attr(x@time, ".indexTZ"))
+}
 
 setAs("STIDF", "xts", function(from) as.xts.STIDF(from))
 
