@@ -37,7 +37,7 @@ as.data.frame.STSDF = function(x, row.names = NULL, ...) {
   	data.frame(f, x@data, row.names = row.names, ...)
 }
 setAs("STSDF", "data.frame", function(from) as.data.frame.STSDF(from))
-setAs("STSDF", "xts", function(from) as(as(from, "STFDF"), "xts"))
+setAs("STSDF", "xts", function(from) as(as(from, "STFDF"), "xts")) # a good idea?
 
 subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 	n.args = nargs()
@@ -81,7 +81,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 		if (is.logical(j))
 			j = which(j)
 		.time = xts(matrix(1:nrow(x@time), dimnames=list(NULL, "timeIndex")),
-			index(x@time))
+			index(x@time), tzone = attr(x@time, ".indexTZ"))
 		# the following uses [.xts, deals with character/iso8601,
 		# and takes care of negative indices:
 		.time = .time[j] 
@@ -118,7 +118,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 			if (length(t) == 1)
 				x = x@data[1,1,drop=TRUE]
 			else
-				x = xts(x@data, index(x@time[x@index[,2]]))
+				x = xts(x@data, index(x@time[x@index[,2]]), tzone = attr(x@time, ".indexTZ"))
                 # added index to achieve 
 				#   (nrow(x)==length(order.by)) in index() # TG
 		} else if (length(t) == 1) { # only one time item
