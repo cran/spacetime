@@ -10,12 +10,21 @@ aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 		if (is(ix, "Date"))
 			cc = as.Date(cc)
 		if (is(ix, "POSIXt"))
-			cc = as.POSIXct(cc, tz = format(ix[1], "%Z"))
+			cc = as.POSIXct(cc, tz = attr(ix, "tzone"))
 	}
 	d = vector("list", length = ncol(x@data))
 	for (i in 1:length(d)) {
 		# use aggregate.zoo, returns zoo object:
-		agg = aggregate(as.zoo(as(x[,,i], "xts")), cc, FUN = FUN, ...)
+		x.xts = as(x[,,i], "xts")
+		x.zoo = as.zoo(x.xts)
+		agg = aggregate(x.zoo, cc, FUN, ...)
+		#myAsZooXts = function(x) {
+    	#	cd <- coredata(x)
+    	#	if (length(cd) == 0) 
+        #		cd <- NULL
+    	#	zoo(cd, order.by = index(x))
+		#}
+		#agg = aggregate(myAsZooXts(as(x[,,i], "xts")), cc, FUN = FUN, ...)
 		d[[i]] = as.vector(t(agg))
 	}
 	names(d) = names(x@data)
@@ -78,8 +87,11 @@ aggregateBySTST = function(x, by, FUN = mean, ..., simplify = TRUE) {
 setMethod("aggregateBy", signature(x = "ST", by = "ST"),
 	aggregateBySTST)
 
-setMethod("aggregate", signature(x = "ST"),
-	function(x, by, FUN = mean, ..., simplify = TRUE) 
-		# dispatches on "by" as well:
-		aggregateBy(x, by, FUN = FUN, simplify = simplify, ...)
-)
+#setMethod("aggregate", signature(x = "ST"),
+#	function(x, by, FUN = mean, ..., simplify = TRUE) 
+#		# dispatches on "by" as well:
+#		aggregateBy(x, by, FUN = FUN, simplify = simplify, ...)
+#)
+aggregate.ST = function(x, by, FUN, ..., simplify = TRUE) {
+	aggregateBy(x, by, FUN, simplify = simplify, ...)
+}

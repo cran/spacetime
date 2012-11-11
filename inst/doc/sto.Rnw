@@ -172,7 +172,6 @@ intervals), i.e. the case where $T$ is interval and for some $i$,
 $t_{i+1}-t_i=0$ or the case where $U$ is interval and for some $j$,
 $u_{j+1}-u_j=0$.
 
-\end{document}
 
 \section{Aggregating spatio-temporal data}
 
@@ -279,6 +278,7 @@ For monthly data, we will first select those stations that
 have measured (non-NA) values in 2008,
 <<>>=
 sel = which(!apply(as(rural[,"2008"], "xts"), 2, function(x) all(is.na(x))))
+#library(zoo)
 x = aggregate(rural[sel,"2008"], "month", mean, na.rm=TRUE)
 stplot(x, mode = "tp")
 @
@@ -298,14 +298,23 @@ The strings that can be passed are e.g. {\tt "year"}, but also {\tt
 this way is only possible if the time index is of class {\tt Date}
 or {\tt POSIXct}.
 
-An alternative is to provide a function for temporal aggregation:
+An alternative is to provide a function for temporal aggregation. The
+function \code{as.yearqtr} from package \code{zoo} transforms dates
+to quarters, and hence allows aggregation {\em to} quarterly values,
+in this example medians:
 <<>>=
+library(zoo)
 x = aggregate(rural[sel,"2005::2011"], as.yearqtr, median, na.rm=TRUE)
 stplot(x, mode = "tp")
 @
-shown in figure \ref{fig:tp3}.  Further information can be found
-in {\tt ?aggregate.zoo}, which is the function used to do the
-processing.
+shown in figure \ref{fig:tp3}. Aggregating to monthly values is obtained
+by function {\code as.yearmon}, aggregating to years by creating the
+function
+<<>>=
+as.year <- function(x) as.numeric(floor(as.yearmon(x)))
+@
+Further information can be found in {\tt ?aggregate.zoo}, which is
+the function used to do the processing.
 
 \begin{figure}
 <<fig=TRUE,echo=FALSE>>=
@@ -320,7 +329,7 @@ print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
 Aggregation over spatio-temporal volumes can be done by passing
 an object inheriting from {\tt ST} to the {\tt by} argument:
 <<>>=
-DE.years = STF(DE, xts(1:2, as.POSIXct(as.Date(c("2008-01-01", "2009-01-01")))))
+DE.years = STF(DE, as.Date(c("2008-01-01", "2009-01-01")))
 aggregate(rural[,"2008::2009"], DE.years, mean, na.rm=TRUE)
 @
 

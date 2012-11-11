@@ -1,18 +1,25 @@
 \name{timeMatch}
 \alias{timeMatch}
+\alias{timeMatch,ST,ST-method}
+\alias{timeMatch,xts,xts-method}
+\alias{timeMatch,POSIXct,POSIXct-method}
+\alias{index}
+\alias{MATCH}
+\alias{MATCH.default}
+\alias{zoo}
 \title{ match two (time) sequences }
 \description{ match two (time) sequences, where each can
 be intervals or instances. }
 \usage{ 
-timeMatch(x, y, returnList = FALSE, end.x = NULL, end.y = NULL)
+timeMatch(x, y, returnList = FALSE, ...)
 }
 \arguments{
 \item{x}{ ordered sequence, e.g. of time stamps }
 \item{y}{ ordered sequence, e.g. of time stamps }
 \item{returnList }{ boolean; should a list be returned with all matches (TRUE),
 or a vector with single matches (FALSE)? }
-\item{end.x}{ NULL or ordered sequence, e.g. of time stamps, indicating interval end times for x }
-\item{end.y}{ NULL or ordered sequence, e.g. of time stamps, indicating interval end times for y }
+\item{...}{ \code{end.x} and \code{end.y} can be specified for
+\code{xts} and \code{POSIXct} methods}
 }
 \value{
 if \code{returnList = FALSE}: integer vector of length
@@ -25,20 +32,18 @@ with each list element an integer vector with all the indexes
 of \code{y} matching to that element of \code{x}.
 }
 \details{
-\code{timeIsInterval(x)} and \code{timeIsInterval(y)} both need
-to be non-missing logicals (i.e., TRUE or FALSE).
+When \code{x} and \code{y} are of class \code{xts} or \code{POSIXct},
+\code{end.x} and \code{end.y} need to specify endpoint of intervals.
 
-Matching in case of no intervals is done on equality of values.
+In case \code{x} and \code{y} are both not intervals, matching is
+done on equality of values, using \link[base]{match}.
 
 If \code{x} represents intervals, then the first interval is from
 \code{x[1]} to \code{x[2]}, with \code{x[1]} included but \code{x[2]}
-not. In case of zero-width intervals (e.g. \code{x[1]==x[2]}),
-nothing will match.
-
-If package \code{intervals} is loaded, for matching time intervals or
-points and intervals, \link[intervals]{interval_overlap} is used. If
-this is not the case, spacetime uses its own, relatively inefficient 
-(O(N^2)) code.
+not (left-closed, right-open). In case of zero-width intervals
+(e.g. \code{x[1]==x[2]}), nothing will match and a warning is raised.
+Package \code{intervals} is used to check overlap of intervals,
+using, \link[intervals]{interval_overlap}.
 }
 \seealso{\link{over}, \link{timeIsInterval}, \link[intervals]{interval_overlap}}
 \author{Edzer Pebesma}

@@ -1,8 +1,8 @@
 
-R version 2.15.2 Patched (2012-11-09 r61094) -- "Trick or Treat"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-unknown-linux-gnu (64-bit)
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -18,21 +18,12 @@ Type 'q()' to quit R.
 
 > library(spacetime)
 Loading required package: sp
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 > library(raster)
 raster 2.0-31 (9-November-2012)
 > x <- brick(system.file("external/rlogo.grd", package="raster"))
-> x <- setZ(x, as.Date(1:nlayers(x)))
+> x <- setZ(x, as.Date(1:nlayers(x), origin = "1970-01-01"))
 > stplot(x)
 > 
 > proc.time()
    user  system elapsed 
-  2.068   0.040   2.111 
+  2.244   0.080   2.308 

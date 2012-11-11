@@ -40,7 +40,7 @@ setMethod("over", signature(x = "xts", y = "xts"), over.xts)
 over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) {
     	space.index = over(x@sp, y@sp, returnList = TRUE)
-		time.index = timeMatch(x@time, y@time, returnList = TRUE) 
+		time.index = timeMatch(x, y, returnList = TRUE) 
 		n = length(y@sp)
 		lst = vector("list", length(space.index) * length(time.index))
 		k = 1
@@ -59,7 +59,7 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 		lst
 	} else {
     	space.index = over(x@sp, y@sp)
-		time.index = rep(timeMatch(x@time, y@time), each = length(space.index))
+		time.index = rep(timeMatch(x, y), each = length(space.index))
 		# compute the index of x in y as y is STF:
     	(time.index - 1) * length(y@sp) + space.index # space.index gets recycled
 	}
@@ -68,7 +68,7 @@ setMethod("over", signature(x = "STF", y = "STF"), over.STF.STF)
 
 over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
     space.index = over(x@sp, y@sp)[x@index[,1]]
-	time.index = timeMatch(x@time, y@time)[x@index[,2]]
+	time.index = timeMatch(x, y)[x@index[,2]]
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
 	.index2list(idx, returnList)
@@ -78,7 +78,7 @@ setMethod("over", signature(x = "STS", y = "STF"), over.STS.STF)
 over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	#if (returnList) warning("returnList not supported yet")
     space.index = over(x@sp, y@sp)
-	time.index = timeMatch(x@time, y@time, returnList)
+	time.index = timeMatch(x, y, returnList)
 	# compute the index of x in y as y is STF:
     idx = (unlist(time.index) - 1) * length(y@sp) + unlist(space.index)
 	.index2list(idx, returnList)

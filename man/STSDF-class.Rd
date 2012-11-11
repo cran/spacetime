@@ -82,6 +82,7 @@ if FALSE, no coercion to reduced classes takes place}
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
 sp = SpatialPoints(sp)
+library(xts)
 time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))
 m = c(10,20,30) # means for each of the 3 point locations
 mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))

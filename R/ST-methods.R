@@ -6,10 +6,10 @@ ST = function(sp, time, endTime) {
 		stopifnot(is(time, .supportedTime))
 		t = 1:length(time)
 		stopifnot(order(time, t) == t)
-		tm = xts(matrix(1:length(time), dimnames=list(NULL, "timeIndex")),
-			time)
-		time = tm
+		time = xts(matrix(1:length(time), ncol = 1,
+				dimnames = list(NULL, "timeIndex")), time)
 	}
+	attr(endTime, "tzone") = attr(time, "tzone")
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")
 		warning("converted SpatialGrid to SpatialPixels")
@@ -162,5 +162,5 @@ if (!isGeneric("aggregate"))
 	setGeneric("aggregate", function(x, ...)
 		standardGeneric("aggregate"))
 if (!isGeneric("aggregateBy"))
-	setGeneric("aggregateBy", function(x, by, ...)
+	setGeneric("aggregateBy", function(x, by, FUN = mean, ...)
 		standardGeneric("aggregateBy"))

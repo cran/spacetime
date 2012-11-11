@@ -1112,7 +1112,8 @@ and choose 10 time points from that period
 to form the spatio-temporal prediction grid:
 <<>>=
 n = 10
-tgrd = xts(1:n, seq(min(index(wind.data)), max(index(wind.data)), length=n))
+library(xts)
+tgrd = seq(min(index(wind.data)), max(index(wind.data)), length=n)
 pred.grd = STF(grd, tgrd)
 @
 We will interpolate with a
