@@ -8,7 +8,7 @@ if (!isGeneric("timeIsInterval<-"))
 
 setMethod("timeIsInterval", "ST",
 	function(x, ...) {
-		any(index(x@time) < x@endTime)
+		any(as.POSIXct(index(x@time)) < x@endTime)
 	}
 )
 

@@ -64,8 +64,7 @@ unstack.STFDF = function(x, form, which = 1,...) {
 }
 
 setAs("STFDF", "xts", function(from) {
-		xts(unstack(from), index(from@time), 
-			tzone = attr(from@time, ".indexTZ"))
+		xts(unstack(from), index(from@time), tzone = attr(from@time, "tzone"))
 	}
 )
 
@@ -128,7 +127,7 @@ subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 			if (length(t) == 1) # drop time as well:
 				x = x@data[1,]
 			else
-				x = xts(x@data, index(x@time), tzone = attr(x@time, ".indexTZ"))
+				x = xts(x@data, index(x@time), tzone = attr(x@time, "tzone"))
 		} else if (length(t) == 1) # only one time step:
 			x = addAttrToGeom(x@sp, x@data, match.ID = FALSE)
 	}

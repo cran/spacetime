@@ -81,7 +81,7 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 		if (is.logical(j))
 			j = which(j)
 		.time = xts(matrix(1:nrow(x@time), dimnames=list(NULL, "timeIndex")),
-			index(x@time), tzone = attr(x@time, ".indexTZ"))
+			index(x@time), tzone = attr(x@time, "tzone"))
 		# the following uses [.xts, deals with character/iso8601,
 		# and takes care of negative indices:
 		.time = .time[j] 
@@ -118,7 +118,8 @@ subs.STSDF <- function(x, i, j, ... , drop = TRUE) {
 			if (length(t) == 1)
 				x = x@data[1,1,drop=TRUE]
 			else
-				x = xts(x@data, index(x@time[x@index[,2]]), tzone = attr(x@time, ".indexTZ"))
+				x = xts(x@data, index(x@time[x@index[,2]]), 
+						tzone = attr(x@time, "tzone"))
                 # added index to achieve 
 				#   (nrow(x)==length(order.by)) in index() # TG
 		} else if (length(t) == 1) { # only one time item

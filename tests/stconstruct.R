@@ -1,4 +1,5 @@
 library(spacetime)
+library(xts)
 
 # example 0: construction with STFDF:
 

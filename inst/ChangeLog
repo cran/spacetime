@@ -1,3 +1,199 @@
+2012-11-12 18:18  EdzerPebesma
+
+	* NAMESPACE, R/aggregate.R, R/timematch.R, inst/doc/sto.Rnw,
+	  man/timematch.Rd, tests/Examples,
+	  tests/Examples/spacetime-Ex.Rout.save, tests/basic.Rout.save,
+	  tests/stconstruct.Rout.save: found the MATCH error: zoo needs to
+	  have S3method("MATCH", "default") in
+	  its NAMESPACE, along with MATCH import and export in spacetime
+	  NAMESPACE;
+	  else (e.g. with zoo 1.7-9 on CRAN) sto.Rnw (aggregate using
+	  aggregate.zoo)
+	  will not work without attaching zoo first; so, we now depend on
+	  zoo's
+	  development version...
+
+2012-11-12 08:27  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/aggregate.R, R/timematch.R,
+	  inst/doc/sto.Rnw, tests/basic.Rout.save, tests/over.R,
+	  tests/over.Rout.save, tests/stconstruct.Rout.save, tests/wind.R,
+	  tests/wind.Rout.save: further NAMESPACE import limitation;
+	  but aggregate still needs zoo to be attached.
+
+2012-11-11 15:03  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/aggregate.R, data/air.rda,
+	  inst/doc/jss816.Rnw, inst/doc/sto.Rnw, man/STSDF-class.Rd,
+	  man/unstack.Rd, tests/basic.R, tests/basic.Rout.save,
+	  tests/over.R, tests/over.Rout.save, tests/raster.R,
+	  tests/raster.Rout.save, tests/stconstruct.R,
+	  tests/stconstruct.Rout.save, tests/traj.Rout.save, tests/wind.R,
+	  tests/wind.Rout.save: reorganized zoo and xts to be in Imports:
+	  rather than Depends:
+	  (one issue still hangs with zoo needing to be attached before
+	  sto.Rnw
+	  can run aggregate.zoo)
+	  doc files: removed xts() calls when only time steps were passed.
+
+2012-11-10 22:57  EdzerPebesma
+
+	* DESCRIPTION, R/Class-ST.R, R/ST-methods.R, R/STFDF-methods.R,
+	  R/STIDF-methods.R, R/STSDF-methods.R, R/coerce.R,
+	  R/stconstruct.R, R/timematch.R: syncronized tzone of endTime with
+	  that of time; version bump.
+
+2012-11-10 16:12  EdzerPebesma
+
+	* DESCRIPTION, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STSDF-methods.R, data/air.rda, inst/doc/jss816.Rnw,
+	  man/STLDF-class.Rd, tests/raster.Rout.save, tests/wind.Rout.save:
+	  added time zone to rural air data;
+	  time zones in various ST methods (as.xts, selection) got lost,
+	  now retained;
+	  updated tests outputs;
+	  version bump
+
+2012-11-05 13:22  EdzerPebesma
+
+	* man/eof.Rd: limited time steps for example, to reduce run time
+
+2012-11-05 11:43  EdzerPebesma
+
+	* DESCRIPTION, demo/00Index, demo/trip.R, inst/CITATION,
+	  inst/doc/jss816.Rnw, inst/doc/jss816.bib, man/ST-class.Rd,
+	  man/STFDF-class.Rd, man/STIDF-class.Rd, man/STLDF-class.Rd,
+	  man/STSDF-class.Rd, man/STTDF-class.Rd, man/delta.Rd,
+	  man/over.Rd, man/stconstruct.Rd, man/stplot.Rd, man/timematch.Rd,
+	  tests/traj.R, tests/traj.Rout.save: update references to JSS
+	  paper; its publication corresponds to releasing 1.0-0;
+	  removed trip from Suggests:.
+
+2012-10-29 13:13  BenediktGraeler
+
+	* DESCRIPTION:
+
+2012-10-28 20:10  EdzerPebesma
+
+	* inst/doc/sto.Rnw: updated information on endTime and intervals.
+
+2012-10-28 18:42  EdzerPebesma
+
+	* R/raster.R, R/timematch.R: reverted back setClass();
+	  alternative way to keep tzone in augment.with.one()
+
+2012-10-27 20:22  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STSDF-methods.R, R/raster.R, R/timematch.R,
+	  tests/basic.Rout.save, tests/traj.Rout.save: raster: restore
+	  setClass for RasterStackBrick, if not loaded before;
+	  ST?DF-methods: missing , in as.data.frame method
+	  timematch.R: augment.with.one dropped tzone;
+	  tests: updated for tzone; coerce
+	  STFDF->STSDF->STIDF->STSDF->STFDF no longer
+	  identical, as endTime doesn't get set back (further check
+	  needed?)
+
+2012-10-26 18:46  EdzerPebesma
+
+	* R/STFDF-methods.R, R/STSDF-methods.R, R/timematch.R: two bugs
+	  caught by Ben Graeler; cosmetic changes to timematch.
+
+2012-10-25 19:41  EdzerPebesma
+
+	* demo/00Index: added gvis to index
+
+2012-10-24 06:50  EdzerPebesma
+
+	* demo/gvis.R: added googleVis demos
+
+2012-10-23 05:59  EdzerPebesma
+
+	* R/raster.R: removed setClass.
+
+2012-10-21 20:33  EdzerPebesma
+
+	* inst/doc/sto.Rnw: updated references
+
+2012-10-21 09:24  EdzerPebesma
+
+	* R/ST-methods.R, R/STIDF-methods.R, R/STSDF-methods.R,
+	  R/aggregate.R, R/eof.R, R/plot.R, R/stconstruct.R, R/stplot.R:
+	  EOF: use prcomp.formula so that na.action gets passed;
+	  default xts slot gets named index column;
+
+2012-10-18 13:15  EdzerPebesma
+
+	* R/stplot.R, man/stplot.Rd: argument mismatch (scales =
+	  list(draw=FALSE))
+
+2012-10-14 10:53  EdzerPebesma
+
+	* NAMESPACE, R/ST-methods.R, R/coerce.R: dim methods for STT, STx
+	  cercion.
+
+2012-10-03 14:56  EdzerPebesma
+
+	* R/endtime.R, R/stplot.R, inst/doc/jss816.Rnw: added endTime;
+	  update to vignette; scales handling in stplot.
+
+2012-09-28 20:48  EdzerPebesma
+
+	* DESCRIPTION, R/stplot.R, man/stplot.Rd: stplot: correct scales
+	  argument if unprojected;
+	  DESCRIPTION: dropped removed file.
+
+2012-09-25 21:34  EdzerPebesma
+
+	* DESCRIPTION, R/Class-STLDF.R, R/STLDF-methods.R,
+	  inst/doc/jss816.Rnw, tests/basic.R, tests/over.R,
+	  tests/over.Rout.save, tests/traj.R, tests/traj.Rout.save: removed
+	  STLDF sources; version bump; tried to make tests clean wrt TZ
+	  differences
+
+2012-09-25 08:20  EdzerPebesma
+
+	* R/STTDF-methods.R: needed for CRAN submission
+
+2012-09-24 19:42  EdzerPebesma
+
+	* R/tgrass.R: dealt with endTime in writing tgrass files
+
+2012-09-23 18:48  EdzerPebesma
+
+	* DESCRIPTION, NAMESPACE, R/Class-ST.R, R/Class-STLDF.R,
+	  R/ST-methods.R, R/STFDF-methods.R, R/STIDF-methods.R,
+	  R/STLDF-methods.R, R/STSDF-methods.R, R/STTDF-methods.R,
+	  R/coerce.R, R/eof.R, R/interval.R, R/over.R, R/plot.R,
+	  R/raster.R, R/stconstruct.R, R/timematch.R, data/air.rda,
+	  inst/doc/cls.fig, inst/doc/cls.pdf, inst/doc/jss816.Rnw,
+	  inst/doc/move.fig, inst/doc/move.pdf, man/ST-class.Rd,
+	  man/STFDF-class.Rd, man/STIDF-class.Rd, man/STLDF-class.Rd,
+	  man/STSDF-class.Rd, man/delta.Rd, man/interval.Rd,
+	  man/stconstruct.Rd, man/timematch.Rd, tests/basic.Rout.save,
+	  tests/over.R, tests/over.Rout.save, tests/raster.Rout.save,
+	  tests/stconstruct.Rout.save, tests/traj.Rout.save, tests/wind.R,
+	  tests/wind.Rout.save: removed STL and STLDF class, added endTime
+	  as slot to ST, and
+	  tried to deal with all the consequences of having an endTime for
+	  each observation. Started integrating the more efficient
+	  intervals
+	  matching from package "intervals". Updated vignette and docs.
+
+2012-09-12 18:23  EdzerPebesma
+
+	* DESCRIPTION, R/raster.R, R/tgrass.R: moved tgrass stuff to new
+	  file
+
+2012-09-12 15:25  EdzerPebesma
+
+	* R/ST-methods.R, R/raster.R, man/tgrass.Rd: minor mods to pass
+	  check again.
+
+2012-09-12 15:01  EdzerPebesma
+
+	* man/tgrass.Rd: {read,write}.tgrass doc
+
 2012-09-12 14:28  EdzerPebesma
 
 	* R/raster.R: removed the "x" before .tif

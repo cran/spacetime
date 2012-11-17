@@ -26,6 +26,7 @@ STIDF = function(sp, time, data, endTime) {
 		sp = sp[o,]
 		endTime = endTime[o]
 		data = data[o,,drop=FALSE]
+		attr(endTime, "tzone") = attr(time, "tzone")
 	}
 	new("STIDF", STI(sp, time, endTime), data = data)
 }
@@ -62,7 +63,7 @@ as.data.frame.STIDF = function(x, row.names = NULL, ...) {
 setAs("STIDF", "data.frame", function(from) as.data.frame.STIDF(from))
 
 as.xts.STIDF = function(x, ...) {
-	xts(x@data, index(x@time), tzone = attr(x@time, ".indexTZ"))
+	xts(x@data, index(x@time), tzone = attr(x@time, "tzone"))
 }
 
 setAs("STIDF", "xts", function(from) as.xts.STIDF(from))

@@ -1,52 +1,53 @@
+import(methods)
 import(sp)
-import(zoo)
-import(xts)
 import(lattice)
-# import(methods)
-importFrom(stats, aggregate)
-importFrom(utils, stack)
-#importFrom(graphics, plot)
+importFrom(stats, aggregate, na.omit)
+importFrom(utils, stack, unstack)
+importFrom(xts, xts, as.xts)
+importFrom(zoo, zoo, as.zoo, index, MATCH, MATCH.default)
+importFrom(intervals, interval_overlap, Intervals)
 
 exportClasses(
-	xts, 
-	ST, STF, STFDF, 
-	STS, STSDF, 
-	STI, STIDF, 
-	STT, STTDF, 
-	ltraj)
+	xts,
+	ST, STF, STFDF,
+	STS, STSDF,
+	STI, STIDF,
+	STT, STTDF,
+	ltraj
+)
 
-export(ST, 
+export(delta,
+	EOF,
+	index,
+	MATCH,
+	ST,
 	STF, STFDF,
 	STS, STSDF,
 	STI, STIDF,
 	STT, STTDF,
-	as.data.frame.STF,
-	as.data.frame.STS,
-	as.data.frame.STI,
-	as.data.frame.STFDF,
-	as.data.frame.STSDF,
-	as.data.frame.STIDF,
-	unstack.STFDF,
-	stplot,
 	stConstruct,
-	na.omit.STFDF,
-	EOF, 
-	#aggregate.ST,
-	cbind.ST,
-	rbind.STIDF,
-	rbind.STSDF,
-	rbind.STFDF,
-	timeMatch, delta,
-	read.tgrass, write.tgrass)
+	read.tgrass,
+	write.tgrass,
+	zoo, MATCH.default
+)
 
-#exportMethods(proj4string, "proj4string<-", is.projected)
-exportMethods(aggregate, timeIsInterval, "timeIsInterval<-", plot)
+exportMethods(
+	timeMatch,
+	plot,
+	stplot,
+	timeIsInterval, 
+	"timeIsInterval<-"
+)
 
 S3method(as.data.frame, STF)
+S3method(as.data.frame, STS)
+S3method(as.data.frame, STI)
 S3method(as.data.frame, STFDF)
 S3method(as.data.frame, STSDF)
 S3method(as.data.frame, STIDF)
 S3method(as.xts, STIDF)
+S3method(aggregate, ST)
+S3method(cbind, ST)
 S3method(dim, ST)
 S3method(dim, STF)
 S3method(dim, STS)
@@ -69,9 +70,12 @@ S3method(length, STFDF)
 S3method(length, STSDF)
 S3method(length, STIDF)
 S3method(lines, STTDF)
-#S3method(unstack, STFDF)
+S3method(na.omit, STFDF)
+S3method(rbind, STIDF)
+S3method(rbind, STSDF)
+S3method(rbind, STFDF)
 S3method(print, summary.ST)
-#S3method(rbind, STIDFtraj)
 S3method(stack, STFDF)
 S3method(stack, STSDF)
 S3method(stack, STIDF)
+S3method(unstack, STFDF)
