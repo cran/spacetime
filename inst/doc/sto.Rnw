@@ -11,7 +11,9 @@
 
 \title{\bf Spatio-temporal overlay and aggregation }
 
-\author{ \includegraphics[scale=.7]{ifgi-logo_int}\\
+\author{
+\includegraphics[width=5cm]{ifgi-logo_int} \hspace{.5cm}
+\includegraphics[width=4cm]{logo52n} \\
 \href{mailto:edzer.pebesma@uni-muenster.de}{Edzer Pebesma}
 }
 \date{\small \today }
@@ -278,7 +280,6 @@ For monthly data, we will first select those stations that
 have measured (non-NA) values in 2008,
 <<>>=
 sel = which(!apply(as(rural[,"2008"], "xts"), 2, function(x) all(is.na(x))))
-#library(zoo)
 x = aggregate(rural[sel,"2008"], "month", mean, na.rm=TRUE)
 stplot(x, mode = "tp")
 @
@@ -303,7 +304,6 @@ function \code{as.yearqtr} from package \code{zoo} transforms dates
 to quarters, and hence allows aggregation {\em to} quarterly values,
 in this example medians:
 <<>>=
-library(zoo)
 x = aggregate(rural[sel,"2005::2011"], as.yearqtr, median, na.rm=TRUE)
 stplot(x, mode = "tp")
 @

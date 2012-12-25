@@ -37,7 +37,8 @@
 \Shorttitle{\pkg{spacetime}: Spatio-Temporal Data in \proglang{R}}
 
 \author{
-\includegraphics[width=5cm]{ifgi-logo_int} \\
+\includegraphics[width=5cm]{ifgi-logo_int} \hspace{.5cm}
+\includegraphics[width=4cm]{logo52n} \\
 {\bf Edzer Pebesma} 
 %Institute for Geoinformatics\\
 %University of M\"{u}nster, Germany
@@ -50,7 +51,11 @@ University of M\"{u}nster\\
 Weseler Strasse 253\\
 48151 M\"{u}nster, Germany\\
 E-mail: \email{edzer.pebesma@uni-muenster.de}\\
-URL: \url{http://ifgi.uni-muenster.de/}
+URL: \url{http://ifgi.uni-muenster.de/} \\ \\
+52{\textdegree}North Initiative for Geospatial Open Source Software GmbH\\
+Martin-Luther-King-Weg 24\\
+48155 Muenster, Germany\\
+URL: \url{http://www.52north.org/}
 }
 
 \Abstract{
@@ -63,13 +68,13 @@ from package \pkg{xts}.  The goal is to cover a number of useful
 representations for spatio-temporal sensor data, and results from
 predicting (spatial and/or temporal interpolation or smoothing),
 aggregating, or subsetting them, and to represent trajectories.
-The goals of this paper is to explore how spatio-temporal data can
+The goals of this paper are to explore how spatio-temporal data can
 be sensibly represented in classes, and to find out which analysis
 and visualisation methods are useful and feasible. We discuss
 the time series convention of representing time intervals by their 
 starting time only. This vignette is the main reference for the
-\proglang{R} package \code{spacetime}, and has been published as
-\cite{jss816}}
+\proglang{R} package \code{spacetime}; it been published as
+\cite{jss816}, but is kept up-to-date with the software.}
 
 \Keywords{Time series analysis, spatial data, spatio-temporal statistics, Geographic Information Systems}
 
@@ -1432,14 +1437,15 @@ large challenges remain. We hope that these first steps will help
 discovering and identifying these more complex use cases.
 
 \section*{Acknowledgements}
-Michael Sumner provided helpful comments on the trip example.
+%Michael Sumner provided helpful comments on the trip example.
 Members from the spatio-temporal modelling lab of the Institute for
 Geoinformatics of the University of M\"{u}nster (Ben Gr\"{a}ler,
 Katharina Henneb\"{o}hl, Daniel N\"{u}st, and S\"{o}ren Gebbert)
 contributed in several useful discussions. Participants to
 the workshop {\em Handling and analyzing spatio-temporal data
 in \proglang{R}}, held in M\"{u}nster on Mar 21-22, 2011, are
-gratefully acknowledged.
+gratefully acknowledged. Several anonymous reviewers provided
+valuable comments.
 
 \bibliography{jss816}
 

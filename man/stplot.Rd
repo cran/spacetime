@@ -23,7 +23,7 @@
 stplot(obj, ...)
 stplot.STFDF(obj, names.attr = as.character(index(obj@time)), ..., 
 	as.table = TRUE, at, cuts = 15, scales = list(draw = FALSE), 
-	animate = 0, mode = "xy", scaleX = 0, auto.key = TRUE, 
+	animate = 0, mode = "xy", scaleX = 0, auto.key = list(space = key.space), 
 	key.space = "right", type = "l", do.repeat = TRUE)
 stplot.STIDF(obj, names.attr = NULL, ..., as.table = TRUE, by =
 	c("time", "burst", "id"), scales = list(draw = FALSE),
@@ -51,7 +51,7 @@ plotted in multiple panels, one panel per location. }
 \item{scaleX}{ integer: 0, 1 or 2; when \code{mode} is "xt", used to determine
 whether the index of the spatial location is shown (0), the x coordinate (1)
 or the y coordinate (2). }
-\item{auto.key}{see \link[lattice]{xyplot}}
+\item{auto.key}{see the \code{auto.key} argument in \link[lattice]{xyplot}}
 \item{key.space}{character; see \link[lattice]{xyplot}}
 \item{by}{ conditioning variable(s); in case \code{time} is conditioning
 variable, it will be classified using \link{equal.count}, using parameters

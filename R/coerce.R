@@ -141,7 +141,7 @@ setAs("STTDF", "STIDF",
 		time = do.call(c, lapply(from@traj, index))
 		attr(time, "tzone") = attr(index(from@traj[[1]]), "tzone")
 		#timeIsInterval(time) = timeIsInterval(from)
-		# TODO: take care of endTIme?
+		# TODO: take care of endTime?
 		STIDF(sp, time, from@data)
 	}
 )
@@ -156,7 +156,7 @@ setAs("STIDF", "STTDF",
 
 as.STFDF.Spatial = function(from) {
 	#from@data$time = index(from@time)
-	df = as.data.frame(t(as(from, "xts")))
+	df = as.data.frame(t(as(from[,,1], "xts")))
 	ret = addAttrToGeom(geometry(from@sp), df, match.ID = FALSE)
 	# data.frame names will now be mangled time-like strings, so
 	attr(ret, "time") = index(from@time) # to make it somehow accessible...

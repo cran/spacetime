@@ -1,5 +1,6 @@
 aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 	stopifnot("data" %in% slotNames(x))
+	require(zoo)
 	x = as(x, "STFDF")
 	if (is.function(by))
 		cc = by(index(x@time)) # time format index
@@ -15,16 +16,7 @@ aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 	d = vector("list", length = ncol(x@data))
 	for (i in 1:length(d)) {
 		# use aggregate.zoo, returns zoo object:
-		x.xts = as(x[,,i], "xts")
-		x.zoo = as.zoo(x.xts)
-		agg = aggregate(x.zoo, cc, FUN, ...)
-		#myAsZooXts = function(x) {
-    	#	cd <- coredata(x)
-    	#	if (length(cd) == 0) 
-        #		cd <- NULL
-    	#	zoo(cd, order.by = index(x))
-		#}
-		#agg = aggregate(myAsZooXts(as(x[,,i], "xts")), cc, FUN = FUN, ...)
+		agg = aggregate(as.zoo(as(x[,,i], "xts")), cc, FUN, ...)
 		d[[i]] = as.vector(t(agg))
 	}
 	names(d) = names(x@data)

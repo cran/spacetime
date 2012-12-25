@@ -94,7 +94,8 @@ stfdf[,,2]
 stfdf[,,"values"]
 stfdf[1,]
 stfdf[,2]
-as(stfdf, "xts")
+as(stfdf[,,1], "xts")
+as(stfdf[,,2], "xts")
 # examples for [[, [[<-, $ and $<- 
 stfdf[[1]]
 stfdf[["values"]]
