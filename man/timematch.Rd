@@ -5,8 +5,6 @@
 \alias{timeMatch,POSIXct,POSIXct-method}
 \alias{index}
 \alias{MATCH}
-\alias{MATCH.default}
-\alias{zoo}
 \title{ match two (time) sequences }
 \description{ match two (time) sequences, where each can
 be intervals or instances. }

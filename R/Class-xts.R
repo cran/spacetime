@@ -1,1 +1,2 @@
 setClass("xts")
+#setClass("zoo")

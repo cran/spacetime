@@ -5,7 +5,8 @@ if (!isGeneric("stplot"))
 stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 		..., as.table = TRUE, at, cuts = 15, scales = list(draw = FALSE),
 		animate = 0, mode = "xy", scaleX = 0, 
-		auto.key = TRUE, key.space = "right", type = 'l', do.repeat = TRUE) {
+		auto.key = list(space = key.space), 
+		key.space = "right", type = 'l', do.repeat = TRUE) {
 
 	ind = sp.ID = NULL # keep R CMD check happy in R 2.13 
     z = names(obj@data)[1]
@@ -28,7 +29,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
     	if (ncol(obj@data) == 1)
 			xyplot(as.formula(paste(z, "~ time | sp.ID")), 
 				as.data.frame(obj), type = type, auto.key = auto.key, 
-				key.space = key.space, as.table = as.table, ...)
+				as.table = as.table, ...)
 		else {
 			n = names(obj@data)
 			df = as.data.frame(obj)
@@ -37,8 +38,7 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 			st$sp.ID = df$sp.ID
 			xyplot(as.formula(paste("values ~ time | sp.ID")), 
 				st, type = type, groups = ind,
-				key.space = key.space, auto.key = auto.key, 
-				as.table = as.table, ...)
+				auto.key = auto.key, as.table = as.table, ...)
 		}
 	} else if (mode == "xt") { # space-time cross section == Hovmoeller
 		if (missing(scales))
@@ -77,14 +77,13 @@ stplot.STFDF = function(obj, names.attr = as.character(index(obj@time)),
 				timeStep = (i %% ncol(df)) + 1
 				print(spplot(x[,timeStep], main = names.attr[timeStep], at = at, 
 					cuts = cuts, as.table = as.table, auto.key = auto.key, 
-					key.space = key.space, scales = scales, ...))
+					scales = scales, ...))
 				Sys.sleep(animate)
 				i = i + 1
 			}
 		} else
 			spplot(x, names.attr = names.attr, as.table = as.table, at = at,
-				cuts = cuts, auto.key = auto.key, key.space = key.space, 
-				scales = scales, ...)
+				cuts = cuts, auto.key = auto.key, scales = scales, ...)
 	}
 }
 

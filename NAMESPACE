@@ -1,10 +1,10 @@
 import(methods)
 import(sp)
 import(lattice)
-importFrom(stats, aggregate, na.omit)
+importFrom(stats, aggregate, na.omit, time, start, end)
 importFrom(utils, stack, unstack)
 importFrom(xts, xts, as.xts)
-importFrom(zoo, zoo, as.zoo, index, MATCH, MATCH.default)
+importFrom(zoo, as.zoo, index, na.locf, na.spline, na.approx)
 importFrom(intervals, interval_overlap, Intervals)
 
 exportClasses(
@@ -19,7 +19,7 @@ exportClasses(
 export(delta,
 	EOF,
 	index,
-	MATCH,
+	na.locf, na.spline, na.approx,
 	ST,
 	STF, STFDF,
 	STS, STSDF,
@@ -28,7 +28,7 @@ export(delta,
 	stConstruct,
 	read.tgrass,
 	write.tgrass,
-	zoo, MATCH.default
+	nbMult
 )
 
 exportMethods(
@@ -79,3 +79,10 @@ S3method(stack, STFDF)
 S3method(stack, STSDF)
 S3method(stack, STIDF)
 S3method(unstack, STFDF)
+
+S3method(start, ST)
+S3method(end, ST)
+S3method(time, ST)
+S3method(na.locf, STFDF)
+S3method(na.spline, STFDF)
+S3method(na.approx, STFDF)

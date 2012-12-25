@@ -11,7 +11,9 @@
 
 \title{\bf Spatio-temporal objects to proxy a PostgreSQL table } 
 
-\author{ \includegraphics[scale=.7]{ifgi-logo_int}\\
+\author{
+\includegraphics[width=5cm]{ifgi-logo_int} \hspace{.5cm}
+\includegraphics[width=4cm]{logo52n} \\
 \href{mailto:edzer.pebesma@uni-muenster.de}{Edzer Pebesma}
 }
 \date{\small \today }

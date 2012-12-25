@@ -63,10 +63,17 @@ unstack.STFDF = function(x, form, which = 1,...) {
   ret
 }
 
-setAs("STFDF", "xts", function(from) {
-		xts(unstack(from), index(from@time), tzone = attr(from@time, "tzone"))
-	}
-)
+as.STFDF.xts = function(from) {
+	nc = seq_along(from@data)
+	ret = do.call(cbind, lapply(nc, function(i) 
+		xts(unstack(from[,,i]), index(from@time), tzone = attr(from@time, "tzone"))))
+	if (length(nc) > 1)
+		names(ret) = as.vector(t(outer(names(from@data), row.names(from@sp), paste, sep = ".")))
+	else
+		names(ret) = row.names(from@sp)
+	ret
+}
+setAs("STFDF", "xts", as.STFDF.xts)
 
 subs.STFDF <- function(x, i, j, ... , drop = TRUE) {
 	nr = dim(x)[1]
@@ -169,3 +176,35 @@ length.STF = function(x) { prod(dim(x)[1:2]) }
 length.STFDF = function(x) { prod(dim(x)[1:2]) }
 
 setMethod("geometry", "STFDF", function(obj) as(obj, "STF"))
+
+nbMult = function(nb, st, addT = TRUE, addST = FALSE) {
+	stopifnot(is(st, "STF"))
+	stopifnot(is(nb, "nb"))
+	stopifnot(length(nb) == length(st@sp))
+	n = dim(st)[2] # time dimension
+	if (n <= 1)
+		return(nb)
+	L = length(nb)
+	ret = list()
+	FN = function(x,i,j,L) {
+		ret = as.integer(x + i * L) # spatial-only, for time i+1
+		if (addT) {
+			if (addST)
+				now = c(ret, j + i * L)
+			else
+				now = j + i * L
+			if (i > 0)
+				ret = c(ret, now - L) # time-previous: j-iL
+			if (i < (n-1))
+				ret = c(ret, now + L) # time-next: j+iL
+		}
+		sort(ret)
+	}
+	for (i in 0:(n-1)) {
+		app = lapply(1:L, function(j) FN(nb[[j]], i, j, L))
+		ret = append(ret, app)
+	}
+	attributes(ret) = attributes(nb)
+	attr(ret, "region.id") = as.character(1:length(ret))
+	ret
+}

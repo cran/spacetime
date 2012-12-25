@@ -1,6 +1,10 @@
 library(spacetime)
 data(air)
-rural_PM10 = na.omit(as(rural[1:5,], "data.frame"))
+#rural_PM10 = na.omit(as(rural[1:5,], "data.frame"))
+#rural_PM10 = na.omit(as(na.locf(rural)[1:5,], "data.frame"))
+#rural_PM10 = na.omit(as(rural[1:5,], "data.frame"))
+rural_PM10 = as(rural[1:5,], "data.frame")
+rural_PM10$PM10[is.na(rural_PM10$PM10)] = 0
 
 library(googleVis)
 # un-annotated timeLine:
