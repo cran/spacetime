@@ -1,6 +1,6 @@
 Package: spacetime
-Version: 1.0-3
-Date: 2012-12-25
+Version: 1.0-4
+Date: 2013-02-19
 Title: classes and methods for spatio-temporal data
 Authors@R: c(person("Edzer", "Pebesma", role = c("cre", "aut"), email =
         "edzer.pebesma@uni-muenster.de"), person("Benedikt", "Graeler",
@@ -9,7 +9,7 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("cre", "aut"), email =
 Depends: R (>= 2.14.0), methods, sp (>= 0.9-89)
 Imports: xts (>= 0.8-8), zoo (>= 1.7-9), intervals, lattice
 Suggests: rgdal, rgeos, raster, intervals, maps, mapdata, maptools,
-        gstat (>= 0.9-74), adehabitatLT, diveMove, RColorBrewer, plm,
+        gstat (>= 1.0-16), adehabitatLT, diveMove, RColorBrewer, plm,
         cshapes, foreign, RPostgreSQL, zoo
 LazyData: yes
 Description: A package with classes and methods for spatio-temporal
@@ -28,9 +28,10 @@ Collate: Class-xts.R Class-ST.R Class-STFDF.R Class-STSDF.R
         STFDF-methods.R STSDF-methods.R STIDF-methods.R STTDF-methods.R
         apply.R coerce.R stconstruct.R plot.R stplot.R timematch.R
         over.R aggregate.R eof.R bind.R na.R raster.R tgrass.R
-Packaged: 2012-12-25 14:01:51 UTC; edzer
+Packaged: 2013-02-19 19:24:27 UTC; edzer
 Author: Edzer Pebesma [cre, aut], Benedikt Graeler [ctb], Tom Gottfried
         [ctb], Robert J. Hijmans [ctb]
 Maintainer: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2012-12-25 15:41:34
+Date/Publication: 2013-02-19 21:22:04
