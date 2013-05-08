@@ -3,6 +3,8 @@
 #}
 
 delta = function(x) {
+	if (any(is.na(x)))
+		stop("time values cannot be negative")
 	augment.with.one = function(x) {
 		ux = unique(x)
 		l = length(ux)
@@ -27,16 +29,17 @@ if (!isGeneric("timeMatch"))
 
 setMethod(timeMatch, signature(x = "ST", y = "ST"),
 	function(x, y, returnList = FALSE) {
-		if (timeIsInterval(x))
+		xt = as.POSIXct(index(x@time))
+		yt = as.POSIXct(index(y@time))
+		if (any(xt != x@endTime))
 			end.x = x@endTime
 		else
 			end.x = NULL
-		if (timeIsInterval(y))
+		if (any(yt != y@endTime))
 			end.y = y@endTime
 		else
 			end.y = NULL
-		timeMatch(as.POSIXct(index(x@time)), as.POSIXct(index(y@time)), 
-				returnList, end.x, end.y)
+		timeMatch(xt, yt, returnList, end.x, end.y)
 	}
 )
 

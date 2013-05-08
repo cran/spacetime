@@ -1,15 +1,21 @@
 #.supportedTime = c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")
 
 ST = function(sp, time, endTime) {
-	stopifnot(is(endTime, "POSIXct"))
 	if (!is(time, "xts")) {
 		#stopifnot(is(time, .supportedTime))
-		stopifnot(timeBased(time))
+		if (!timeBased(time))
+			stop("time is not a time based class")
 		t = 1:length(time)
-		stopifnot(order(time, t) == t)
+		if (any(order(time, t) != t))
+			stop("time must be ordered")
 		time = xts(matrix(1:length(time), ncol = 1,
 				dimnames = list(NULL, "timeIndex")), time)
 	}
+	if (any(is.na(index(time))))
+		stop("time values cannot be negative")
+	if (any(is.na(endTime)))
+		stop("endTime values cannot be negative")
+	stopifnot(is(endTime, "POSIXct"))
 	attr(endTime, "tzone") = attr(time, "tzone")
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")
@@ -99,11 +105,20 @@ if (!isGeneric("plot"))
 	setGeneric("plot", function(x, y, ...)
 		standardGeneric("plot"))
 
-
 if (!isGeneric("spTransform"))
 	setGeneric("spTransform", function(x, CRSobj, ...)
 		standardGeneric("spTransform"))
+
+spTransform.STT = function(x, CRSobj, ...) {
+	stopifnot(require(rgdal))
+	x@traj = lapply(x@traj, spTransform, CRSobj)
+	x@sp = spTransform(x@sp, CRSobj)
+	x
+}
+setMethod("spTransform", signature("STT", "CRS"), spTransform.STT)
+
 spTransform.ST = function(x, CRSobj, ...) {
+	stopifnot(require(rgdal))
 	x@sp = spTransform(x@sp, CRSobj)
 	x
 }
@@ -126,7 +141,10 @@ setMethod("summary", "ST", summary.ST)
 
 print.summary.ST = function(x, ...) {
     cat(paste("Object of class ", x[["class"]], "\n", sep = ""))
-	cat(" with Dimensions (s, t, attr): (")
+	if (is(x, "STT"))
+		cat(" with Dimensions (ntraj, total_points, attr): (")
+	else
+		cat(" with Dimensions (s, t, attr): (")
 	cat(paste(x[["dim"]], collapse = ", "))
 	cat(")\n")
 	cat("[[Spatial:]]\n")

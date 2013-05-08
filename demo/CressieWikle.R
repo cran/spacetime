@@ -57,6 +57,7 @@ sst.m = rep(1:12, length.out = 399)
 # dates:
 sst.Date = as.Date(paste(sst.y, sst.m, "01", sep="-"), "%Y-%m-%d")
 # as year/months:
+library(zoo)
 sst.ym = as.yearmon(sst.Date)
 
 # landmask:
@@ -172,10 +173,10 @@ class(sp)
 sp.x = spsample(sp, 630, "regular", offset = c(.5,.5))
 stplot(s, sp.layout=list("sp.points", sp.x))
 gridded(sp.x)=TRUE
-sa = aggregate(s, sp.x)
+sa = aggregate(s, sp.x, mean)
 stplot(sa)
-s1 = aggregate(s, sp.x[sample(630),])
-s2 = aggregate(s, sp.x[sample(630),])
+s1 = aggregate(s, sp.x[sample(630),], mean)
+s2 = aggregate(s, sp.x[sample(630),], mean)
 stplot(s1)
 s1[1,1]
 stplot(s2) # plot should be identical
