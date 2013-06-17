@@ -1,6 +1,6 @@
 aggregate_ST_temporal = function(x, by, FUN = mean, ..., simplify = TRUE) {
 	stopifnot("data" %in% slotNames(x))
-	require(zoo) # otherwise, missing MATCH errors appear later on.
+	#require(zoo) # otherwise, missing MATCH errors appear later on.
 	x = as(x, "STFDF")
 	if (is.function(by))
 		cc = by(index(x@time)) # time format index
@@ -86,4 +86,15 @@ setMethod("aggregateBy", signature(x = "ST", by = "ST"),
 #)
 aggregate.ST = function(x, by, FUN, ..., simplify = TRUE) {
 	aggregateBy(x, by, FUN, simplify = simplify, ...)
+}
+
+aggregate.STFDF = function(x, by, FUN, ..., simplify = TRUE) {
+	if (identical(by, "time"))
+		addAttrToGeom(x@sp,
+			as.data.frame(apply(as.array(x), c(1,3), FUN)),
+			FALSE)
+	else if (identical(by, "space"))
+		xts(apply(as.array(x), c(2,3), FUN), index(x@time))
+	else
+		aggregate.ST(x, by, FUN, ..., simplify = simplify)
 }

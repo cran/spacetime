@@ -11,7 +11,7 @@ set.seed(1331)
 ###################################################
 ### code chunk number 2: jss816.Rnw:185-187
 ###################################################
-library("foreign")
+library(foreign)
 read.dbf(system.file("shapes/sids.dbf", package="maptools"))[1:5,c(5,9:14)]
 
 
@@ -196,8 +196,8 @@ xs2[1:4,]
 ### code chunk number 18: jss816.Rnw:801-811 (eval = FALSE)
 ###################################################
 ## # code to create figure 5.
-## library("lattice")
-## library("RColorBrewer")
+## library(lattice)
+## library(RColorBrewer)
 ## b = brewer.pal(12, "Set3")
 ## par.settings = list(superpose.symbol = list(col = b, fill = b), 
 ## 	superpose.line = list(col = b),
@@ -223,7 +223,7 @@ library(xts)
 ###################################################
 ### code chunk number 21: jss816.Rnw:932-935
 ###################################################
-library("maptools")
+library(maptools)
 fname = system.file("shapes/sids.shp", package="maptools")[1]
 nc = readShapePoly(fname, proj4string=CRS("+proj=longlat +datum=NAD27"))
 
@@ -253,10 +253,10 @@ nct = STFDF(sp = as(nc, "SpatialPolygons"), time, data, endTime)
 ###################################################
 ### code chunk number 25: jss816.Rnw:960-965
 ###################################################
-library("maps")
+library(maps)
 states.m = map('state', plot=FALSE, fill=TRUE)
 IDs <- sapply(strsplit(states.m$names, ":"), function(x) x[1])
-library("maptools")
+library(maptools)
 states = map2SpatialPolygons(states.m, IDs=IDs)
 
 
@@ -270,7 +270,7 @@ time = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
 ###################################################
 ### code chunk number 27: jss816.Rnw:973-975
 ###################################################
-library("plm")
+library(plm)
 data("Produc")
 
 
@@ -298,7 +298,7 @@ zz <- plm(log(gsp) ~ log(pcap) + log(pc) + log(emp) + unemp,
 ###################################################
 ### code chunk number 31: jss816.Rnw:1033-1039
 ###################################################
-library("gstat")
+library(gstat)
 data("wind")
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
 wind.loc$x = as.numeric(char2dms(as.character(wind.loc[["Longitude"]])))
@@ -309,7 +309,7 @@ proj4string(wind.loc) = "+proj=longlat +datum=WGS84"
 ###################################################
 ### code chunk number 32: jss816.Rnw:1044-1049
 ###################################################
-library("mapdata")
+library(mapdata)
 plot(wind.loc, xlim = c(-11,-5.4), ylim = c(51,55.5), axes=T, col="red",
 	cex.axis =.7)
 map("worldHires", add=TRUE, col = grey(.5))
@@ -353,7 +353,7 @@ pts = SpatialPoints(pts, CRS("+proj=longlat +datum=WGS84"))
 ###################################################
 ### code chunk number 37: jss816.Rnw:1095-1098
 ###################################################
-library("rgdal")
+library(rgdal)
 utm29 = CRS("+proj=utm +zone=29 +datum=WGS84")
 pts = spTransform(pts, utm29)
 
@@ -369,7 +369,7 @@ class(wind.data)
 ###################################################
 ### code chunk number 39: jss816.Rnw:1108-1113
 ###################################################
-library("maptools")
+library(maptools)
 m = map2SpatialLines(
 	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
 proj4string(m) = "+proj=longlat +datum=WGS84"
@@ -433,8 +433,8 @@ colnames(wind.ST@data) <- "sqrt_speed"
 ### code chunk number 46: jss816.Rnw:1162-1173 (eval = FALSE)
 ###################################################
 ## pdf("windts.pdf", height = 4)
-## library("lattice")
-## library("RColorBrewer")
+## library(lattice)
+## library(RColorBrewer)
 ## b = brewer.pal(12,"Set3")
 ## par.settings = list(superpose.symbol = list(col = b, fill = b), 
 ## 	superpose.line = list(col = b),
@@ -483,7 +483,7 @@ print(spplot(EOF(wind.ST), col.regions=bpy.colors(),
 ###################################################
 ### code chunk number 52: jss816.Rnw:1225-1234
 ###################################################
-library("adehabitatLT")
+library(adehabitatLT)
 data("puechabonsp")
 locs = puechabonsp$relocs
 xy = coordinates(locs)
@@ -511,7 +511,7 @@ print(stplot(sttdf, by="time*id"))
 ###################################################
 ### code chunk number 55: jss816.Rnw:1261-1265
 ###################################################
-library("cshapes")
+library(cshapes)
 cs = cshp()
 names(cs)
 row.names(cs) = paste(as.character(cs$CNTRY_NAME), 1:244)

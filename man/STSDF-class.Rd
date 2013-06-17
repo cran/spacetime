@@ -10,6 +10,7 @@
 \alias{coerce,STSDF,STFDF-method}
 \alias{coerce,STSDF,STIDF-method}
 \alias{plot,STS,missing-method}
+\alias{plot,STSDF,missing-method}
 \alias{rbind.STSDF}
 
 \title{Class "STSDF"}
@@ -32,8 +33,10 @@ Objects of this class carry sparse space/time grid data }
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "STSDF")}: selects spatial entities,        temporal entities, and attributes } 
-
-    % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
+    \item{plot}{\code{signature(x = "STS", y = "missing")}: plots
+	space-time layout }
+    \item{plot}{\code{signature(x = "STSDF", y = "missing")}: plots
+	space-time layout, indicating records partially NA }
 	% for spatial objects; does nothing but setting up a plotting region choosing
 	% a suitable aspect if not given(see below), colouring the plot background using either a bg= argument or par("bg"), and possibly drawing axes.  }
 	% \item{summary}{\code{signature(object = "Spatial")}: summarize object}
@@ -81,6 +84,7 @@ if FALSE, no coercion to reduced classes takes place}
 \examples{
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
+library(sp)
 sp = SpatialPoints(sp)
 library(xts)
 time = xts(1:4, as.POSIXct("2010-08-05")+3600*(10:13))

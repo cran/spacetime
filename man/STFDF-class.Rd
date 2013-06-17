@@ -9,8 +9,11 @@
 \alias{coerce,STFDF,xts-method}
 \alias{coerce,STFDF,Spatial-method}
 \alias{plot,STF,missing-method}
+\alias{plot,STFDF,missing-method}
 \alias{na.omit.STFDF}
 \alias{rbind.STFDF}
+\alias{as.zoo}
+\alias{as.zoo.STFDF}
 
 \title{Class "STFDF"}
 \description{ A class for spatio-temporal data with full space-time grid; for
@@ -32,8 +35,10 @@ Objects of this class represent full space/time data with a full grid
    \item{coerce}{STFDF,xts}
    \item{coerce}{STFDF,Spatial}(from) coerces to (wide form) SpatialXxDataFrame,
    where SpatialXx is the spatial class of from@sp
-
-    % \item{plot}{\code{signature(x = "Spatial", y = "missing")}: plot method
+    \item{plot}{\code{signature(x = "STF", y = "missing")}: plots space-time
+	layout }
+    \item{plot}{\code{signature(x = "STFDF", y = "missing")}: plots space-time
+	layout, indicating full missing valued records }
 	% for spatial objects; does nothing but setting up a plotting region choosing
 	% a suitable aspect if not given(see below), colouring the plot background using either a bg= argument or par("bg"), and possibly drawing axes.  }
 	% \item{summary}{\code{signature(object = "Spatial")}: summarize object}
@@ -80,6 +85,7 @@ appropriately. }
 \examples{
 sp = cbind(x = c(0,0,1), y = c(0,1,1))
 row.names(sp) = paste("point", 1:nrow(sp), sep="")
+library(sp)
 sp = SpatialPoints(sp)
 time = as.POSIXct("2010-08-05")+3600*(10:13)
 m = c(10,20,30) # means for each of the 3 point locations

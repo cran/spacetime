@@ -1,3 +1,4 @@
+library(sp)
 library(spacetime)
 library(xts)
 
@@ -28,7 +29,7 @@ Produc$y = xy[,2]
 #using stConstruct, use polygon centroids for location:
 x = stConstruct(Produc, c("x", "y"), "time")
 class(x)
-stplot(x[,,"unemp"], yrs)
+stplot(x[,,"unemp"])
 
 # alternatively, pass states:
 Produc$state = gsub("TENNESSE", "TENNESSEE", Produc$state)
