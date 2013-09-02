@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.0.1 (2013-05-16) -- "Good Sport"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,8 +15,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> library(sp)
 > library(spacetime)
-Loading required package: sp
 > 
 > m = 3# nr of trajectories
 > n = 100 # length of each
@@ -54,4 +53,4 @@ Loading required package: sp
 > 
 > proc.time()
    user  system elapsed 
-  1.444   0.048   1.490 
+  1.616   0.048   1.667 
