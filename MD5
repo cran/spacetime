@@ -1,4 +1,4 @@
-6fea7ed243cf6a19c31bebeb4db0c92a *DESCRIPTION
+53bf112624a352cd5beeffd63d010b7c *DESCRIPTION
 a143094bee74a3143121e5890d707e2c *NAMESPACE
 b43961893ac75a5f95427458cc50cfe6 *R/Class-ST.R
 f02cc2b2e484af569bd9080a8b723675 *R/Class-STFDF.R
@@ -41,13 +41,13 @@ f3d2bf7bfaa880e145b212aab480f26b *demo/gvis.R
 c8bd3aac0901313066a48464aa7e1a9c *inst/ChangeLog
 d7d3e09278b7c2bc3aa4fabec81fa813 *inst/doc/jss816.R
 4cdcbd9b09833bad86acb73f5cd4ced0 *inst/doc/jss816.Rnw
-bbba254773e2e62f84ed7de074c2f750 *inst/doc/jss816.pdf
+653a079f9c82e42cee753181fde5f470 *inst/doc/jss816.pdf
 64708bb3288b3f50a2f53ebf4d2df117 *inst/doc/sto.R
 8ba856cb5c84f3a88aad2ec8f358cb51 *inst/doc/sto.Rnw
-9d65fe27a1118a907fd019870ed6d1d6 *inst/doc/sto.pdf
-47aa1e2c0c531e8515826fe7e8ef7abe *inst/doc/stpg.R
-99f0564c15a3e0963dd20fcfc9c13892 *inst/doc/stpg.Rnw
-9b4a9c3070871b18603d0002f412ba8e *inst/doc/stpg.pdf
+20991e91ba34c211f168bdf5bd21cc36 *inst/doc/sto.pdf
+43d0ffc1fceb6ecf0533df56337a8e9c *inst/doc/stpg.R
+1cb105bff82c815f15927f6a9c26a04e *inst/doc/stpg.Rnw
+19ff17979263dc6e6b49d010b004f6c9 *inst/doc/stpg.pdf
 00159a3bab98f91c90f528de610a3392 *man/ST-class.Rd
 43018bb680de6c6f4f46bd8341e87539 *man/STFDF-class.Rd
 d64aa542b0141ac7d729a5949bff9dfa *man/STIDF-class.Rd
@@ -94,7 +94,7 @@ b9564ddd59a06782310989e8f33db55e *vignettes/jsslogo.jpg
 4df61dc8c0423de519b478c62b342050 *vignettes/move.pdf
 2428f80cf9f7d0444d1e0cf000430aaf *vignettes/produc.jpg
 8ba856cb5c84f3a88aad2ec8f358cb51 *vignettes/sto.Rnw
-99f0564c15a3e0963dd20fcfc9c13892 *vignettes/stpg.Rnw
+1cb105bff82c815f15927f6a9c26a04e *vignettes/stpg.Rnw
 dda382f9c70c4d5f98cd61c0deff7b09 *vignettes/ti.fig
 c3c1f352700e5152136a4d2c0a0b2208 *vignettes/ti.pdf
 134caaa9c956604c2161bd9b7168bd01 *vignettes/tp.pdf
