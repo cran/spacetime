@@ -72,10 +72,11 @@ password = "pw"
 
 
 ###################################################
-### code chunk number 9: stpg.Rnw:127-133
+### code chunk number 9: stpg.Rnw:127-134
 ###################################################
 setClass("ST_PG", contains = "ST", 
-	slots = c(space_table = "character",
+	# slots = c(space_table = "character",
+	representation(space_table = "character",
 	time_table = "character",
 	attr_table = "character",
 	attr = "character",
@@ -83,7 +84,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 10: stpg.Rnw:136-144 (eval = FALSE)
+### code chunk number 10: stpg.Rnw:137-145 (eval = FALSE)
 ###################################################
 ## rural_proxy = new("ST_PG", 
 ## 	#ST(rural@sp, rural@time, rural@endTime),
@@ -96,7 +97,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 11: stpg.Rnw:151-171
+### code chunk number 11: stpg.Rnw:152-172
 ###################################################
 .SqlTime = function(x, j) {
 	stopifnot(is.character(j))
@@ -121,7 +122,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 12: stpg.Rnw:177-187
+### code chunk number 12: stpg.Rnw:178-188
 ###################################################
 setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 	stopifnot(missing(i) != missing(j)) # either of them present
@@ -136,7 +137,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 13: stpg.Rnw:189-196 (eval = FALSE)
+### code chunk number 13: stpg.Rnw:190-197 (eval = FALSE)
 ###################################################
 ## pm10_20050101 = rural_proxy[, "2005-01-01"]
 ## summary(pm10_20050101)
@@ -148,7 +149,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 14: stpg.Rnw:201-204 (eval = FALSE)
+### code chunk number 14: stpg.Rnw:202-205 (eval = FALSE)
 ###################################################
 ## dim(pm10_NRW)
 ## pm10_NRW = pm10_NRW[T,]
@@ -156,7 +157,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 15: stpg.Rnw:207-210 (eval = FALSE)
+### code chunk number 15: stpg.Rnw:208-211 (eval = FALSE)
 ###################################################
 ## object.size(rural)
 ## object.size(pm10_20050101)
@@ -164,7 +165,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 16: stpg.Rnw:216-218 (eval = FALSE)
+### code chunk number 16: stpg.Rnw:217-219 (eval = FALSE)
 ###################################################
 ## dbDisconnect(con)
 ## dbUnloadDriver(drv)
