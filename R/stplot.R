@@ -52,7 +52,8 @@ stplot.STFDF = function(obj, names.attr = trimDates(obj), ...,
 			scales = list(draw=TRUE)
 		else
 			scales$draw = TRUE
-		s = sp:::longlat.scales(obj@sp, scales = scales, xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
+		s = longlat.scales(obj@sp, scales = scales, 
+			xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
 		cn = coordnames(obj@sp)
 		if (scaleX == 1) {
 			scales["x"] = s["x"]
@@ -78,7 +79,7 @@ stplot.STFDF = function(obj, names.attr = trimDates(obj), ...,
 		## OR:
 		## x = as(obj, "Spatial")
 		## x@data = data.frame(x@data) # cripples column names
-		scales = sp:::longlat.scales(obj@sp, scales = scales, 
+		scales = longlat.scales(obj@sp, scales = scales, 
 			xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,])
 		if (animate > 0) {
 			names.attr = rep(names.attr, length = ncol(df))
@@ -107,14 +108,14 @@ stplot.STFDF = function(obj, names.attr = trimDates(obj), ...,
 #	stplot(as(obj, "STFDF"), names.attr = names.attr, ...)
 
 panel.stpointsplot = function(x, y, col, sp.layout, ...) {
-    sp:::sp.panel.layout(sp.layout, panel.number())
+    sp.panel.layout(sp.layout, panel.number())
 	panel.xyplot(x, y, col = col, ...)
 }
 
 stplot.STIDF = function(obj, ..., names.attr = NULL,
 		as.table = TRUE, scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = 'p', number = 6, tcuts, sp.layout = NULL,
-		xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,]) 
+		xlim = bbox(obj)[1,], ylim = bbox(obj)[2,]) 
 {
 	if (ncol(obj@data) > 1)
 		warning("plotting only the first mark or attribute")
@@ -146,14 +147,14 @@ stplot.STI = function(obj, names.attr = NULL, ...,
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = 'p', number = 6, overlap = 0, asp,
 		col = 1, panel = panel.stpointsplot, sp.layout = NULL,
-		xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,]
+		xlim = bbox(obj)[1,], ylim = bbox(obj)[2,]
 		) {
 	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
 	# further control time here?:
 	f = paste(f, "| time")
 	if (missing(asp))
 		asp = mapasp(obj@sp)
-	scales = sp:::longlat.scales(obj@sp, scales = scales, xlim, ylim)
+	scales = longlat.scales(obj@sp, scales = scales, xlim, ylim)
 	obj = as.data.frame(obj)
 	if (is.numeric(number) && number > 1)
 		obj$time = equal.count(obj$time, number = number, overlap = overlap)
@@ -163,7 +164,7 @@ stplot.STI = function(obj, names.attr = NULL, ...,
 }
 
 panel.sttrajplot = function(x, y, col, sp.layout, ..., GRP, lwd, lty = 1) {
-    sp:::sp.panel.layout(sp.layout, panel.number())
+    sp.panel.layout(sp.layout, panel.number())
 	if (length(GRP) == 1 && length(lwd) == 1 && length(col) == 1)
 		llines(x, y, lwd = lwd, col = col)
 	else {
@@ -185,11 +186,11 @@ stplot.STTDF = function(obj, names.attr = NULL, ...,
 		scales = list(draw=FALSE), xlab = NULL, ylab = NULL, 
 		type = 'l', number = 6, overlap = 0, asp,
 		col = 1, lwd = 1, lty = 1, panel = panel.sttrajplot, sp.layout = NULL,
-		xlim = bbox(obj@sp)[1,], ylim = bbox(obj@sp)[2,]
+		xlim = bbox(obj)[1,], ylim = bbox(obj)[2,]
 		) {
 	if (missing(asp))
 		asp = mapasp(obj@sp)
-	scales = sp:::longlat.scales(obj@sp, scales = scales, xlim, ylim)
+	scales = longlat.scales(obj@sp, scales = scales, xlim, ylim)
 	GRP = rep(1:length(obj@traj), times = sapply(obj@traj, length))
 
 	f =  paste(rev(coordnames(obj@sp)), collapse=" ~ ")
@@ -207,7 +208,8 @@ stplot.STTDF = function(obj, names.attr = NULL, ...,
 
 setMethod("stplot", signature("STTDF"), stplot.STTDF)
 setMethod("stplot", signature("STFDF"),  stplot.STFDF)
-setMethod("stplot", signature("STSDF"), stplot.STIDF)
+setMethod("stplot", signature("STSDF"),
+          function(obj, ...) stplot.STIDF(as(obj, "STIDF"), ...))
 setMethod("stplot", signature("STIDF"), stplot.STIDF)
 setMethod("stplot", signature("STI"), stplot.STI)
 

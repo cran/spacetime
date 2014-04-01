@@ -1,11 +1,14 @@
 import(methods)
 import(sp)
 import(lattice)
+import(rgeos)
 importFrom(stats, aggregate, na.omit, time, start, end)
 importFrom(utils, stack, unstack)
 importFrom(xts, xts, as.xts, timeBased)
 importFrom(zoo, index, na.locf, na.spline, na.approx, as.zoo)
 importFrom(intervals, interval_overlap, Intervals)
+# importFrom(rgl, plot3d, lines3d, surface3d)
+# importFrom(OpenStreetMap, openmap, openproj)
 
 exportClasses(
 	xts, zoo,
@@ -29,12 +32,17 @@ export(delta,
 	EOF,
 	nbMult,
 	# zoo methods:
-	index, na.locf, na.spline, na.approx, as.zoo #as.zoo.STFDF
+	index, na.locf, na.spline, na.approx, as.zoo
 )
 
 exportMethods(
+	aggregate,
+	bbox,
+	coordnames,
+	geometry,
 	over,
 	plot,
+	stbox,
 	stplot,
 	timeMatch
 )

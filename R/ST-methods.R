@@ -12,14 +12,14 @@ ST = function(sp, time, endTime) {
 				dimnames = list(NULL, "timeIndex")), time)
 	}
 	if (any(is.na(index(time))))
-		stop("time values cannot be negative")
-	if (any(is.na(endTime)))
-		stop("endTime values cannot be negative")
+		stop("NA time values not allowed")
 	stopifnot(is(endTime, "POSIXct"))
 	attr(endTime, "tzone") = attr(time, "tzone")
+	if (any(is.na(endTime)))
+		stop("NA endTime values not allowed")
 	if (is(sp, "SpatialGrid")) {
 		sp = as(sp, "SpatialPixels")
-		warning("converted SpatialGrid to SpatialPixels")
+		warning("on constructing ST, converted SpatialGrid to SpatialPixels")
 	}
 	new("ST", sp = sp, time = time, endTime = endTime)
 }
@@ -109,6 +109,19 @@ if (!isGeneric("spTransform"))
 	setGeneric("spTransform", function(x, CRSobj, ...)
 		standardGeneric("spTransform"))
 
+if (!isGeneric("stbox"))
+	setGeneric("stbox", function(obj)
+		standardGeneric("stbox"))
+
+setMethod("stbox", "ST", 
+	function(obj) {
+		bb = bbox(obj@sp)
+		tr = range(index(obj@time))
+		data.frame(t(bb), time = tr)
+	}
+)
+setMethod("bbox", "ST", function(obj) t(stbox(obj)[1:2]))
+
 spTransform.STT = function(x, CRSobj, ...) {
 	stopifnot(require(rgdal))
 	x@traj = lapply(x@traj, spTransform, CRSobj)
@@ -181,3 +194,6 @@ if (!isGeneric("aggregate"))
 if (!isGeneric("aggregateBy"))
 	setGeneric("aggregateBy", function(x, by, FUN = mean, ...)
 		standardGeneric("aggregateBy"))
+if (!isGeneric("geometry"))
+	setGeneric("geometry", function(obj)
+		standardGeneric("geometry"))
