@@ -103,7 +103,7 @@ axis(1, at = sort(unique(t)), labels = rep("", length(t)))
 axis(2, at = sort(unique(s)), labels = rep("", length(s)))
 #text(g, labels = 1:5, pos=4)
 title("STT: trajectory")
-opar$cin = opar$cra = opar$csi = opar$cxy = opar$din = NULL
+opar$cin = opar$cra = opar$csi = opar$cxy = opar$din = opar$page = NULL
 par(opar)
 
 
@@ -367,30 +367,31 @@ class(wind.data)
 
 
 ###################################################
-### code chunk number 39: jss816.Rnw:1108-1113
+### code chunk number 39: jss816.Rnw:1108-1114
 ###################################################
 library(maptools)
 m = map2SpatialLines(
-	map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
+	#map("worldHires", xlim = c(-11,-5.4), ylim = c(51,55.5), plot=F))
+	map("worldHires", xlim = c(-11.5,-6.0), ylim = c(51.3,55.0), plot=F))
 proj4string(m) = "+proj=longlat +datum=WGS84"
 m = spTransform(m, utm29)
 
 
 ###################################################
-### code chunk number 40: jss816.Rnw:1116-1118
+### code chunk number 40: jss816.Rnw:1117-1119
 ###################################################
 grd = SpatialPixels(SpatialPoints(makegrid(m, n = 300)),
 	proj4string = proj4string(m))
 
 
 ###################################################
-### code chunk number 41: jss816.Rnw:1121-1122
+### code chunk number 41: jss816.Rnw:1122-1123
 ###################################################
 wind.data = wind.data[, "1961-04"]
 
 
 ###################################################
-### code chunk number 42: jss816.Rnw:1126-1130
+### code chunk number 42: jss816.Rnw:1127-1131
 ###################################################
 n = 10
 library(xts)
@@ -399,7 +400,7 @@ pred.grd = STF(grd, tgrd)
 
 
 ###################################################
-### code chunk number 43: jss816.Rnw:1134-1138
+### code chunk number 43: jss816.Rnw:1135-1139
 ###################################################
 v = vgmST("separable", space = vgm(1, "Exp", 750000), time = vgm(1, "Exp", 1.5 * 3600 * 24),
          sill=0.6)
@@ -408,7 +409,7 @@ colnames(wind.ST@data) <- "sqrt_speed"
 
 
 ###################################################
-### code chunk number 44: jss816.Rnw:1144-1149 (eval = FALSE)
+### code chunk number 44: jss816.Rnw:1145-1150 (eval = FALSE)
 ###################################################
 ## layout = list(list("sp.lines", m, col='grey'),
 ## 	list("sp.points", pts, first=F, cex=.5))
@@ -418,35 +419,35 @@ colnames(wind.ST@data) <- "sqrt_speed"
 
 
 ###################################################
-### code chunk number 45: jss816.Rnw:1152-1159 (eval = FALSE)
+### code chunk number 45: jss816.Rnw:1153-1160
 ###################################################
-## pdf("wind.pdf", height=4.5)
-## layout = list(list("sp.lines", m, col='grey'),
-## 	list("sp.points", pts, first=F, cex=.5))
-## print(stplot(wind.ST, col.regions=brewer.pal(11, "RdBu")[-c(10,11)],
-## 	at=seq(-1.375,1,by=.25),
-## 	par.strip.text = list(cex=.7), sp.layout = layout))
-## dev.off()
+pdf("wind.pdf", height=4.5)
+layout = list(list("sp.lines", m, col='grey'),
+	list("sp.points", pts, first=F, cex=.5))
+print(stplot(wind.ST, col.regions=brewer.pal(11, "RdBu")[-c(10,11)],
+	at=seq(-1.375,1,by=.25),
+	par.strip.text = list(cex=.7), sp.layout = layout))
+dev.off()
 
 
 ###################################################
-### code chunk number 46: jss816.Rnw:1162-1173 (eval = FALSE)
+### code chunk number 46: jss816.Rnw:1163-1174
 ###################################################
-## pdf("windts.pdf", height = 4)
-## library(lattice)
-## library(RColorBrewer)
-## b = brewer.pal(12,"Set3")
-## par.settings = list(superpose.symbol = list(col = b, fill = b), 
-## 	superpose.line = list(col = b),
-## 	fontsize = list(text=9)) 
-## print(stplot(wind.data, mode = "ts",  auto.key=list(space="right"), 
-## 	xlab = "1961", ylab = expression(sqrt(speed)),
-## 	par.settings = par.settings))
-## dev.off()
+pdf("windts.pdf", height = 4)
+library(lattice)
+library(RColorBrewer)
+b = brewer.pal(12,"Set3")
+par.settings = list(superpose.symbol = list(col = b, fill = b), 
+	superpose.line = list(col = b),
+	fontsize = list(text=9)) 
+print(stplot(wind.data, mode = "ts",  auto.key=list(space="right"), 
+	xlab = "1961", ylab = expression(sqrt(speed)),
+	par.settings = par.settings))
+dev.off()
 
 
 ###################################################
-### code chunk number 47: jss816.Rnw:1176-1181 (eval = FALSE)
+### code chunk number 47: jss816.Rnw:1177-1182 (eval = FALSE)
 ###################################################
 ## pdf("hov.pdf")
 ## scales=list(x=list(rot=45))
@@ -456,32 +457,32 @@ colnames(wind.ST@data) <- "sqrt_speed"
 
 
 ###################################################
-### code chunk number 48: jss816.Rnw:1187-1188 (eval = FALSE)
+### code chunk number 48: jss816.Rnw:1188-1189 (eval = FALSE)
 ###################################################
-## eof.data = EOF(wind.data)
+## eof.data = eof(wind.data)
 
 
 ###################################################
-### code chunk number 49: jss816.Rnw:1191-1192 (eval = FALSE)
+### code chunk number 49: jss816.Rnw:1192-1193
 ###################################################
-## eof.int = EOF(wind.ST)
+eof.int = eof(wind.ST)
 
 
 ###################################################
-### code chunk number 50: jss816.Rnw:1196-1197 (eval = FALSE)
+### code chunk number 50: jss816.Rnw:1197-1198 (eval = FALSE)
 ###################################################
-## eof.xts = EOF(wind.ST, "temporal")
+## eof.xts = eof(wind.ST, "temporal")
 
 
 ###################################################
-### code chunk number 51: jss816.Rnw:1206-1208
+### code chunk number 51: jss816.Rnw:1207-1209
 ###################################################
-print(spplot(EOF(wind.ST), col.regions=bpy.colors(),
-	par.strip.text = list(cex=.5), as.table = TRUE))
+print(spplot(eof.int[1:4], col.regions=bpy.colors(),
+	par.strip.text = list(cex=.5), as.table = TRUE, sp.layout = layout))
 
 
 ###################################################
-### code chunk number 52: jss816.Rnw:1225-1234
+### code chunk number 52: jss816.Rnw:1226-1235
 ###################################################
 library(adehabitatLT)
 data("puechabonsp")
@@ -495,21 +496,21 @@ l2 = cutltraj(ltr, "foo(dt)", nextr = TRUE)
 
 
 ###################################################
-### code chunk number 53: jss816.Rnw:1238-1240 (eval = FALSE)
+### code chunk number 53: jss816.Rnw:1239-1241 (eval = FALSE)
 ###################################################
 ## sttdf = as(l2, "STTDF")
 ## stplot(sttdf, by="time*id")
 
 
 ###################################################
-### code chunk number 54: jss816.Rnw:1246-1248
+### code chunk number 54: jss816.Rnw:1247-1249
 ###################################################
 sttdf = as(l2, "STTDF")
 print(stplot(sttdf, by="time*id"))
 
 
 ###################################################
-### code chunk number 55: jss816.Rnw:1261-1265
+### code chunk number 55: jss816.Rnw:1262-1266
 ###################################################
 library(cshapes)
 cs = cshp()
@@ -518,7 +519,7 @@ row.names(cs) = paste(as.character(cs$CNTRY_NAME), 1:244)
 
 
 ###################################################
-### code chunk number 56: jss816.Rnw:1275-1280
+### code chunk number 56: jss816.Rnw:1276-1281
 ###################################################
 cs = cs[cs$COWSYEAR > -1,]
 begin = as.POSIXct(paste(cs$COWSYEAR, cs$COWSMONTH, cs$COWSDAY, sep="-"), 
@@ -528,41 +529,41 @@ end = as.POSIXct(paste(cs$COWEYEAR, cs$COWEMONTH,cs$COWEDAY, sep="-"),
 
 
 ###################################################
-### code chunk number 57: jss816.Rnw:1283-1284
+### code chunk number 57: jss816.Rnw:1284-1285
 ###################################################
 st = STIDF(geometry(cs), begin, as.data.frame(cs), end)
 
 
 ###################################################
-### code chunk number 58: jss816.Rnw:1288-1290
+### code chunk number 58: jss816.Rnw:1289-1291
 ###################################################
 pt = SpatialPoints(cbind(7, 52), CRS(proj4string(cs)))
 as.data.frame(st[pt,,1:5])
 
 
 ###################################################
-### code chunk number 59: jss816.Rnw:1314-1316 (eval = FALSE)
+### code chunk number 59: jss816.Rnw:1315-1317 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## demo(CressieWikle)
 
 
 ###################################################
-### code chunk number 60: jss816.Rnw:1327-1329 (eval = FALSE)
+### code chunk number 60: jss816.Rnw:1328-1330 (eval = FALSE)
 ###################################################
 ## library(gstat)
 ## vignette("st")
 
 
 ###################################################
-### code chunk number 61: jss816.Rnw:1335-1337 (eval = FALSE)
+### code chunk number 61: jss816.Rnw:1336-1338 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## vignette("stpg")
 
 
 ###################################################
-### code chunk number 62: jss816.Rnw:1349-1351 (eval = FALSE)
+### code chunk number 62: jss816.Rnw:1350-1352 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## vignette("sto")

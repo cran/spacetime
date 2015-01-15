@@ -69,12 +69,18 @@ subs.STSDF <- function(x, i, j, ... , drop = is(x, "STSDF")) {
     	}
 	} 
 
-  matrix.i <- FALSE
+	if (!missing.i && is(i, "STS")) { # highjack i and j:
+		j = which(!is.na(timeMatch(x,i)))
+		i = which(!is.na(over(x@sp, geometry(i@sp))))
+		missing.j = FALSE
+	}
+
+	matrix.i <- FALSE
   
 	# space
-  #######
+	#######
   
-  # keep track of original spatial indicies - if not yet 
+	# keep track of original spatial indicies - if not yet 
   	if (!is.character(row.names(x@sp)))
     	row.names(x@sp) <- as.character(row.names(x@sp))
   
@@ -176,10 +182,13 @@ subs.STSDF <- function(x, i, j, ... , drop = is(x, "STSDF")) {
 			}
 		} else {
       		if (length(t) == 1) { # only one time item
-  				if (is(x, "STSDF"))
-  					x = addAttrToGeom(x@sp[x@index[,1],], x@data, match.ID = FALSE)
+  				if (is(x, "STSDF")) {
+  					sp = x@sp[x@index[,1],]
+					if ("data" %in% slotNames(sp))
+						x@data = cbind(x@data, sp@data) # otherwise they'd get lost
+  					x = addAttrToGeom(sp, x@data, match.ID = FALSE)
               	# added index to achieve matching SpatialPoints and data.frame # TG
-  				else
+  				} else
   					x = x@sp[x@index[,1],]
   			}
 		}

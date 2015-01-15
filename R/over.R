@@ -1,12 +1,9 @@
-# from sp:
-.index2list = function(x, returnList) {
-	if (returnList) {
-		l = lapply(1:length(x), function(x) { integer(0) })
-		notNA = !is.na(x)
-		l[notNA] = x[notNA]
-		l
-	} else
-		x
+# copied from sp:
+.index2list = function(x) {
+	l = lapply(1:length(x), function(x) { integer(0) })
+	notNA = !is.na(x)
+	l[notNA] = x[notNA]
+	l
 }
 
 over.xts = function(x, y, returnList = FALSE, fn = NULL, ...) {
@@ -36,6 +33,7 @@ setMethod("over", signature(x = "xts", y = "xts"), over.xts)
 
 # y = STF:
 over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
+	stopifnot(is.null(fn))
 	if (returnList) {
     	space.index = over(x@sp, y@sp, returnList = TRUE)
 		time.index = timeMatch(x, y, returnList = TRUE) 
@@ -65,34 +63,49 @@ over.STF.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
 setMethod("over", signature(x = "STF", y = "STF"), over.STF.STF)
 
 over.STS.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
+	stopifnot(is.null(fn))
     space.index = over(x@sp, y@sp)[x@index[,1]]
 	time.index = timeMatch(x, y)[x@index[,2]]
 	# compute the index of x in y as y is STF:
     idx = (time.index - 1) * length(y@sp) + space.index
-	.index2list(idx, returnList)
+	if (returnList)
+		.index2list(idx)
+	else
+		idx
 }
 setMethod("over", signature(x = "STS", y = "STF"), over.STS.STF)
 
 over.STI.STF = function(x, y, returnList = FALSE, fn = NULL, ...) {
-	#if (returnList) warning("returnList not supported yet")
-    space.index = over(x@sp, y@sp)
-	time.index = timeMatch(x, y, returnList)
+	stopifnot(is.null(fn))
+    space.index = over(x@sp, geometry(y@sp))
+	time.index = timeMatch(x, y, returnList = FALSE)
 	# compute the index of x in y as y is STF:
-    idx = (unlist(time.index) - 1) * length(y@sp) + unlist(space.index)
-	.index2list(idx, returnList)
+    #idx = (unlist(time.index) - 1) * length(y@sp) + unlist(space.index)
+    idx = (time.index - 1) * length(y@sp) + space.index
+	if (returnList) 
+		.index2list(idx)
+	else
+		idx
 }
 setMethod("over", signature(x = "STI", y = "STF"), over.STI.STF)
 
 # y = STI:
 over.STF.STI = function(x, y, returnList = FALSE, fn = NULL, ...)
-	over(as(x, "STS"), y, returnList = returnList, fn=fn, ...)
+	over(as(x, "STS"), y, returnList = returnList, fn = fn, ...)
 setMethod("over", signature(x = "STF", y = "STI"), over.STF.STI)
 
-over.STS.STI = function(x, y, returnList = FALSE, fn = NULL, ...)
-	over(as(x, "STI"), y, returnList = returnList, fn=fn, ...)
+over.STS.STI = function(x, y, returnList = FALSE, fn = NULL, ...) {
+	stopifnot(is.null(fn))
+	if (returnList) { # aggregate call:
+		r = over(y, x, returnList = TRUE)
+		sp:::.invert(r, length(r), length(x))
+	} else
+		over(as(x, "STI"), y, returnList = returnList, fn = NULL, ...) #improve?
+}
 setMethod("over", signature(x = "STS", y = "STI"), over.STS.STI)
 
 over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...) {
+	stopifnot(is.null(fn))
 	#if (returnList) warning("returnList not fully supported yet")
 	lst = list(index(x@time), index(y@time), returnList = TRUE)
 	if (any(x@endTime > as.POSIXct(index(x@time))))
@@ -110,27 +123,33 @@ over.STI.STI = function(x, y, returnList = FALSE, fn = NULL, ...) {
 			integer(0)
 	})
 	if (! returnList)
-		ret = unlist(lapply(ret, function(x) { x[1] }))
-	ret
+		unlist(lapply(ret, function(x) { x[1] }))
+	else
+		ret
 }
 setMethod("over", signature(x = "STI", y = "STI"), over.STI.STI)
 
-# y = STS:
+# any ST x, but y = STS:
 over.ST.STS = function(x, y, returnList = FALSE, fn = NULL, ...) {
-	if (returnList) warning("returnList not fully supported yet")
-	ret = over(x, STF(y@sp, y@time), returnList = returnList, fn = fn)
+	stopifnot(is.null(fn))
+	ret = over(x, as(y, "STF"), returnList = returnList, fn = fn)
+	if (!is.null(fn))
+		return(ret)
 	ix.sts = (y@index[,2] - 1) * length(y@sp) + y@index[,1]
 	ix.stf = rep(as.integer(NA), nrow(y@time) * length(y@sp))
-	ix.stf[ix.sts] = 1:nrow(y@index)
-	ix.stf[ret]
+	ix.stf[ix.sts] = 1:nrow(y@index) # e.g. NA NA 1 NA 2 NA 3 4 5 NA 6 etc, sort of inverse of index
+	if (returnList)
+		lapply(ret, function(x) { sel = ix.stf[x]; sel[!is.na(sel)] })
+	else
+		ix.stf[ret]
 }
 setMethod("over", signature(x = "ST", y = "STS"), over.ST.STS)
 
 overDFGenericST = function(x, y, returnList = FALSE, fn = NULL, ...) {
-    stopifnot(identical(proj4string(x),proj4string(y)))
+    stopifnot(identicalCRS(x, y))
 	if (is.null(fn) && !returnList) {
     	r = over(x, geometry(y), returnList = FALSE)
-		ret = y@data[r,,drop=FALSE]
+		ret = y@data[r , , drop = FALSE]
 	} else {
     	r = over(x, geometry(y), returnList = TRUE)
     	#ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
