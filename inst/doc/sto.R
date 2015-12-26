@@ -40,22 +40,23 @@ showMethods(over)
 
 
 ###################################################
-### code chunk number 7: sto.Rnw:199-202
+### code chunk number 7: sto.Rnw:199-203
 ###################################################
 data(air)
+rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 class(rural)
 class(DE_NUTS1)
 
 
 ###################################################
-### code chunk number 8: sto.Rnw:215-217
+### code chunk number 8: sto.Rnw:216-218
 ###################################################
 x = as(rural[,"2008"], "xts")
 apply(x, 1, mean, na.rm=TRUE)[1:5]
 
 
 ###################################################
-### code chunk number 9: sto.Rnw:223-228
+### code chunk number 9: sto.Rnw:224-229
 ###################################################
 dim(rural[,"2008"])
 x = aggregate(rural[,"2008"], DE_NUTS1, mean, na.rm=TRUE)
@@ -65,19 +66,19 @@ stplot(x, mode = "tp")
 
 
 ###################################################
-### code chunk number 10: sto.Rnw:232-233 (eval = FALSE)
+### code chunk number 10: sto.Rnw:233-234 (eval = FALSE)
 ###################################################
 ## stplot(x, mode = "tp", par.strip.text = list(cex=.5))
 
 
 ###################################################
-### code chunk number 11: sto.Rnw:237-238
+### code chunk number 11: sto.Rnw:238-239
 ###################################################
 print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
 
 
 ###################################################
-### code chunk number 12: sto.Rnw:248-251
+### code chunk number 12: sto.Rnw:249-252
 ###################################################
 x = aggregate(rural[,"2008"], DE, mean, na.rm=TRUE)
 class(x)
@@ -85,20 +86,20 @@ plot(x[,"PM10"])
 
 
 ###################################################
-### code chunk number 13: sto.Rnw:256-257
+### code chunk number 13: sto.Rnw:257-258
 ###################################################
 plot(x[,"PM10"])
 
 
 ###################################################
-### code chunk number 14: sto.Rnw:268-270
+### code chunk number 14: sto.Rnw:269-271
 ###################################################
 x = as(rural[,"2008"], "xts")
 apply(x, 2, mean, na.rm=TRUE)[1:5]
 
 
 ###################################################
-### code chunk number 15: sto.Rnw:277-280
+### code chunk number 15: sto.Rnw:278-281
 ###################################################
 sel = which(!apply(as(rural[,"2008"], "xts"), 2, function(x) all(is.na(x))))
 x = aggregate(rural[sel,"2008"], "month", mean, na.rm=TRUE)
@@ -106,13 +107,13 @@ stplot(x, mode = "tp")
 
 
 ###################################################
-### code chunk number 16: sto.Rnw:285-286
+### code chunk number 16: sto.Rnw:286-287
 ###################################################
 print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
 
 
 ###################################################
-### code chunk number 17: sto.Rnw:302-305
+### code chunk number 17: sto.Rnw:303-306
 ###################################################
 library(zoo)
 x = aggregate(rural[sel,"2005::2011"], as.yearqtr, median, na.rm=TRUE)
@@ -120,19 +121,19 @@ stplot(x, mode = "tp")
 
 
 ###################################################
-### code chunk number 18: sto.Rnw:310-311
+### code chunk number 18: sto.Rnw:311-312
 ###################################################
 as.year <- function(x) as.numeric(floor(as.yearmon(x)))
 
 
 ###################################################
-### code chunk number 19: sto.Rnw:317-318
+### code chunk number 19: sto.Rnw:318-319
 ###################################################
 print(stplot(x, mode = "tp", par.strip.text = list(cex=.5)))
 
 
 ###################################################
-### code chunk number 20: sto.Rnw:328-330
+### code chunk number 20: sto.Rnw:329-331
 ###################################################
 DE.years = STF(DE, as.Date(c("2008-01-01", "2009-01-01")))
 aggregate(rural[,"2008::2009"], DE.years, mean, na.rm=TRUE)

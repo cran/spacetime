@@ -5,6 +5,7 @@ op <- options(gvis.plot.tag='chart')
 ## ----results='asis', eval=TRUE-------------------------------------------
 library(spacetime)
 data(air) # loads rural and DE_NUTS1
+rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 library(ISOcodes)
 data("ISO_3166_2")
 ## State names are already in German

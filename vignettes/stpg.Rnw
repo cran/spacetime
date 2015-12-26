@@ -91,6 +91,7 @@ locations). For this, we need the \code{rgdal} function \code{writeOGR},
 which by default creates an index on the geometry:
 <<eval=FALSE>>=
 data(air)
+rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 rural = as(rural, "STSDF")
 p = rural@sp
 sp = SpatialPointsDataFrame(p, data.frame(geom_id=1:length(p)))

@@ -61,7 +61,7 @@ unstack.STFDF = function(x, form, which = 1,...) {
 #      paste(coordnames(x@sp),collapse="+"), sep = "~"))
     form = as.formula(paste(names(x@data)[which], "sp.ID", sep = "~"))
   ret = unstack(as(x, "data.frame"), form, ...)
-  rownames(ret) = as.character(index(x@time))
+  rownames(ret) = make.unique(as.character(index(x@time)))
   ret
 }
 
@@ -71,9 +71,9 @@ as.STFDF.xts = function(from) {
 			function(i) {
 				ix = index(from@time)
 				if (is(ix, "Date"))
-					xts(unstack(from[,,i]), ix)
+					xts(unstack(from[,,i, drop = FALSE]), ix)
 				else
-					xts(unstack(from[,,i]), ix, tzone = attr(from@time, "tzone"))
+					xts(unstack(from[,,i, drop = FALSE]), ix, tzone = attr(from@time, "tzone"))
 			}
 		)
 	)
@@ -93,8 +93,9 @@ setAs("STFDF", "zoo", function(from) as.zoo.STFDF(from))
 as.array.STFDF = function(x, ...) {
 	a = array(NA, dim(x))
 	for (i in 1:dim(x)[3])
-		a[,,i] = t(as(x[,,i], "xts"))
-	dimnames(a) = list(names(x@sp), make.names(index(x@time)), names(x@data))
+		a[,,i] = t(as(x[,, i, drop = FALSE], "xts"))
+	#dimnames(a) = list(names(x@sp), make.names(index(x@time)), names(x@data))
+	dimnames(a) = list(NULL, make.names(index(x@time)), names(x@data))
 	a
 }
 

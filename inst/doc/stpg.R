@@ -41,9 +41,10 @@ password = "pw"
 
 
 ###################################################
-### code chunk number 6: stpg.Rnw:92-101 (eval = FALSE)
+### code chunk number 6: stpg.Rnw:92-102 (eval = FALSE)
 ###################################################
 ## data(air)
+## rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 ## rural = as(rural, "STSDF")
 ## p = rural@sp
 ## sp = SpatialPointsDataFrame(p, data.frame(geom_id=1:length(p)))
@@ -55,13 +56,13 @@ password = "pw"
 
 
 ###################################################
-### code chunk number 7: stpg.Rnw:106-107 (eval = FALSE)
+### code chunk number 7: stpg.Rnw:107-108 (eval = FALSE)
 ###################################################
 ## subset(ogrDrivers(), name == "PostgreSQL")$write
 
 
 ###################################################
-### code chunk number 8: stpg.Rnw:113-117 (eval = FALSE)
+### code chunk number 8: stpg.Rnw:114-118 (eval = FALSE)
 ###################################################
 ## df = data.frame(time = index(rural@time), time_id = 1:nrow(rural@time))
 ## dbWriteTable(con, "rural_time", df)
@@ -70,7 +71,7 @@ password = "pw"
 
 
 ###################################################
-### code chunk number 9: stpg.Rnw:122-126 (eval = FALSE)
+### code chunk number 9: stpg.Rnw:123-127 (eval = FALSE)
 ###################################################
 ## idx = rural@index
 ## names(rural@data) = "pm10" # lower case
@@ -79,7 +80,7 @@ password = "pw"
 
 
 ###################################################
-### code chunk number 10: stpg.Rnw:135-142
+### code chunk number 10: stpg.Rnw:136-143
 ###################################################
 setClass("ST_PG", contains = "ST", 
 	# slots = c(space_table = "character",
@@ -91,7 +92,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 11: stpg.Rnw:145-153 (eval = FALSE)
+### code chunk number 11: stpg.Rnw:146-154 (eval = FALSE)
 ###################################################
 ## rural_proxy = new("ST_PG", 
 ## 	#ST(rural@sp, rural@time, rural@endTime),
@@ -104,7 +105,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 12: stpg.Rnw:160-180
+### code chunk number 12: stpg.Rnw:161-181
 ###################################################
 .SqlTime = function(x, j) {
 	stopifnot(is.character(j))
@@ -129,7 +130,7 @@ setClass("ST_PG", contains = "ST",
 
 
 ###################################################
-### code chunk number 13: stpg.Rnw:186-196
+### code chunk number 13: stpg.Rnw:187-197
 ###################################################
 setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 	stopifnot(missing(i) != missing(j)) # either of them present
@@ -144,7 +145,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 14: stpg.Rnw:198-205 (eval = FALSE)
+### code chunk number 14: stpg.Rnw:199-206 (eval = FALSE)
 ###################################################
 ## pm10_20050101 = rural_proxy[, "2005-01-01"]
 ## summary(pm10_20050101)
@@ -156,7 +157,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 15: stpg.Rnw:210-213 (eval = FALSE)
+### code chunk number 15: stpg.Rnw:211-214 (eval = FALSE)
 ###################################################
 ## dim(pm10_NRW)
 ## pm10_NRW = pm10_NRW[T,]
@@ -164,7 +165,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 16: stpg.Rnw:216-219 (eval = FALSE)
+### code chunk number 16: stpg.Rnw:217-220 (eval = FALSE)
 ###################################################
 ## object.size(rural)
 ## object.size(pm10_20050101)
@@ -172,7 +173,7 @@ setMethod("[", "ST_PG", function(x, i, j, ... , drop = TRUE) {
 
 
 ###################################################
-### code chunk number 17: stpg.Rnw:225-227 (eval = FALSE)
+### code chunk number 17: stpg.Rnw:226-228 (eval = FALSE)
 ###################################################
 ## dbDisconnect(con)
 ## dbUnloadDriver(drv)
