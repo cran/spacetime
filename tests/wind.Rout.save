@@ -1,6 +1,6 @@
 
-R version 3.2.2 (2015-08-14) -- "Fire Safety"
-Copyright (C) 2015 The R Foundation for Statistical Computing
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -111,22 +111,16 @@ Type 'q()' to quit R.
 + }
 Loading required package: gstat
 Loading required package: maps
-
- # ATTENTION: maps v3.0 has an updated 'world' map.        #
- # Many country borders and names have changed since 1990. #
- # Type '?world' or 'news(package="maps")'. See README_v3. #
-
-
 Loading required package: rgdal
-rgdal: version: 1.1-1, (SVN revision 463)
+rgdal: version: 1.1-10, (SVN revision 463)
  Geospatial Data Abstraction Library extensions to R successfully loaded
- Loaded GDAL runtime: GDAL 1.11.2, released 2015/02/10
+ Loaded GDAL runtime: GDAL 2.1.0, released 2016/04/25
  Path to GDAL shared files: /usr/local/share/gdal
  Loaded PROJ.4 runtime: Rel. 4.9.2, 08 September 2015, [PJ_VERSION: 492]
  Path to PROJ.4 shared files: (autodetected)
- Linking to sp version: 1.2-1 
+ Linking to sp version: 1.2-3 
 Checking rgeos availability: TRUE
 > 
 > proc.time()
    user  system elapsed 
-  1.416   0.304   1.407 
+  1.348   0.304   1.385 

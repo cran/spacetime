@@ -78,11 +78,9 @@ wind.stack = stack(wind[,4:15])
 names(wind.stack) = c("wind_speed", "station")
 wind.stack$time = rep(time, 12)
 plot(
-  gvisAnnotatedTimeLine(wind.stack, "time", "wind_speed", "station",
+  gvisAnnotationChart(wind.stack, "time", "wind_speed", "station",
                         options = list(width = "1000px", 
-                                       height = "500px",
-                                       zoomStartTime=time[length(time)-365], 
-                                       zoomEndTime=max(time)))
+                                       height = "500px"))
 )
 
 ## ----results='asis'------------------------------------------------------
@@ -106,7 +104,6 @@ plot(
   gvisAnnotationChart(d, "time", "PM10", "sp.ID",
                       options = list(width = "1000px", 
                                      height = "500px"))
-  # zoomStartTime=d$time[1], zoomEndTime=d$time[1]+365))
   )
 
 ## ----MotionChartExample, results='asis', tidy=FALSE----------------------
