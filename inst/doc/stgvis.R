@@ -9,7 +9,7 @@ rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 library(ISOcodes)
 data("ISO_3166_2")
 ## State names are already in German
-ISO_3166_2_DE <- subset(ISO_3166_2, Country %in% "DE")
+ISO_3166_2_DE <- ISO_3166_2[grep("DE-", ISO_3166_2$Code), ]
 plot(
   gvisTable(ISO_3166_2_DE)
   )

@@ -8,19 +8,19 @@
 This vignette shows how Google charts can be used to
 display some spatio-temporal data sets used in the
 [JSS paper](http://www.jstatsoft.org/v51/i07/) on
-[spacetime](http://cran.r-project.org/package=spacetime).
+[spacetime](https://cran.r-project.org/package=spacetime).
 
 [Google
 charts](https://developers.google.com/chart/interactive/docs/index)
 are interactive graphs in web pages
 that use Google proprietary code. R package
-[googleVis](http://cran.r-project.org/package=googleVis) converts
+[googleVis](https://cran.r-project.org/package=googleVis) converts
 R data.frame objects into Google charts. This vignette uses
-[knitr](http://cran.r-project.org/package=knitr) and markdown to
+[knitr](https://cran.r-project.org/package=knitr) and markdown to
 create a web page from the R-markdown [source file](https://github.com/edzer/spacetime/blob/master/vignettes/stgvis.Rmd). It
 was inspired by, and copies small sections of, the corresponding
-[googleVis](http://cran.r-project.org/package=googleVis)
-[vignette](http://cran.r-project.org/web/packages/googleVis/vignettes/Using_googleVis_with_knitr.html)
+[googleVis](https://cran.r-project.org/package=googleVis)
+vignette with knitr examples.
 
 Set the googleVis options first to change the behaviour of `plot.gvis`,
 so that only the chart component of the HTML file is written into
@@ -48,7 +48,7 @@ rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
 library(ISOcodes)
 data("ISO_3166_2")
 ## State names are already in German
-ISO_3166_2_DE <- subset(ISO_3166_2, Country %in% "DE")
+ISO_3166_2_DE <- ISO_3166_2[grep("DE-", ISO_3166_2$Code), ]
 plot(
   gvisTable(ISO_3166_2_DE)
   )
@@ -179,8 +179,8 @@ plot(
 ```
 
 ## Rural PM10 data from spacetime: Annotation Chart
-The PM10 data in the [spacetime
-vignette](http://cran.r-project.org/web/packages/spacetime/vignettes/sto.pdf)
+The PM10 data from the ``[spacetime](https://cran.r-project.org/package=spacetime)
+vignette on spatio-temporal overlay and aggregation''
 contain missing values. These are connected by straight lines in
 the Annotated Time Line, rendering this visualisation useless.
 
