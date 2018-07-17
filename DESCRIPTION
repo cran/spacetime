@@ -1,8 +1,7 @@
 Package: spacetime
-Version: 1.2-1
+Version: 1.2-2
 Title: Classes and Methods for Spatio-Temporal Data
-Authors@R: c(person("Edzer", "Pebesma", role = c("cre", "aut"),
-		 email = "edzer.pebesma@uni-muenster.de"),
+Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de", comment = c(ORCID = "0000-0001-8049-7069")),
 	person("Benedikt", "Graeler", role = "ctb"),
 	person("Tom", "Gottfried", role = "ctb"),
 	person("Robert J.", "Hijmans", role = "ctb"))
@@ -25,11 +24,11 @@ Collate: Class-xts.R Class-ST.R Class-STFDF.R Class-STSDF.R
         over.R aggregate.R eof.R mnf.R bind.R na.R raster.R tgrass.R
         stinteraction.R
 NeedsCompilation: no
-Packaged: 2017-09-24 19:46:13 UTC; edzer
-Author: Edzer Pebesma [cre, aut],
+Packaged: 2018-07-17 07:29:41 UTC; edzer
+Author: Edzer Pebesma [aut, cre] (<https://orcid.org/0000-0001-8049-7069>),
   Benedikt Graeler [ctb],
   Tom Gottfried [ctb],
   Robert J. Hijmans [ctb]
 Maintainer: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
 Repository: CRAN
-Date/Publication: 2017-09-24 21:50:53 UTC
+Date/Publication: 2018-07-17 18:10:03 UTC
