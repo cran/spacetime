@@ -72,7 +72,7 @@ as.STIDF.STSDF = function(from) {
 	# replicate the sp and time columns; keeps time always ordered?
 	sp = from@sp[from@index[,1],]
 	if (is(sp, "SpatialPoints"))
-		row.names(sp) = make.unique(row.names(sp))
+		row.names(sp) = make.unique(as.character(row.names(sp)))
 	STIDF(sp, from@time[from@index[,2]], 
 			from@data,
 			from@endTime[from@index[,2]])
@@ -140,7 +140,7 @@ setAs("STTDF", "STIDF",
 	function(from) {
 		sp = do.call(rbind, lapply(from@traj, function(x) x@sp))
 		time = do.call(c, lapply(from@traj, index))
-		attr(time, "tzone") = attr(index(from@traj[[1]]), "tzone")
+		attr(time, "tzone") = tzone(from@traj[[1]])
 		endTime = do.call(c, lapply(from@traj, function(x) x@endTime))
 		STIDF(sp, time, from@data, endTime) # reorders there
 	}

@@ -1,7 +1,7 @@
 #.supportedTime = c("Date", "POSIXct", "timeDate", "yearmon", "yearqtr")
 
 ST = function(sp, time, endTime) {
-	if (!is(time, "xts")) {
+	if (!inherits(time, "xts")) {
 		#stopifnot(is(time, .supportedTime))
 		if (!timeBased(time))
 			stop("time is not a time based class")
@@ -14,7 +14,7 @@ ST = function(sp, time, endTime) {
 	if (any(is.na(index(time))))
 		stop("NA time values not allowed")
 	stopifnot(is(endTime, "POSIXct"))
-	attr(endTime, "tzone") = attr(time, "tzone")
+	attr(endTime, "tzone") = tzone(time)
 	if (any(is.na(endTime)))
 		stop("NA endTime values not allowed")
 	if (is(sp, "SpatialGrid")) {
