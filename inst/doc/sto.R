@@ -1,5 +1,4 @@
 ### R code from vignette source 'sto.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: sto.Rnw:89-90 (eval = FALSE)

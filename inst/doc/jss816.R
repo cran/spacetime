@@ -1,5 +1,4 @@
 ### R code from vignette source 'jss816.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: jss816.Rnw:86-88
@@ -277,7 +276,7 @@ data("Produc")
 ### code chunk number 28: jss816.Rnw:980-982
 ###################################################
 # deselect District of Columbia, polygon 8, which is not present in Produc:
-Produc.st = STFDF(states[-8], time, Produc[order(Produc[2], Produc[1]),])
+Produc.st = STFDF(states[-8], time, Produc[order(Produc[,2], Produc[,1]),])
 
 
 ###################################################

@@ -1,8 +1,8 @@
-## ----setOptions, message=FALSE-------------------------------------------
+## ----setOptions, message=FALSE------------------------------------------------
 library(googleVis)
 op <- options(gvis.plot.tag='chart')
 
-## ----results='asis', eval=TRUE-------------------------------------------
+## ----results='asis', eval=TRUE------------------------------------------------
 library(spacetime)
 data(air) # loads rural and DE_NUTS1
 rural = STFDF(stations, dates, data.frame(PM10 = as.vector(air)))
@@ -14,11 +14,11 @@ plot(
   gvisTable(ISO_3166_2_DE)
   )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 ISO_3166_2_DE <- ISO_3166_2_DE[order(ISO_3166_2_DE$Name),]
 DE_NUTS1$name <- ISO_3166_2_DE$Name
 
-## ----GeoMapExample, results='asis', tidy=FALSE---------------------------
+## ----GeoMapExample, results='asis', tidy=FALSE--------------------------------
 library(googleVis)
 ## Create list with options for Geo Chart to be used
 geoChartDE <- list(region="DE", 
@@ -30,7 +30,7 @@ plot(
                options=geoChartDE)
   )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 DE_NUTS1$code = ISO_3166_2_DE$Code
 plot(
   gvisGeoChart(DE_NUTS1@data, locationvar = "code", 
@@ -38,7 +38,7 @@ plot(
                options=geoChartDE)
   )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 DE_NUTS1.years = STF(DE_NUTS1, as.Date(c("2008-01-01", "2009-01-01")))
 agg = aggregate(rural[,"2008::2009"], DE_NUTS1.years, mean, na.rm=TRUE)
 d = agg[,1]@data # select time step one, take attr table of resulting SpatialPolygonsDataFrame object
@@ -55,7 +55,7 @@ Tbl <- gvisTable(d, options=list(height=400),
                  formats=list(PM10="#,###.0"))
 plot(gvisMerge(M, Tbl, horizontal=TRUE))
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 library(sp)
 data("wind", package = "gstat")
 wind.loc$y = as.numeric(char2dms(as.character(wind.loc[["Latitude"]])))
@@ -70,7 +70,7 @@ plot( gvisGeoChart(wind.loc, "yx", "mean", "sd", "Station",
                                   legend="{numberFormat:'#.00'}"))
       )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 # select:
 wind = wind[wind$year > 76,] # select three years, 1976-1978
 time = ISOdate(wind$year+1900, wind$month, wind$day)
@@ -83,20 +83,20 @@ plot(
                                        height = "500px"))
 )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 wind$time = time
 plot(
   gvisLineChart(wind[1:200,], "time", names(wind)[4:9])
   )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 wind$time = time
 wind[4:5, 7:9] = NA
 plot(
   gvisLineChart(wind[1:10,], "time", names(wind)[4:9])
   )
 
-## ----results='asis'------------------------------------------------------
+## ----results='asis'-----------------------------------------------------------
 library(spacetime)
 data(air)
 d = as(rural[1:10,"2001"], "data.frame") # daily, 2001
@@ -106,13 +106,13 @@ plot(
                                      height = "500px"))
   )
 
-## ----MotionChartExample, results='asis', tidy=FALSE----------------------
+## ----MotionChartExample, results='asis', tidy=FALSE---------------------------
 data("Produc", package = "plm")
 plot(
   gvisMotionChart(Produc, idvar="state", timevar="year")
 )
 
-## ----resetOptions--------------------------------------------------------
+## ----resetOptions-------------------------------------------------------------
 ## Set options back to original options
 options(op)
 

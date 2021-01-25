@@ -1,5 +1,4 @@
 ### R code from vignette source 'stsubs.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: stsubs.Rnw:32-57

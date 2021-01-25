@@ -1,5 +1,4 @@
 ### R code from vignette source 'stpg.Rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: stpg.Rnw:47-48 (eval = FALSE)
