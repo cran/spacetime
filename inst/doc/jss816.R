@@ -511,57 +511,48 @@ print(stplot(sttdf, by="time*id"))
 ### code chunk number 55: jss816.Rnw:1261-1265
 ###################################################
 library(cshapes)
+library(sf)
 cs = cshp()
 names(cs)
-row.names(cs) = paste(as.character(cs$CNTRY_NAME), 1:244)
 
 
 ###################################################
-### code chunk number 56: jss816.Rnw:1275-1280
+### code chunk number 56: jss816.Rnw:1276-1278
 ###################################################
-cs = cs[cs$COWSYEAR > -1,]
-begin = as.POSIXct(paste(cs$COWSYEAR, cs$COWSMONTH, cs$COWSDAY, sep="-"), 
-    tz = "GMT")
-end = as.POSIXct(paste(cs$COWEYEAR, cs$COWEMONTH,cs$COWEDAY, sep="-"), 
-    tz = "GMT")
+st = STIDF(geometry(as(cs, "Spatial")), 
+	as.POSIXct(cs$start), as.data.frame(cs), as.POSIXct(cs$end))
 
 
 ###################################################
-### code chunk number 57: jss816.Rnw:1283-1284
+### code chunk number 57: jss816.Rnw:1282-1284
 ###################################################
-st = STIDF(geometry(cs), begin, as.data.frame(cs), end)
-
-
-###################################################
-### code chunk number 58: jss816.Rnw:1288-1290
-###################################################
-pt = SpatialPoints(cbind(7, 52), CRS(proj4string(cs)))
+pt = SpatialPoints(cbind(7, 52), CRS(proj4string(st)))
 as.data.frame(st[pt,,1:5])
 
 
 ###################################################
-### code chunk number 59: jss816.Rnw:1314-1316 (eval = FALSE)
+### code chunk number 58: jss816.Rnw:1305-1307 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## demo(CressieWikle)
 
 
 ###################################################
-### code chunk number 60: jss816.Rnw:1327-1329 (eval = FALSE)
+### code chunk number 59: jss816.Rnw:1318-1320 (eval = FALSE)
 ###################################################
 ## library(gstat)
 ## vignette("st")
 
 
 ###################################################
-### code chunk number 61: jss816.Rnw:1335-1337 (eval = FALSE)
+### code chunk number 60: jss816.Rnw:1326-1328 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## vignette("stpg")
 
 
 ###################################################
-### code chunk number 62: jss816.Rnw:1349-1351 (eval = FALSE)
+### code chunk number 61: jss816.Rnw:1340-1342 (eval = FALSE)
 ###################################################
 ## library(spacetime)
 ## vignette("sto")
