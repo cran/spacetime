@@ -250,3 +250,27 @@ setAs("STTDF", "SpatialLines",
 		SpatialLines(l2)
 	}
 )
+
+# sftime:
+setOldClass("sftime")
+
+setAs("sftime", "STI",
+	function(from) {
+		if (! requireNamespace("sf", quietly = TRUE))
+			stop("package sf required, please install it first")
+		if (! requireNamespace("sftime", quietly = TRUE))
+			stop("package sftime required, please install it first")
+		STI(as(sf::st_geometry(from), "Spatial"), sftime::st_time(from))
+	}
+)
+
+setAs("sftime", "STIDF",
+	function(from) {
+		if (! requireNamespace("sf", quietly = TRUE))
+			stop("package sf required, please install it first")
+		if (! requireNamespace("sftime", quietly = TRUE))
+			stop("package sftime required, please install it first")
+		STIDF(as(sf::st_geometry(from), "Spatial"), sftime::st_time(from), 
+			sf::st_drop_geometry(sftime::st_drop_time(from)))
+	}
+)
