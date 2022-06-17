@@ -106,7 +106,7 @@ plot(
                                      height = "500px"))
   )
 
-## ----MotionChartExample, results='asis', tidy=FALSE---------------------------
+## ----MotionChartExample, results='asis', tidy=FALSE, eval=require(plm)--------
 data("Produc", package = "plm")
 plot(
   gvisMotionChart(Produc, idvar="state", timevar="year")

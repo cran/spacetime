@@ -1,5 +1,5 @@
 Package: spacetime
-Version: 1.2-7
+Version: 1.2-8
 Title: Classes and Methods for Spatio-Temporal Data
 Authors@R: c(person("Edzer",  "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de", comment = c(ORCID = "0000-0001-8049-7069")),
 	person("Benedikt", "Graeler", role = "ctb"),
@@ -17,6 +17,7 @@ Description: Classes and methods for spatio-temporal data, including space-time 
 License: GPL (>= 2)
 URL: https://github.com/edzer/spacetime
 BugReports: https://github.com/edzer/spacetime/issues
+Encoding: UTF-8
 VignetteBuilder: knitr
 Collate: Class-xts.R Class-ST.R Class-STFDF.R Class-STSDF.R
         Class-STIDF.R Class-STTDF.R interval.R endtime.R ST-methods.R
@@ -25,11 +26,11 @@ Collate: Class-xts.R Class-ST.R Class-STFDF.R Class-STSDF.R
         over.R aggregate.R eof.R mnf.R bind.R na.R raster.R tgrass.R
         stinteraction.R
 NeedsCompilation: no
-Packaged: 2022-06-02 20:12:53 UTC; edzer
+Packaged: 2022-06-15 09:51:14 UTC; edzer
 Author: Edzer Pebesma [aut, cre] (<https://orcid.org/0000-0001-8049-7069>),
   Benedikt Graeler [ctb],
   Tom Gottfried [ctb],
   Robert J. Hijmans [ctb]
 Maintainer: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
 Repository: CRAN
-Date/Publication: 2022-06-05 16:40:05 UTC
+Date/Publication: 2022-06-17 23:50:06 UTC
